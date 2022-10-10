@@ -22,7 +22,8 @@ ToolBar {
         ToolSeparator {}
 
         ToolButton {
-            text: "DFM"
+            text: steam_api_bridge.SteamUtils().IsSteamRunningOnSteamDeck ? "DECKFM" : "DFM"
+
             font.pointSize: 24
             Layout.fillWidth: parent
             Layout.maximumWidth: 150

@@ -5,7 +5,6 @@
 #include <QLocale>
 
 #include "fsbridge.h"
-#include "qdebug.h"
 
 FSBridge::FSBridge(QObject *parent)
     : QObject{parent}
@@ -13,19 +12,19 @@ FSBridge::FSBridge(QObject *parent)
 
 }
 
-QStringList FSBridge::mime(const QString &path)
+QStringList FSBridge::mime(const QString &path) const
 {
     return QMimeDatabase().mimeTypeForFile(path).name().split("/");
 }
 
-bool FSBridge::isReadable(const QString &path)
+bool FSBridge::isReadable(const QString &path) const
 {
     QFileInfo dir(pathFromURL(path));
 
     return dir.isReadable();
 }
 
-QString FSBridge::icon(const QString &path)
+QString FSBridge::icon(const QString &path) const
 {
     auto type = mime(path);
     auto category = type[0];
@@ -46,7 +45,7 @@ QString FSBridge::icon(const QString &path)
    return "file";
 }
 
-QString FSBridge::humanReadableSize(const QString &path, bool includeHidden)
+QString FSBridge::humanReadableSize(const QString &path, bool includeHidden) const
 {
     QFileInfo info(path);
     if (info.isDir()) {
@@ -62,12 +61,12 @@ QString FSBridge::humanReadableSize(const QString &path, bool includeHidden)
 
 }
 
-QString FSBridge::pathFromURL(const QString &path)
+QString FSBridge::pathFromURL(const QString &path) const
 {
     return QUrl(path).path();
 }
 
-QVariantList FSBridge::pathToComponenets(const QString &path)
+QVariantList FSBridge::pathToComponenets(const QString &path) const
 {
     QVariantList result;
     auto parts = path.split(QDir::separator());

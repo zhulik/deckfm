@@ -12,5 +12,8 @@ int main(int argc, char *argv[])
     }
     Application app(argc, argv);
 
-    return app.exec();
+    auto res = app.exec();
+
+    SteamAPI_Shutdown();
+    return res;
 }

@@ -10,21 +10,21 @@ public:
     explicit FSBridge(QObject *parent = nullptr);
 
     Q_INVOKABLE
-    QStringList mime(const QString &path);
+    QStringList mime(const QString &path) const;
 
     Q_INVOKABLE
-    bool isReadable(const QString &path);
+    bool isReadable(const QString &path) const;
 
     Q_INVOKABLE
-    QString icon(const QString &path);
+    QString icon(const QString &path) const;
 
     Q_INVOKABLE
-    QString humanReadableSize(const QString &path, bool includeHidden);
+    QString humanReadableSize(const QString &path, bool includeHidden) const;
 
     Q_INVOKABLE
-    QString pathFromURL(const QString &path);
+    QString pathFromURL(const QString &path) const;
 
     Q_INVOKABLE
-    QVariantList pathToComponenets(const QString &path);
+    QVariantList pathToComponenets(const QString &path) const;
 
 };

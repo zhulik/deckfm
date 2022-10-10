@@ -9,6 +9,7 @@
 #include "application.h"
 #include "fsbridge.h"
 #include "gamepadbridge.h"
+#include "steamapibridge.h"
 
 Application::Application(int &argc, char **argv)
     : QGuiApplication{argc, argv}
@@ -21,6 +22,7 @@ Application::Application(int &argc, char **argv)
 
     m_engine->rootContext()->setContextProperty("fs_bridge", new FSBridge(m_engine));
     m_engine->rootContext()->setContextProperty("gamepad_bridge", new GamepadBridge(m_engine));
+    m_engine->rootContext()->setContextProperty("steam_api_bridge", new SteamAPIBridge(m_engine));
 
     m_engine->load("qrc:/qml/MainWindow.qml");
 

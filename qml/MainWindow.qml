@@ -103,4 +103,8 @@ ApplicationWindow {
             directoryViewLeft.forceActiveFocus()
         }
     }
+
+    Component.onCompleted: {
+        console.log(steam_api_bridge.SteamUtils())
+    }
 }
