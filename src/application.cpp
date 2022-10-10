@@ -15,7 +15,7 @@ Application::Application(int &argc, char **argv)
 
     m_engine = new QQmlApplicationEngine();
 
-    m_engine->load("qrc:/qml/main.qml");
+    m_engine->load("qrc:/qml/MainWindow.qml");
 
     if (m_engine->rootObjects().count() == 0) {
         qApp->exit(1);

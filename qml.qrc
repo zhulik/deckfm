@@ -1,6 +1,20 @@
 <RCC>
     <qresource prefix="/">
-        <file>qml/main.qml</file>
         <file>fonts/materialdesignicons-webfont.ttf</file>
+        <file>qml/DirectoryView/DirectoryModel.qml</file>
+        <file>qml/DirectoryView/DirectoryView.qml</file>
+        <file>qml/DirectoryView/FileDelegate.qml</file>
+        <file>qml/DirectoryView/FilePathView.qml</file>
+        <file>qml/Footer.qml</file>
+        <file>qml/Gamepad.qml</file>
+        <file>qml/GamepadInput.qml</file>
+        <file>qml/GlobalMenu.qml</file>
+        <file>qml/Header.qml</file>
+        <file>qml/MainWindow.qml</file>
+        <file>qml/MDI/Button.qml</file>
+        <file>qml/MDI/Icon.qml</file>
+        <file>qml/MDI/icons.js</file>
+        <file>qml/MDI/materialdesignicons-webfont.ttf</file>
+        <file>qml/MDI/MenuItem.qml</file>
     </qresource>
 </RCC>
