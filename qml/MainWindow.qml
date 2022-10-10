@@ -107,4 +107,20 @@ ApplicationWindow {
     Component.onCompleted: {
         console.log(steam_api_bridge.SteamUtils())
     }
+
+    Timer {
+        interval: 33
+
+        onTriggered: {
+            steam_api_bridge.RunCallbacks()
+        }
+
+        repeat: true
+        running: true
+
+    }
+
+    onFrameSwapped: {
+        steam_api_bridge.RunCallbacks()
+    }
 }

@@ -1,3 +1,5 @@
+#include "steam/steam_api.h"
+
 #include "steamapibridge.h"
 #include "steamutilsbridge.h"
 
@@ -10,4 +12,9 @@ SteamAPIBridge::SteamAPIBridge(QObject *parent)
 QObject *SteamAPIBridge::SteamUtils() const
 {
     return m_steamUtilsBridge;
+}
+
+void SteamAPIBridge::RunCallbacks()
+{
+    SteamAPI_RunCallbacks();
 }

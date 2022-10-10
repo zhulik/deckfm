@@ -13,6 +13,9 @@ public:
     Q_INVOKABLE
     QObject *SteamUtils() const;
 
+    Q_INVOKABLE
+    void RunCallbacks();
+
 private:
     SteamUtilsBridge *m_steamUtilsBridge;
 };
