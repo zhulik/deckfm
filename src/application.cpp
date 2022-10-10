@@ -2,6 +2,7 @@
 #include <QtQuickControls2/QQuickStyle>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QtGamepad/QGamepadManager>
 
 #include <QDebug>
 
@@ -22,6 +23,9 @@ Application::Application(int &argc, char **argv)
     m_engine->load("qrc:/qml/MainWindow.qml");
 
     if (m_engine->rootObjects().count() == 0) {
-        qApp->exit(1);
+        throw "error";
     }
+
+    auto gamepad = QGamepadManager::instance();
+    qDebug() << gamepad->connectedGamepads();
 }

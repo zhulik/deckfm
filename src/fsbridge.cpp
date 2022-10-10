@@ -55,7 +55,6 @@ QString FSBridge::humanReadableSize(const QString &path, bool includeHidden)
             flags = flags | QDir::Hidden;
         }
         auto files = QDir(path).entryList(flags);
-        qDebug() << path << files.count();
         return QString("%1 Items").arg(files.count());
     }
 

@@ -11,8 +11,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt5 REQUIRED COMPONENTS Core Quick QuickControls2)
-find_package(Qt5 REQUIRED COMPONENTS Core Quick QuickControls2)
+
+find_package(Qt5 REQUIRED COMPONENTS Core Quick QuickControls2 Gamepad)
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 
@@ -22,4 +22,4 @@ set(PROJECT_SOURCES ${sources} qml.qrc)
 
 add_executable(deckfm ${PROJECT_SOURCES})
 
-target_link_libraries(deckfm PRIVATE Qt5::Core Qt5::Quick Qt5::QuickControls2)
+target_link_libraries(deckfm PRIVATE Qt5::Core Qt5::Quick Qt5::QuickControls2 Qt5::Gamepad)
