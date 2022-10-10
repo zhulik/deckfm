@@ -22,21 +22,12 @@ ToolBar {
         ToolSeparator {}
 
         ToolButton {
-            text: system_bridge.isOnDeck ? "DECKFM" : "DFM"
+            text: "DFM"
             font.pointSize: 24
             Layout.fillWidth: parent
             Layout.maximumWidth: 150
 
             onClicked: root.logoClicked()
-        }
-
-        ToolButton {
-            text: steamworks_bridge.username
-            font.pointSize: 24
-            Layout.fillWidth: parent
-            Layout.maximumWidth: 400
-
-            onClicked: steamworks_bridge.show_overlay()
         }
 
         Item {

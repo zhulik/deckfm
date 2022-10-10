@@ -14,7 +14,7 @@ ApplicationWindow {
     title: "DeckFM"
     visible: true
 
-    visibility: system_bridge.isOnDeck ? "FullScreen" : "Windowed"
+    visibility: "Windowed"
 
     width: 1280
     height: 800
@@ -102,9 +102,5 @@ ApplicationWindow {
         onClosed: {
             directoryViewLeft.forceActiveFocus()
         }
-    }
-
-    Component.onCompleted: {
-        steamworks_bridge.initialize()
     }
 }

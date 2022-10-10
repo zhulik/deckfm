@@ -1,5 +1,4 @@
-#ifndef APPLICATION_H
-#define APPLICATION_H
+#pragma once
 
 #include <QGuiApplication>
 
@@ -15,5 +14,3 @@ private:
     QQmlApplicationEngine *m_engine;
 
 };
-
-#endif // APPLICATION_H

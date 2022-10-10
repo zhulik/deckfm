@@ -30,11 +30,11 @@ FolderListModel {
     }
 
     function fileSizeStr(path) {
-        return fs_bridge.file_size_str(path, _showHidden)
+        return fs_bridge.humanReadableSize(path, _showHidden)
     }
 
     function pathFromUrl(path) {
-        return fs_bridge.path_from_url(path)
+        return fs_bridge.pathFromURL(path)
     }
 
     function goUp() {
@@ -50,7 +50,7 @@ FolderListModel {
     }
 
     function canCd(path) {
-        return fs_bridge.isreadable(path)
+        return fs_bridge.isReadable(path)
     }
 
     function cd(path) {

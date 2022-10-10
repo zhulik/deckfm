@@ -42,7 +42,7 @@ ListView {
     orientation: ListView.Horizontal
 
     onPathChanged: {
-        const parts = fs_bridge.split_path(path)
+        const parts = fs_bridge.pathToComponenets(path)
 
         if (parts.length < listModel.count) {
             listModel.remove(parts.length, listModel.count - parts.length)
