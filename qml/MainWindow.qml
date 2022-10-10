@@ -105,7 +105,11 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        console.log(steam_api_bridge.SteamUtils())
+        steam_api_bridge.SteamInput().Init(true)
+    }
+
+    onClosing: {
+        steam_api_bridge.SteamInput().Shutdown()
     }
 
     Timer {

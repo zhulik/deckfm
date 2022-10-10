@@ -3,6 +3,7 @@
 #include <QObject>
 
 class SteamUtilsBridge;
+class SteamInputBridge;
 
 class SteamAPIBridge : public QObject
 {
@@ -14,8 +15,12 @@ public:
     QObject *SteamUtils() const;
 
     Q_INVOKABLE
+    QObject *SteamInput() const;
+
+    Q_INVOKABLE
     void RunCallbacks();
 
 private:
     SteamUtilsBridge *m_steamUtilsBridge;
+    SteamInputBridge *m_steamInputBridge;
 };

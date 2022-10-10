@@ -2,9 +2,11 @@
 
 #include "steamapibridge.h"
 #include "steamutilsbridge.h"
+#include "steaminputbridge.h"
 
 SteamAPIBridge::SteamAPIBridge(QObject *parent)
-    : QObject{parent}, m_steamUtilsBridge(new SteamUtilsBridge(this))
+    : QObject{parent}, m_steamUtilsBridge(new SteamUtilsBridge(this)),
+        m_steamInputBridge(new SteamInputBridge(this))
 {
 
 }
@@ -12,6 +14,11 @@ SteamAPIBridge::SteamAPIBridge(QObject *parent)
 QObject *SteamAPIBridge::SteamUtils() const
 {
     return m_steamUtilsBridge;
+}
+
+QObject *SteamAPIBridge::SteamInput() const
+{
+    return m_steamInputBridge;
 }
 
 void SteamAPIBridge::RunCallbacks()
