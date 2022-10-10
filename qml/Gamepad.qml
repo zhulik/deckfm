@@ -119,7 +119,7 @@ Item {
         const mapped = keyMapping[button]
 
         if (mapped) {
-            gamepad_bridge.send_key_press(mapped)
+            gamepad_bridge.sendKeyPress(mapped)
         }
     }
 }
