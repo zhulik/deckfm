@@ -118,6 +118,8 @@ Item {
             cellHeight: 70
             clip: true
 
+            boundsBehavior: Flickable.StopAtBounds
+
             ScrollBar.vertical: ScrollBar {}
 
             populate: Transition {
