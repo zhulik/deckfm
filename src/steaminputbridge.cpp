@@ -73,15 +73,17 @@ SteamInputBridge::SteamInputBridge(QObject *parent)
 
 bool SteamInputBridge::init()
 {
-    if (SteamInput()->Init(true)) {
-        auto path = QDir::current().filePath("input.vdf");
-
-        if (!SteamInput()->SetInputActionManifestFilePath( path.toLocal8Bit() )) {
-            throw "error";
-        }
-        return true;
+    if (!(SteamInput()->Init(true))) {
+        return false;
     }
-    return false;
+    auto path = QDir::current().filePath("input.vdf");
+
+    if (!SteamInput()->SetInputActionManifestFilePath( path.toLocal8Bit() )) {
+        throw "error";
+    }
+
+    return true;
+
 }
 
 bool SteamInputBridge::shutdown()
@@ -114,6 +116,20 @@ void SteamInputBridge::poll()
                                    });
         }
         emit connectedControllersChanged(m_connectedControllers);
+    }
+
+    if (!updated.empty()) {
+        auto menuControlSet = SteamInput()->GetActionSetHandle("menu_controls");
+        SteamInput()->ActivateActionSet(updated[0], menuControlSet);
+
+
+        auto menuAction = SteamInput()->GetDigitalActionHandle("menu_select");
+        SteamAPI_RunCallbacks();
+
+        auto digitalData = SteamInput()->GetDigitalActionData(updated[0], menuAction);
+        auto state = digitalData.bActive && digitalData.bState;
+
+        emit digitalActionActivated(QString("menu_select: %1").arg(state), state);
     }
 }
 

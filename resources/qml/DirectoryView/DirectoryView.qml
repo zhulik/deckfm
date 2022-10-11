@@ -196,10 +196,4 @@ Item {
             }
         }
     }
-
-    Core.GamepadInput {
-        onLeftStickChanged: {
-            view.flick(0, leftStick.y * 1000)
-        }
-    }
 }

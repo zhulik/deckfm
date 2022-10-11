@@ -7,7 +7,7 @@ class SteamUtilsBridge : public QObject
     Q_OBJECT
 
     Q_PROPERTY(bool isOnDeck READ isOnDeck NOTIFY isOnDeckChanged)
-    Q_PROPERTY(bool IsSteamInBigPictureMode READ IsSteamInBigPictureMode NOTIFY IsSteamInBigPictureModeChanged)
+    Q_PROPERTY(bool isBigPicture READ isBigPicture NOTIFY isBigPictureChanged)
 
 public:
     explicit SteamUtilsBridge(QObject *parent = nullptr);
@@ -15,14 +15,10 @@ public:
 
     bool isOnDeck() const;
 
-    bool IsSteamInBigPictureMode() const;
+    bool isBigPicture() const;
 
 signals:
 
     void isOnDeckChanged();
-    void IsSteamInBigPictureModeChanged();
-
-private:
-    bool m_IsSteamRunningOnSteamDeck;
-    bool m_IsSteamInBigPictureMode;
+    void isBigPictureChanged();
 };

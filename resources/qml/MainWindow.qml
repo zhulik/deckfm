@@ -14,14 +14,14 @@ ApplicationWindow {
     title: "DeckFM"
     visible: true
 
-    visibility: steam_utils.isOnDeck ? "FullScreen" : "Windowed"
+    visibility: steam_utils.isOnDeck || steam_utils.isBigPicture ? "FullScreen" : "Windowed"
 
     width: 1280
     height: 800
 
-    Gamepad {
-        id: gamepad
-    }
+//    Gamepad {
+//        id: gamepad
+//    }
 
     header: Header {
         onMenuClicked: {

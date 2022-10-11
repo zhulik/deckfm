@@ -6,7 +6,6 @@
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     if (!SteamAPI_Init()) {
         qWarning() << "SteamAPI cannot be initialized";
     }

@@ -7,6 +7,7 @@
 #include <QtGamepad/QGamepadManager>
 
 #include <QDebug>
+#include <QSGRendererInterface>
 
 #include "steam/steam_api.h"
 
@@ -21,7 +22,7 @@
 Application::Application(int &argc, char **argv)
     : QGuiApplication{argc, argv}
 {
-
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QFontDatabase::addApplicationFont(":/resources/fonts/materialdesignicons-webfont.ttf");
     QQuickStyle::setStyle("Material");
 
@@ -60,4 +61,6 @@ Application::Application(int &argc, char **argv)
     callbackTimer->start(33);
 
     QObject::connect((QQuickWindow *)mainWindow, &QQuickWindow::frameSwapped, runCallbacks);
+
+    QSGRendererInterface *rif = ((QQuickWindow *)mainWindow)->rendererInterface();
 }

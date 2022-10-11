@@ -13,7 +13,7 @@ bool SteamUtilsBridge::isOnDeck() const
     return SteamUtils()->IsSteamRunningOnSteamDeck();
 }
 
-bool SteamUtilsBridge::IsSteamInBigPictureMode() const
+bool SteamUtilsBridge::isBigPicture() const
 {
     return SteamUtils()->IsSteamInBigPictureMode();
 }

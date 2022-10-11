@@ -104,10 +104,24 @@ Dialog {
 
                     anchors.fill: gamepadItem
 
-                    Label {
+                    ColumnLayout {
                         Layout.preferredWidth: gamepadItem.width / 2
-                        text: `Name: ${modelData.name}`
 
+                        Label {
+                            text: `Name: ${modelData.name}`
+                        }
+
+                        Label {
+                            id: menuSelectState
+
+                            Connections {
+                                    target: steam_input
+
+                                    function onDigitalActionActivated(name, active) {
+                                        menuSelectState.text = `${name} ${JSON.stringify(state)}`
+                                    }
+                                }
+                        }
                     }
 
                     Image {

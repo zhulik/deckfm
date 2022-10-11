@@ -25,6 +25,7 @@ public:
 
 signals:
     void connectedControllersChanged(QVariantList);
+    void digitalActionActivated(QString, bool);
 
 private:
     QList<ControllerHandle_t> m_controllerHandles;

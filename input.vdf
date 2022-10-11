@@ -12,32 +12,6 @@
 	}
 	"actions"
 	{
-		"ship_controls"
-		{
-			"title"		"Ship Controls"
-			"legacy_set"		"0"
-			"StickPadGyro"
-			{
-				"analog_controls"
-				{
-					"title"		"#AnalogControls"
-					"input_mode"		"joystick_move"
-				}
-			}
-			"Button"
-			{
-				"turn_left"		"#TurnLeft"
-				"turn_right"		"#TurnRight"
-				"fire_lasers"		"#FireLasers"
-				"pause_menu"		"#PauseMenu"
-				"forward_thrust"		"#ForwardThrust"
-				"backward_thrust"		"#BackwardThrust"
-			}
-			"Layers"
-			{
-				"thrust_action_layer"		"#ThrustLayer"
-			}
-		}
 		"menu_controls"
 		{
 			"title"		"#MenuControls"
@@ -55,13 +29,6 @@
 	}
 	"action_layers"
 	{
-		"thrust_action_layer"
-		{
-			"title"		"#ThrustLayer"
-			"legacy_set"		"1"
-			"set_layer"		"1"
-			"parent_set_name"		"ship_controls"
-		}
 	}
 	"localization"
 	{
