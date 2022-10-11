@@ -118,7 +118,7 @@ Dialog {
                                     target: steam_input
 
                                     function onDigitalActionActivated(name, active) {
-                                        menuSelectState.text = `${name} ${JSON.stringify(state)}`
+                                        menuSelectState.text = `${name}`
                                     }
                                 }
                         }

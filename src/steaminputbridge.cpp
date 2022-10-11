@@ -122,12 +122,13 @@ void SteamInputBridge::poll()
         auto menuControlSet = SteamInput()->GetActionSetHandle("menu_controls");
         SteamInput()->ActivateActionSet(updated[0], menuControlSet);
 
+        SteamAPI_RunCallbacks();
 
         auto menuAction = SteamInput()->GetDigitalActionHandle("menu_select");
         SteamAPI_RunCallbacks();
 
         auto digitalData = SteamInput()->GetDigitalActionData(updated[0], menuAction);
-        auto state = digitalData.bActive && digitalData.bState;
+        auto state = digitalData.bActive;
 
         emit digitalActionActivated(QString("menu_select: %1").arg(state), state);
     }
