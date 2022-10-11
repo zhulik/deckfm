@@ -21,7 +21,7 @@
 Application::Application(int &argc, char **argv)
     : QGuiApplication{argc, argv}
 {
-    setOverrideCursor(QCursor(Qt::BlankCursor));
+
     QFontDatabase::addApplicationFont(":/resources/fonts/materialdesignicons-webfont.ttf");
     QQuickStyle::setStyle("Material");
 
@@ -31,7 +31,12 @@ Application::Application(int &argc, char **argv)
     m_engine->rootContext()->setContextProperty("fs_bridge", new FSBridge(m_engine));
     m_engine->rootContext()->setContextProperty("gamepad_bridge", new GamepadBridge(m_engine));
 
-    m_engine->rootContext()->setContextProperty("steam_utils", new SteamUtilsBridge(m_engine));
+    auto steamUtils = new SteamUtilsBridge(m_engine);
+
+    m_engine->rootContext()->setContextProperty("steam_utils", steamUtils);
+    if (steamUtils->IsSteamRunningOnSteamDeck()) {
+        setOverrideCursor(QCursor(Qt::BlankCursor));
+    }
 
     auto steamInput = new SteamInputBridge(m_engine);
     m_engine->rootContext()->setContextProperty("steam_input", steamInput);
