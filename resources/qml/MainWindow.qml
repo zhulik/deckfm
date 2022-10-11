@@ -113,26 +113,8 @@ ApplicationWindow {
         gamepadWindow.open()
     }
 
-    onClosing: {
+    Component.onDestruction: {
         steam_api_bridge.SteamInput().Shutdown()
-    }
-
-    Timer {
-        interval: 33
-
-        onTriggered: {
-            steam_api_bridge.RunCallbacks()
-            steam_api_bridge.SteamInput().poll()
-        }
-
-        repeat: true
-        running: true
-
-    }
-
-    onFrameSwapped: {
-        steam_api_bridge.RunCallbacks()
-        steam_api_bridge.SteamInput().poll()
     }
 
     GamepadWindow {
