@@ -48,7 +48,6 @@ ToolBar {
             iconName: "windowClose"
             Layout.alignment: Qt.AlignRight
             onClicked: root.exitClicked()
-            visible: !steam_utils.isOnDeck
         }
     }
 }
