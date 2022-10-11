@@ -11,15 +11,14 @@ public:
     explicit SteamInputBridge(QObject *parent = nullptr);
 
     Q_INVOKABLE
-    bool Init(bool b);
+    bool init();
 
     Q_INVOKABLE
-    bool Shutdown();
+    bool shutdown();
 
     Q_INVOKABLE
     QVariantList GetConnectedControllers() const;
 
-    Q_INVOKABLE
     void poll();
 
     QVariantList connectedControllers() const;

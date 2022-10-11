@@ -54,7 +54,7 @@ Dialog {
             Repeater {
                 id: repeater
 
-                model: [{name: "Steam", handle: "100500"}] // steam_api_bridge.SteamInput().connectedControllers
+                model: steam_input.connectedControllers
 
                 TabButton {
                     text: modelData.name
@@ -70,7 +70,8 @@ Dialog {
 
             Layout.fillHeight: parent
 
-            readonly property string name: repeater.model[tabBar.currentIndex].name
+
+            readonly property var controller: repeater.model[tabBar.currentIndex]
 
             RowLayout {
                 visible: tabBar.count > 0
@@ -79,7 +80,7 @@ Dialog {
 
                 Label {
                     Layout.preferredWidth: parent.width / 2
-                    text: `Name: ${controllerView.name}`
+                    text: `Name: ${controllerView.controller.name}`
 
                 }
 
@@ -91,7 +92,7 @@ Dialog {
                     horizontalAlignment: Image.AlignHCenter
 
                     fillMode: Image.PreserveAspectFit
-                    source: `qrc:/resources/images/controllers/${controllerView.name}.png`
+                    source: controllerView.controller.image
                 }
             }
         }

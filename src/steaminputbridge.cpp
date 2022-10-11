@@ -71,9 +71,9 @@ SteamInputBridge::SteamInputBridge(QObject *parent)
 
 }
 
-bool SteamInputBridge::Init(bool b)
+bool SteamInputBridge::init()
 {
-    if (SteamInput()->Init(b)) {
+    if (SteamInput()->Init(true)) {
         auto path = QDir::current().filePath("input.vdf");
 
         if (!SteamInput()->SetInputActionManifestFilePath( path.toLocal8Bit() )) {
@@ -84,7 +84,7 @@ bool SteamInputBridge::Init(bool b)
     return false;
 }
 
-bool SteamInputBridge::Shutdown()
+bool SteamInputBridge::shutdown()
 {
     return SteamInput()->Shutdown();
 }
@@ -104,10 +104,13 @@ void SteamInputBridge::poll()
 
         foreach (auto handle, updated) {
             auto inputType = SteamInput()->GetInputTypeForHandle(handle);
+            auto name = nameForControllerType(inputType);
+
             m_connectedControllers << QVariantMap({
                                        { "handle", handle },
                                        { "type", inputType },
-                                       { "name", nameForControllerType(inputType) },
+                                       { "name", name },
+                                       { "image", QString("qrc:/resources/images/controllers/%1.png").arg(name) }
                                    });
         }
         emit connectedControllersChanged(m_connectedControllers);

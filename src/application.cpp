@@ -13,7 +13,8 @@
 #include "application.h"
 #include "fsbridge.h"
 #include "gamepadbridge.h"
-#include "steamapibridge.h"
+#include "steaminputbridge.h"
+#include "steamutilsbridge.h"
 
 
 
@@ -28,7 +29,11 @@ Application::Application(int &argc, char **argv)
 
     m_engine->rootContext()->setContextProperty("fs_bridge", new FSBridge(m_engine));
     m_engine->rootContext()->setContextProperty("gamepad_bridge", new GamepadBridge(m_engine));
-    m_engine->rootContext()->setContextProperty("steam_api_bridge", new SteamAPIBridge(m_engine));
+
+    m_engine->rootContext()->setContextProperty("steam_utils", new SteamUtilsBridge(m_engine));
+
+    auto steamInput = new SteamInputBridge(m_engine);
+    m_engine->rootContext()->setContextProperty("steam_input", steamInput);
 
     m_engine->load("qrc:/resources/qml/MainWindow.qml");
 
@@ -39,8 +44,9 @@ Application::Application(int &argc, char **argv)
     m_engine->rootContext()->setContextProperty("gamepad_bridge", new GamepadBridge(mainWindow));
 
 
-    auto runCallbacks = [](){
+    auto runCallbacks = [steamInput](){
         SteamAPI_RunCallbacks();
+        steamInput->poll();
     };
 
     auto callbackTimer = new QTimer(m_engine);

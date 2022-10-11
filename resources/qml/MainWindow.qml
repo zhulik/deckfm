@@ -14,7 +14,7 @@ ApplicationWindow {
     title: "DeckFM"
     visible: true
 
-    visibility: steam_api_bridge.SteamUtils().IsSteamRunningOnSteamDeck ? "FullScreen" : "Windowed"
+    visibility: steam_utils.IsSteamRunningOnSteamDeck ? "FullScreen" : "Windowed"
 
     width: 1280
     height: 800
@@ -109,12 +109,12 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        steam_api_bridge.SteamInput().Init(true)
+        steam_input.init()
         gamepadWindow.open()
     }
 
     Component.onDestruction: {
-        steam_api_bridge.SteamInput().Shutdown()
+        steam_input.shutdown()
     }
 
     GamepadWindow {
