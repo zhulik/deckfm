@@ -120,9 +120,16 @@ ApplicationWindow {
     GamepadWindow {
         id: gamepadWindow
 
-        anchors.centerIn: parent
-        width: parent.width * 0.7
-        height: parent.height * 0.7
+        // For some reason this does not work propertly on deck
+//        anchors.centerIn: parent
+//        width: parent.width - 40
+//        height: parent.height - 40
+
+        x: 20
+        y: 20
+
+        width: parent.width - 2 * x
+        height: parent.height - 2* y
 
         onClosed: {
             directoryView.forceActiveFocus()
