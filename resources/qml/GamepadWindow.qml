@@ -18,7 +18,7 @@ Dialog {
             anchors.fill: parent
 
             ToolButton {
-                text: "Gamepad"
+                text: "Gamepads"
 
                 font.pointSize: 24
                 Layout.fillWidth: parent
@@ -49,10 +49,22 @@ Dialog {
             Layout.alignment: Qt.AlignTop
 
             Repeater {
-                id: repeater
-
+                id: tabRepeater
+//                model: [
+//                    {
+//                        "name": "Steam",
+//                        "handle": 12345,
+//                        "image": "qrc:/resources/images/controllers/Steam.png",
+//                        "type": 1
+//                    },
+//                    {
+//                        "name": "Steam Deck",
+//                        "handle": 12346,
+//                        "image": "qrc:/resources/images/controllers/Steam Deck.png",
+//                        "type": 2
+//                    }
+//                ]
                 model: steam_input.connectedControllers
-
                 TabButton {
                     text: modelData.name
                     width: implicitWidth
@@ -60,36 +72,54 @@ Dialog {
             }
         }
 
+        ListView {
+            id: view
 
-        Item {
-            id: controllerView
             Layout.fillWidth: parent
-
             Layout.fillHeight: parent
+            clip: true
+            model: tabRepeater.model
+            orientation: ListView.Horizontal
+            snapMode: ListView.SnapOneItem
+            highlightRangeMode: ListView.StrictlyEnforceRange
 
 
-            readonly property var controller: repeater.model[tabBar.currentIndex]
+            preferredHighlightBegin: 0
+            preferredHighlightEnd: 10
 
-            RowLayout {
-                visible: tabBar.count > 0
+            onCurrentIndexChanged: {
+                tabBar.currentIndex = currentIndex
+            }
 
-                anchors.fill: parent
 
-                Label {
-                    Layout.preferredWidth: parent.width / 2
-                    text: `Name: ${controllerView.controller.name}`
+            delegate: Item {
+                id: gamepadItem
 
-                }
+                height: view.height
+                width: view.width
 
-                Image {
-                    Layout.fillHeight: parent
-                    Layout.preferredWidth: parent.width / 2
+                RowLayout {
+                    id: layout
+                    visible: tabBar.count > 0
 
-                    verticalAlignment: Image.AlignVCenter
-                    horizontalAlignment: Image.AlignHCenter
+                    anchors.fill: gamepadItem
 
-                    fillMode: Image.PreserveAspectFit
-                    source: controllerView.controller.image
+                    Label {
+                        Layout.preferredWidth: gamepadItem.width / 2
+                        text: `Name: ${modelData.name}`
+
+                    }
+
+                    Image {
+                        Layout.fillHeight: gamepadItem
+                        Layout.preferredWidth: gamepadItem.width / 2
+
+                        verticalAlignment: Image.AlignVCenter
+                        horizontalAlignment: Image.AlignHCenter
+
+                        fillMode: Image.PreserveAspectFit
+                        source: modelData.image
+                    }
                 }
             }
         }
