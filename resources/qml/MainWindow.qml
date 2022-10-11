@@ -110,6 +110,7 @@ ApplicationWindow {
 
     Component.onCompleted: {
         steam_input.init()
+//        gamepadWindow.open()
     }
 
     Component.onDestruction: {
@@ -118,6 +119,10 @@ ApplicationWindow {
 
     GamepadWindow {
         id: gamepadWindow
+
+        anchors.centerIn: parent
+        width: parent.width * 0.7
+        height: parent.height * 0.7
 
         onClosed: {
             directoryView.forceActiveFocus()

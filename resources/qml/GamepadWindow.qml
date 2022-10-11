@@ -9,9 +9,6 @@ import "./MDI" as MDI
 Dialog {
     id: root
     Material.theme: Material.Dark
-    anchors.centerIn: parent
-    width: parent.width * 0.98
-    height: parent.height * 0.98
     modal: true
 
 

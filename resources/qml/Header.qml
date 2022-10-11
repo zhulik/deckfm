@@ -36,8 +36,6 @@ ToolBar {
             Layout.fillWidth: parent
         }
 
-        ToolSeparator {}
-
         MDI.Button {
             iconName: "gamepad"
             Layout.alignment: Qt.AlignRight
