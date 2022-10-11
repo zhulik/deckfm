@@ -9,6 +9,7 @@ Menu {
     modal: true
 
     signal exitClicked
+    signal gamepadClicked
 
     anchors.centerIn: parent
 
@@ -17,13 +18,9 @@ Menu {
     }
 
     MDI.MenuItem {
-        iconName: "windowClose"
-        itemText: "Exit"
-    }
-
-    MDI.MenuItem {
-        iconName: "windowClose"
-        itemText: "Exit"
+        iconName: "gamepad"
+        itemText: "Gamepads"
+        onTriggered: root.gamepadClicked()
     }
 
     MenuSeparator {}

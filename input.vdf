@@ -12,18 +12,19 @@
 	}
 	"actions"
 	{
-		"menu_controls"
+		"folder_navigation"
 		{
-			"title"		"#MenuControls"
+			"title"		"#FolderNavigation"
 			"legacy_set"		"0"
 			"Button"
 			{
-				"menu_up"		"#MenuUp"
-				"menu_down"		"#MenuDown"
-				"menu_left"		"#MenuLeft"
-				"menu_right"		"#MenuRight"
-				"menu_select"		"#MenuSelect"
-				"menu_cancel"		"#MenuCancel"
+				"folder_up"		"#FolderUp"
+				"folder_down"		"#FolderDown"
+				"folder_left"		"#FolderLeft"
+				"folder_right"		"#FolderRight"
+
+				"folder_activate"		"#FolderActivate"
+				"folder_go_up"		"#FolderGoUp"
 			}
 		}
 	}
@@ -34,21 +35,17 @@
 	{
 		"english"
 		{
-			"title"		"Space War Action Set Config Sample"
-			"description"		"This is an example configuration for using Steamworks Action Sets."
+			"title"		"DeckFM config"
+			"description"		"DeckFM config"
 			"AnalogControls"		"Analog Controls"
-			"TurnLeft"		"Turn Left"
-			"TurnRight"		"Turn Right"
-			"FireLasers"		"Fire Lasers"
-			"PauseMenu"		"Pause Menu"
-			"BackwardThrust"		"Backward Thrust"
-			"MenuControls"		"Menu Controls"
-			"MenuUp"		"Menu Up"
-			"MenuDown"		"Menu Down"
-			"MenuLeft"		"Menu Left"
-			"MenuRight"		"Menu Right"
-			"MenuSelect"		"Menu Select"
-			"ThrustLayer"		"Thrust Layer"
+			"FolderNavigation"		"Folder Controls"
+
+			"FolderUp"		"Folder Up"
+			"FolderDown"		"Folder Down"
+			"FolderLeft"		"Folder Left"
+			"FolderRight"		"Folder Right"
+			"FolderActivate"		"Folder Activate"
+			"FolderGoUp"		"Folder Go Up"
 		}
 	}
 }

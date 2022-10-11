@@ -21,7 +21,7 @@ set(PROJECT_SOURCES ${sources} qml.qrc)
 
 configure_file(${CMAKE_SOURCE_DIR}/steam_appid.txt ${CMAKE_CURRENT_BINARY_DIR}/steam_appid.txt COPYONLY)
 configure_file(${CMAKE_SOURCE_DIR}/input.vdf ${CMAKE_CURRENT_BINARY_DIR}/input.vdf COPYONLY)
-#configure_file(${CMAKE_SOURCE_DIR}/steam_controller.vdf ${CMAKE_CURRENT_BINARY_DIR}/steam_controller.vdf COPYONLY)
+configure_file(${CMAKE_SOURCE_DIR}/steam_controller.vdf ${CMAKE_CURRENT_BINARY_DIR}/steam_controller.vdf COPYONLY)
 
 add_executable(deckfm ${PROJECT_SOURCES})
 target_link_libraries(deckfm PRIVATE Qt5::Core Qt5::Quick Qt5::QuickControls2 Qt5::Gamepad ${CMAKE_SOURCE_DIR}/libsteam_api.so)

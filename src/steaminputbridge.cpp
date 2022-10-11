@@ -6,61 +6,60 @@
 
 #include "steaminputbridge.h"
 
-QString nameForControllerType(ESteamInputType inputType) {
-    switch(inputType)
-    {
-    case k_ESteamInputType_SteamController:
-        return "Steam";
-        break;
-    case k_ESteamInputType_XBox360Controller:
-        return "XBox 360";
-        break;
-    case k_ESteamInputType_XBoxOneController:
-        return "XBox One";
-        break;
-    case k_ESteamInputType_GenericGamepad:
-        return "Generic";
-        break;
-    case k_ESteamInputType_PS3Controller:
-        return "PS3";
-        break;
-    case k_ESteamInputType_PS4Controller:
-        return "PS4";
-        break;
-    case k_ESteamInputType_AndroidController:
-        return "Android";
-        break;
-    case k_ESteamInputType_AppleMFiController:
-        return "Apple";
-        break;
-    case k_ESteamInputType_SteamDeckController:
-        return "Steam Deck";
-        break;
-    case k_ESteamInputType_SwitchJoyConPair:
-        return "Switch JoyCon pair";
-        break;
-    case k_ESteamInputType_SwitchJoyConSingle:
-        return "Switch JoyCon single";
-        break;
-    case k_ESteamInputType_SwitchProController:
-        return "Switch Pro";
-        break;
-    case k_ESteamInputType_MobileTouch:
-        return "Mobile Touch";
-        break;
-    default:
-        return "Unknown";
+    static const QStringList actionSets{
+                                        "folder_navigation",
+                                        };
+
+static const QStringList digitalGameActions{
+    "folder_up",
+    "folder_down",
+    "folder_left",
+    "folder_right",
+    "folder_activate",
+    "folder_go_up"
+};
+
+    static const QMap<ESteamInputType, QString> controllerNames{
+                                                                {k_ESteamInputType_SteamController, "Steam"},
+                                                                {k_ESteamInputType_XBox360Controller, "XBox 360"},
+                                                                {k_ESteamInputType_XBoxOneController, "XBox One"},
+                                                                {k_ESteamInputType_GenericGamepad, "Generic"},
+                                                                {k_ESteamInputType_PS3Controller, "PS3"},
+                                                                {k_ESteamInputType_PS4Controller, "PS4"},
+                                                                {k_ESteamInputType_PS5Controller, "PS5"},
+                                                                {k_ESteamInputType_AndroidController, "Android"},
+                                                                {k_ESteamInputType_AppleMFiController, "Apple"},
+                                                                {k_ESteamInputType_SteamDeckController, "Steam Deck"},
+                                                                {k_ESteamInputType_SwitchJoyConPair, "Switch JoyCon Pair"},
+                                                                {k_ESteamInputType_SwitchJoyConSingle, "Switch JoyCon Single"},
+                                                                {k_ESteamInputType_SwitchProController, "Switch Pro"},
+                                                                {k_ESteamInputType_MobileTouch, "Mobile Touch"},
+                                                                };
+
+QString nameForControllerType(ESteamInputType inputType)
+{
+    if (controllerNames.contains(inputType)) {
+        return controllerNames[inputType];
     }
+    return "Unknown";
 }
 
-template<typename T>
-QList<T> getConnectedControllers() {
-    QList<T> result;
+QList<ControllerInfo> getConnectedControllers()
+{
+    QList<ControllerInfo> result;
     ControllerHandle_t handles[STEAM_INPUT_MAX_COUNT];
     auto n = SteamInput()->GetConnectedControllers( handles );
 
     for(int i = 0; i < n; i++) {
-        result << handles[i];
+        auto inputType = SteamInput()->GetInputTypeForHandle(handles[i]);
+        auto name = nameForControllerType(inputType);
+
+        result << ControllerInfo{
+            handles[i],
+            name,
+            inputType,
+            QString("qrc:/resources/images/controllers/%1.png").arg(name)
+        };
     }
     return result;
 }
@@ -71,70 +70,194 @@ SteamInputBridge::SteamInputBridge(QObject *parent)
 
 }
 
-bool SteamInputBridge::init()
+void SteamInputBridge::init()
 {
     if (!(SteamInput()->Init(true))) {
-        return false;
+        throw "ERROR";
     }
     auto path = QDir::current().filePath("input.vdf");
 
-    if (!SteamInput()->SetInputActionManifestFilePath( path.toLocal8Bit() )) {
+    if (!SteamInput()->SetInputActionManifestFilePath(path.toLocal8Bit())) {
         throw "error";
     }
-
-    return true;
-
 }
 
-bool SteamInputBridge::shutdown()
+void SteamInputBridge::shutdown()
 {
-    return SteamInput()->Shutdown();
-}
-
-QVariantList SteamInputBridge::GetConnectedControllers() const
-{
-    return getConnectedControllers<QVariant>();
+    if (SteamInput()->Shutdown()) {
+        throw "ERROR";
+    }
 }
 
 void SteamInputBridge::poll()
 {
-    auto updated = getConnectedControllers<ControllerHandle_t>();
-
-    if (updated != m_controllerHandles) {
-        m_controllerHandles = updated;
-        m_connectedControllers.clear();
-
-        foreach (auto handle, updated) {
-            auto inputType = SteamInput()->GetInputTypeForHandle(handle);
-            auto name = nameForControllerType(inputType);
-
-            m_connectedControllers << QVariantMap({
-                                       { "handle", handle },
-                                       { "type", inputType },
-                                       { "name", name },
-                                       { "image", QString("qrc:/resources/images/controllers/%1.png").arg(name) }
-                                   });
-        }
-        emit connectedControllersChanged(m_connectedControllers);
-    }
-
-    if (!updated.empty()) {
-        auto menuControlSet = SteamInput()->GetActionSetHandle("menu_controls");
-        SteamInput()->ActivateActionSet(updated[0], menuControlSet);
-
-        SteamInput()->RunFrame();
-
-        auto menuAction = SteamInput()->GetDigitalActionHandle("menu_select");
-        SteamAPI_RunCallbacks();
-
-        auto digitalData = SteamInput()->GetDigitalActionData(updated[0], menuAction);
-        auto state = digitalData.bActive && digitalData.bState;
-
-        emit digitalActionActivated(QString("menu_select: %1").arg(state), state);
-    }
+    updateControllers();
+    pollControllers();
 }
 
 QVariantList SteamInputBridge::connectedControllers() const
 {
-    return m_connectedControllers;
+    QVariantList result;
+    foreach(auto &info, m_connectedControllers) {
+        result << QVariantMap({
+            { "handle", info.handle },
+            { "type", info.type },
+            { "name", info.name },
+            { "image", QString("qrc:/resources/images/controllers/%1.png").arg(info.name) }
+        });
+    }
+    return result;
+}
+
+void SteamInputBridge::updateControllers()
+{
+    auto updated = ::getConnectedControllers();
+
+    if(updated.empty()) {
+        m_digitalActions.clear();
+        emit digitalActionsChanged(digitalActions());
+        m_actionSets.clear();
+    }
+
+    fillActionSets();
+    fillDigitalActions();
+
+    if (updated == m_connectedControllers) {
+        return;
+    }
+
+    m_connectedControllers = updated;
+
+    emit connectedControllersChanged(connectedControllers());
+
+    if (m_actionSet == "") {
+        setActionSet("folder_navigation");
+    }
+}
+
+void SteamInputBridge::pollControllers()
+{
+    if (m_connectedControllers.empty()) {
+        return;
+    }
+
+    auto states = QMap<QString, bool>();
+
+    foreach(auto &e, m_digitalActions.toStdMap()) {
+        auto digitalData = SteamInput()->GetDigitalActionData(m_connectedControllers[0].handle, e.second.handle);
+        states[e.first] = digitalData.bActive && digitalData.bState;
+    }
+
+    if (states != m_lastDigitalActionStates) {
+        m_lastDigitalActionStates = states;
+        emit digitalActionStatesChanged(digitalActionStates());
+    }
+
+
+
+    auto handle = SteamInput()->GetCurrentActionSet(m_connectedControllers[0].handle);
+
+    QString newSet;
+    foreach(auto &s, m_actionSets.toStdMap()) {
+        if (s.second.handle == handle) {
+            newSet = s.first;
+        }
+    }
+
+    if (newSet == "") {
+        throw "ERROR";
+    }
+
+    if (newSet != m_actionSet) {
+        m_actionSet = newSet;
+        emit actionSetChanged(newSet);
+    }
+}
+
+void SteamInputBridge::fillDigitalActions()
+{
+    if(!m_digitalActions.empty() || m_connectedControllers.empty()) {
+        return;
+    }
+
+    foreach(auto &action, digitalGameActions) {
+        auto handle = SteamInput()->GetDigitalActionHandle(action.toLocal8Bit());
+
+        if (handle == 0) {
+            throw "ERROR";
+        }
+
+        QList<EInputActionOrigin> origins;
+        QStringList glyphs;
+
+        EInputActionOrigin originsBuf[STEAM_INPUT_MAX_ORIGINS];
+
+        auto n = SteamInput()->GetDigitalActionOrigins(m_connectedControllers[0].handle, m_actionSets[m_actionSet].handle, handle, originsBuf);
+
+        for(int i = 0; i < n; i++) {
+            origins << originsBuf[i];
+            glyphs << SteamInput()->GetGlyphSVGForActionOrigin(originsBuf[i], 0);
+        }
+
+            m_digitalActions[action] = DigitalAction{
+                handle,
+                action,
+                origins,
+                glyphs,
+            };
+    }
+    emit digitalActionsChanged(digitalActions());
+}
+
+void SteamInputBridge::fillActionSets()
+{
+    if(!m_actionSets.empty()) {
+        return;
+    }
+    foreach(auto &set, actionSets) {
+        auto handle = SteamInput()->GetActionSetHandle(set.toLocal8Bit());
+
+        if (handle == 0) {
+            throw "ERROR";
+        }
+
+            m_actionSets[set] = ActionSet{
+                                          handle,
+                                          set,
+                                          };
+
+    }
+}
+
+const QString &SteamInputBridge::actionSet() const
+{
+    return m_actionSet;
+}
+
+void SteamInputBridge::setActionSet(const QString &newActionSet)
+{
+    if (m_actionSet == newActionSet)
+        return;
+    SteamInput()->ActivateActionSet(m_connectedControllers[0].handle, m_actionSets[newActionSet].handle);
+}
+
+QVariantMap SteamInputBridge::digitalActionStates() const
+{
+        QVariantMap  result;
+        foreach(auto &e, m_lastDigitalActionStates.toStdMap()) {
+            result[e.first] = e.second;
+        }
+        return result;
+}
+
+QVariantMap SteamInputBridge::digitalActions() const
+{
+    QVariantMap  result;
+    foreach(auto &e, m_digitalActions.toStdMap()) {
+        result[e.first] = QVariantMap{
+            {"name", e.second.name},
+            {"glyphs", e.second.glyphs}
+        };
+    }
+    return result;
 }

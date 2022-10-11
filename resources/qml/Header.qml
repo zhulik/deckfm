@@ -20,15 +20,9 @@ ToolBar {
             onClicked: root.menuClicked()
         }
 
-        ToolSeparator {}
-
         ToolButton {
             text: "DECKFM"
-
             font.pointSize: 24
-            Layout.fillWidth: parent
-            Layout.maximumWidth: 150
-
             onClicked: root.logoClicked()
         }
 

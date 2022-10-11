@@ -102,10 +102,8 @@ ApplicationWindow {
         id: globalMenu
 
         onExitClicked: mainWindow.close()
-
-        onClosed: {
-            directoryViewLeft.forceActiveFocus()
-        }
+        onClosed: directoryViewLeft.forceActiveFocus()
+        onGamepadClicked: gamepadWindow.open()
     }
 
     Component.onCompleted: {

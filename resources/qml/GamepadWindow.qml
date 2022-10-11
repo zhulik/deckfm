@@ -21,8 +21,17 @@ Dialog {
                 text: "Gamepads"
 
                 font.pointSize: 24
-                Layout.fillWidth: parent
-                Layout.maximumWidth: 200
+            }
+
+            ToolButton {
+                text: "TEST"
+
+                font.pointSize: 24
+                onClicked: {
+//                    console.log(steam_input.iconForAction("folder_down"))
+//                    console.log(steam_input.iconForAction("folder_go_up"))
+                    console.log(steam_input.iconForAction("folder_activated"))
+                }
             }
 
             Item {
@@ -38,7 +47,6 @@ Dialog {
             }
         }
     }
-    footer: ToolBar {}
 
     ColumnLayout {
         anchors.fill: parent
@@ -47,6 +55,8 @@ Dialog {
             id: tabBar
             Layout.preferredWidth: parent.width
             Layout.alignment: Qt.AlignTop
+
+            currentIndex: view.currentIndex
 
             Repeater {
                 id: tabRepeater
@@ -80,17 +90,9 @@ Dialog {
             clip: true
             model: tabRepeater.model
             orientation: ListView.Horizontal
-            snapMode: ListView.SnapOneItem
+            snapMode: ListView.SnapToItem
+
             highlightRangeMode: ListView.StrictlyEnforceRange
-
-
-            preferredHighlightBegin: 0
-            preferredHighlightEnd: 10
-
-            onCurrentIndexChanged: {
-                tabBar.currentIndex = currentIndex
-            }
-
 
             delegate: Item {
                 id: gamepadItem
@@ -112,15 +114,15 @@ Dialog {
                         }
 
                         Label {
-                            id: menuSelectState
+                            text: `Current action set: ${steam_input.actionSet}`
+                        }
 
-                            Connections {
-                                    target: steam_input
+                        Label {
+                            text: `Digital action states: ${JSON.stringify(steam_input.digitalActionStates, null, 2)}`
+                        }
 
-                                    function onDigitalActionActivated(name, active) {
-                                        menuSelectState.text = `${name}`
-                                    }
-                                }
+                        Label {
+                            text: `Digital actions: ${JSON.stringify(steam_input.digitalActions, null, 2)}`
                         }
                     }
 
