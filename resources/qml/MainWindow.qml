@@ -14,7 +14,7 @@ ApplicationWindow {
     title: "DeckFM"
     visible: true
 
-    visibility: steam_utils.IsSteamRunningOnSteamDeck ? "FullScreen" : "Windowed"
+    visibility: steam_utils.isOnDeck ? "FullScreen" : "Windowed"
 
     width: 1280
     height: 800

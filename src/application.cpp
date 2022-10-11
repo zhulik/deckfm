@@ -34,7 +34,7 @@ Application::Application(int &argc, char **argv)
     auto steamUtils = new SteamUtilsBridge(m_engine);
 
     m_engine->rootContext()->setContextProperty("steam_utils", steamUtils);
-    if (steamUtils->IsSteamRunningOnSteamDeck()) {
+    if (steamUtils->isOnDeck()) {
         setOverrideCursor(QCursor(Qt::BlankCursor));
     }
 

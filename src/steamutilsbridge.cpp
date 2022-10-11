@@ -8,7 +8,7 @@ SteamUtilsBridge::SteamUtilsBridge(QObject *parent)
 
 }
 
-bool SteamUtilsBridge::IsSteamRunningOnSteamDeck() const
+bool SteamUtilsBridge::isOnDeck() const
 {
     return SteamUtils()->IsSteamRunningOnSteamDeck();
 }

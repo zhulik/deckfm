@@ -23,7 +23,7 @@ ToolBar {
         ToolSeparator {}
 
         ToolButton {
-            text: steam_utils.IsSteamRunningOnSteamDeck ? "DECKFM" : "DFM"
+            text: "DECKFM"
 
             font.pointSize: 24
             Layout.fillWidth: parent
@@ -48,6 +48,7 @@ ToolBar {
             iconName: "windowClose"
             Layout.alignment: Qt.AlignRight
             onClicked: root.exitClicked()
+            visible: !steam_utils.isOnDeck
         }
     }
 }
