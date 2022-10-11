@@ -14,7 +14,7 @@ ApplicationWindow {
     title: "DeckFM"
     visible: true
 
-    visibility: "Windowed"
+    visibility: steam_api_bridge.SteamUtils().IsSteamRunningOnSteamDeck ? "FullScreen" : "Windowed"
 
     width: 1280
     height: 800
@@ -34,6 +34,10 @@ ApplicationWindow {
 
         onExitClicked: {
             mainWindow.close()
+        }
+
+        onGamepadClicked: {
+            gamepadWindow.open()
         }
     }
 
@@ -62,7 +66,7 @@ ApplicationWindow {
         height: parent.height - header.height - footer.height
 
         onClosed: {
-            directoryViewLeft.forceActiveFocus()
+            directoryView.forceActiveFocus()
         }
     }
 
@@ -81,7 +85,7 @@ ApplicationWindow {
             Layout.fillHeight: true
 
             DirView.DirectoryView {
-                id: directoryViewLeft
+                id: directoryView
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 focus: true
@@ -106,6 +110,7 @@ ApplicationWindow {
 
     Component.onCompleted: {
         steam_api_bridge.SteamInput().Init(true)
+        gamepadWindow.open()
     }
 
     onClosing: {
@@ -117,6 +122,7 @@ ApplicationWindow {
 
         onTriggered: {
             steam_api_bridge.RunCallbacks()
+            steam_api_bridge.SteamInput().poll()
         }
 
         repeat: true
@@ -126,5 +132,14 @@ ApplicationWindow {
 
     onFrameSwapped: {
         steam_api_bridge.RunCallbacks()
+        steam_api_bridge.SteamInput().poll()
+    }
+
+    GamepadWindow {
+        id: gamepadWindow
+
+        onClosed: {
+            directoryView.forceActiveFocus()
+        }
     }
 }

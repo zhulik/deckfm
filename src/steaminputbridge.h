@@ -1,10 +1,12 @@
 #pragma once
 
 #include <QObject>
+#include "steam/steam_api.h"
 
 class SteamInputBridge : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QVariantList connectedControllers READ connectedControllers NOTIFY connectedControllersChanged)
 public:
     explicit SteamInputBridge(QObject *parent = nullptr);
 
@@ -14,6 +16,19 @@ public:
     Q_INVOKABLE
     bool Shutdown();
 
-signals:
+    Q_INVOKABLE
+    QVariantList GetConnectedControllers() const;
 
+    Q_INVOKABLE
+    void poll();
+
+    QVariantList connectedControllers() const;
+
+signals:
+    void connectedControllersChanged(QVariantList);
+
+private:
+    QList<ControllerHandle_t> m_controllerHandles;
+
+    QVariantList m_connectedControllers;
 };

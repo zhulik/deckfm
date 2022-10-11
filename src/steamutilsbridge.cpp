@@ -12,3 +12,8 @@ bool SteamUtilsBridge::IsSteamRunningOnSteamDeck() const
 {
     return SteamUtils()->IsSteamRunningOnSteamDeck();
 }
+
+bool SteamUtilsBridge::IsSteamInBigPictureMode() const
+{
+    return SteamUtils()->IsSteamInBigPictureMode();
+}

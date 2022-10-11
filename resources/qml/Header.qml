@@ -9,6 +9,7 @@ ToolBar {
 
     signal menuClicked
     signal logoClicked
+    signal gamepadClicked
     signal exitClicked
 
     RowLayout {
@@ -33,6 +34,14 @@ ToolBar {
 
         Item {
             Layout.fillWidth: parent
+        }
+
+        ToolSeparator {}
+
+        MDI.Button {
+            iconName: "gamepad"
+            Layout.alignment: Qt.AlignRight
+            onClicked: root.gamepadClicked()
         }
 
         ToolSeparator {}

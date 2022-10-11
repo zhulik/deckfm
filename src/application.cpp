@@ -14,7 +14,7 @@
 Application::Application(int &argc, char **argv)
     : QGuiApplication{argc, argv}
 {
-    QFontDatabase::addApplicationFont(":/fonts/materialdesignicons-webfont.ttf");
+    QFontDatabase::addApplicationFont(":/resources/fonts/materialdesignicons-webfont.ttf");
     QQuickStyle::setStyle("Material");
 
 
@@ -24,7 +24,7 @@ Application::Application(int &argc, char **argv)
     m_engine->rootContext()->setContextProperty("gamepad_bridge", new GamepadBridge(m_engine));
     m_engine->rootContext()->setContextProperty("steam_api_bridge", new SteamAPIBridge(m_engine));
 
-    m_engine->load("qrc:/qml/MainWindow.qml");
+    m_engine->load("qrc:/resources/qml/MainWindow.qml");
 
     if (m_engine->rootObjects().count() == 0) {
         throw "error";

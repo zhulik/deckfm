@@ -1,6 +1,69 @@
+#include <QDir>
+
+#include "qdebug.h"
+
 #include "steam/steam_api.h"
 
 #include "steaminputbridge.h"
+
+QString nameForControllerType(ESteamInputType inputType) {
+    switch(inputType)
+    {
+    case k_ESteamInputType_SteamController:
+        return "Steam";
+        break;
+    case k_ESteamInputType_XBox360Controller:
+        return "XBox 360";
+        break;
+    case k_ESteamInputType_XBoxOneController:
+        return "XBox One";
+        break;
+    case k_ESteamInputType_GenericGamepad:
+        return "Generic";
+        break;
+    case k_ESteamInputType_PS3Controller:
+        return "PS3";
+        break;
+    case k_ESteamInputType_PS4Controller:
+        return "PS4";
+        break;
+    case k_ESteamInputType_AndroidController:
+        return "Android";
+        break;
+    case k_ESteamInputType_AppleMFiController:
+        return "Apple";
+        break;
+    case k_ESteamInputType_SteamDeckController:
+        return "Steam Deck";
+        break;
+    case k_ESteamInputType_SwitchJoyConPair:
+        return "Switch JoyCon pair";
+        break;
+    case k_ESteamInputType_SwitchJoyConSingle:
+        return "Switch JoyCon single";
+        break;
+    case k_ESteamInputType_SwitchProController:
+        return "Switch Pro";
+        break;
+    case k_ESteamInputType_MobileTouch:
+        return "Mobile Touch";
+        break;
+    default:
+        return "Unknown";
+    }
+}
+
+template<typename T>
+QList<T> getConnectedControllers() {
+    QList<T> result;
+    ControllerHandle_t handles[STEAM_INPUT_MAX_COUNT];
+    auto n = SteamInput()->GetConnectedControllers( handles );
+
+    for(int i = 0; i < n; i++) {
+        result << handles[i];
+    }
+    return result;
+}
 
 SteamInputBridge::SteamInputBridge(QObject *parent)
     : QObject{parent}
@@ -10,10 +73,48 @@ SteamInputBridge::SteamInputBridge(QObject *parent)
 
 bool SteamInputBridge::Init(bool b)
 {
-    return SteamInput()->Init(b);
+    if (SteamInput()->Init(b)) {
+        auto path = QDir::current().filePath("input.vdf");
+
+        if (!SteamInput()->SetInputActionManifestFilePath( path.toLocal8Bit() )) {
+            throw "error";
+        }
+        return true;
+    }
+    return false;
 }
 
 bool SteamInputBridge::Shutdown()
 {
     return SteamInput()->Shutdown();
+}
+
+QVariantList SteamInputBridge::GetConnectedControllers() const
+{
+    return getConnectedControllers<QVariant>();
+}
+
+void SteamInputBridge::poll()
+{
+    auto updated = getConnectedControllers<ControllerHandle_t>();
+
+    if (updated != m_controllerHandles) {
+        m_controllerHandles = updated;
+        m_connectedControllers.clear();
+
+        foreach (auto handle, updated) {
+            auto inputType = SteamInput()->GetInputTypeForHandle(handle);
+            m_connectedControllers << QVariantMap({
+                                       { "handle", handle },
+                                       { "type", inputType },
+                                       { "name", nameForControllerType(inputType) },
+                                   });
+        }
+        emit connectedControllersChanged(m_connectedControllers);
+    }
+}
+
+QVariantList SteamInputBridge::connectedControllers() const
+{
+    return m_connectedControllers;
 }
