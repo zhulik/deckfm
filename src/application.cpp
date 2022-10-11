@@ -21,6 +21,7 @@
 Application::Application(int &argc, char **argv)
     : QGuiApplication{argc, argv}
 {
+    setOverrideCursor(QCursor(Qt::BlankCursor));
     QFontDatabase::addApplicationFont(":/resources/fonts/materialdesignicons-webfont.ttf");
     QQuickStyle::setStyle("Material");
 
