@@ -156,7 +156,7 @@ Dialog {
                                     Image {
                                         width: 40
                                         height: 40
-                                        source: glyphs[0]
+                                        source: `file://${glyphs[0]}`
                                     }
 
                                     Label {
