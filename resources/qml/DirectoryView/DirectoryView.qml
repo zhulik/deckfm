@@ -27,6 +27,7 @@ Item {
     }
 
     function onSteamInputDigitalStatesChanged(states) {
+        totalLabel.text = JSON.stringify(states)
         if(states["folder_down"]) {
             view.moveCurrentIndexDown();
         }
@@ -203,6 +204,7 @@ Item {
 
         RowLayout {
             Label {
+                id: totalLabel
                 text: `Total: ${folderModel.count}`
                 font.pointSize: 14
                 verticalAlignment: Text.AlignVCenter
