@@ -74,6 +74,7 @@ ListView {
 
         width: label.width
         height: root.height
+        focusPolicy: Qt.NoFocus
 
         onClicked: {
             root.pathSelected(path)

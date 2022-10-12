@@ -20,7 +20,7 @@ ToolBar {
             onClicked: root.menuClicked()
         }
 
-        ToolButton {
+        MDI.Button {
             text: "DECKFM"
             font.pointSize: 24
             onClicked: root.logoClicked()

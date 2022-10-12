@@ -45,8 +45,6 @@ ApplicationWindow {
         y: header.height
         width: Math.max(parent.width * 0.3, 450)
         height: parent.height - header.height - footer.height
-
-        onClosed: directoryView.forceActiveFocus()
     }
 
     footer: Footer {}
@@ -81,7 +79,6 @@ ApplicationWindow {
         id: globalMenu
 
         onExitClicked: mainWindow.close()
-        onClosed: directoryViewLeft.forceActiveFocus()
         onGamepadClicked: gamepadWindow.open()
     }
 
@@ -101,7 +98,5 @@ ApplicationWindow {
         y: 0
         width: parent.width - x
         height: parent.height - y
-
-        onClosed: directoryView.forceActiveFocus()
     }
 }

@@ -13,10 +13,6 @@ Menu {
 
     anchors.centerIn: parent
 
-    onOpened: {
-        exitItem.forceActiveFocus()
-    }
-
     MDI.MenuItem {
         iconName: "gamepad"
         itemText: "Gamepads"

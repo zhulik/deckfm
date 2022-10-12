@@ -16,15 +16,6 @@ Item {
     DirectoryModel {
         id: folderModel
         _showHidden: showHiddenSwitch.position === 1.0
-
-        onFolderChanged: {
-            root.reset()
-        }
-    }
-
-    function reset() {
-        root.forceActiveFocus()
-        view.currentIndex = 0
     }
 
     function cdIndex(index) {
@@ -85,16 +76,13 @@ Item {
             Switch {
                 id: showHiddenSwitch
                 text: "Show hidden"
-                onToggled: {
-                    root.reset()
-                }
+                focusPolicy: Qt.NoFocus
             }
 
             MDI.Button {
                 iconName: "arrowUp"
                 onClicked: {
                     folderModel.goUp()
-                    root.reset()
                 }
                 enabled: folderModel.canGoUp
             }
