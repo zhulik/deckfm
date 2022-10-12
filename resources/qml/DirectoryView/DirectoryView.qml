@@ -113,7 +113,7 @@ Item {
             Connections {
                 target: steam_input
                 function onAnalogActionStatesChanged(states) {
-                    view.flick(states["folder_scroll"].x * 100, states["folder_scroll"].y * 100)
+                    view.flick(states["folder_scroll"].x * 50, states["folder_scroll"].y * 50)
                 }
             }
 
