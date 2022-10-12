@@ -153,16 +153,16 @@ Dialog {
                                 RowLayout {
                                     anchors.fill: parent
 
-                                    Image {
-                                        width: 40
-                                        source: glyphs[0]
-                                    }
+//                                    Image {
+//                                        width: 40
+//                                        source: glyphs[0]
+//                                    }
 
                                     Label {
                                         Layout.fillWidth: parent
                                         height: parent.height
 
-                                        font.pixelSize: steam_input.digitalActionStates[name] ? 36 : 24
+                                        font.pixelSize: 24
                                         text: name
                                         verticalAlignment: Qt.AlignVCenter
                                     }
@@ -170,13 +170,13 @@ Dialog {
                             }
                         }
 
-                        Label {
-                            text: `Digital action states: ${JSON.stringify(steam_input.digitalActionStates, null, 2)}`
-                        }
+//                        Label {
+//                            text: `Digital action states: ${JSON.stringify(steam_input.digitalActionStates, null, 2)}`
+//                        }
 
-                        Label {
-                            text: `Digital actions: ${JSON.stringify(steam_input.digitalActions, null, 2)}`
-                        }
+//                        Label {
+//                            text: `Digital actions: ${JSON.stringify(steam_input.digitalActions, null, 2)}`
+//                        }
 
                     }
 
