@@ -25,6 +25,7 @@
 
 				"folder_activate"		"#FolderActivate"
 				"folder_go_up"		"#FolderGoUp"
+				"folder_go_home"		"#FolderGoHome"
 			}
 			"StickPadGyro"
 			{
@@ -52,10 +53,10 @@
 			"FolderDown"		"Folder Down"
 			"FolderLeft"		"Folder Left"
 			"FolderRight"		"Folder Right"
-			"FolderActivate"		"Folder Activate"
-			"FolderGoUp"		"Folder Go Up"
+			"FolderActivate"		"Open"
+			"FolderGoUp"		"Go Up"
+			"FolderGoHome"		"Go Home"
 			"FolderScroll"	"Folder Scroll"
 		}
 	}
 }
-

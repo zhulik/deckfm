@@ -6,9 +6,9 @@
 
 #include "steaminputbridge.h"
 
-    static const QStringList actionSets{
-                                        "folder_navigation",
-                                        };
+static const QStringList actionSets{
+    "folder_navigation"
+};
 
 static const QStringList digitalGameActions{
     "folder_up",
@@ -16,29 +16,30 @@ static const QStringList digitalGameActions{
     "folder_left",
     "folder_right",
     "folder_activate",
-    "folder_go_up"
+    "folder_go_up",
+    "folder_go_home"
 };
 
     static const QStringList analogGameActions{
                                                "folder_scroll",
                                                };
 
-    static const QMap<ESteamInputType, QString> controllerNames{
-                                                                {k_ESteamInputType_SteamController, "Steam"},
-                                                                {k_ESteamInputType_XBox360Controller, "XBox 360"},
-                                                                {k_ESteamInputType_XBoxOneController, "XBox One"},
-                                                                {k_ESteamInputType_GenericGamepad, "Generic"},
-                                                                {k_ESteamInputType_PS3Controller, "PS3"},
-                                                                {k_ESteamInputType_PS4Controller, "PS4"},
-                                                                {k_ESteamInputType_PS5Controller, "PS5"},
-                                                                {k_ESteamInputType_AndroidController, "Android"},
-                                                                {k_ESteamInputType_AppleMFiController, "Apple"},
-                                                                {k_ESteamInputType_SteamDeckController, "Steam Deck"},
-                                                                {k_ESteamInputType_SwitchJoyConPair, "Switch JoyCon Pair"},
-                                                                {k_ESteamInputType_SwitchJoyConSingle, "Switch JoyCon Single"},
-                                                                {k_ESteamInputType_SwitchProController, "Switch Pro"},
-                                                                {k_ESteamInputType_MobileTouch, "Mobile Touch"},
-                                                                };
+static const QMap<ESteamInputType, QString> controllerNames{
+    {k_ESteamInputType_SteamController, "Steam"},
+    {k_ESteamInputType_XBox360Controller, "XBox 360"},
+    {k_ESteamInputType_XBoxOneController, "XBox One"},
+    {k_ESteamInputType_GenericGamepad, "Generic"},
+    {k_ESteamInputType_PS3Controller, "PS3"},
+    {k_ESteamInputType_PS4Controller, "PS4"},
+    {k_ESteamInputType_PS5Controller, "PS5"},
+    {k_ESteamInputType_AndroidController, "Android"},
+    {k_ESteamInputType_AppleMFiController, "Apple"},
+    {k_ESteamInputType_SteamDeckController, "Steam Deck"},
+    {k_ESteamInputType_SwitchJoyConPair, "Switch JoyCon Pair"},
+    {k_ESteamInputType_SwitchJoyConSingle, "Switch JoyCon Single"},
+    {k_ESteamInputType_SwitchProController, "Switch Pro"},
+    {k_ESteamInputType_MobileTouch, "Mobile Touch"}
+};
 
 QString nameForControllerType(ESteamInputType inputType)
 {
