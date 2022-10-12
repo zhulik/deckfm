@@ -33,13 +33,20 @@ Item {
         if(states["folder_up"]) {
             view.moveCurrentIndexUp();
         }
-
         if(states["folder_left"]) {
             view.moveCurrentIndexLeft();
         }
-
         if(states["folder_right"]) {
             view.moveCurrentIndexRight();
+        }
+        if(states["folder_activate"]) {
+            root.cdIndex(view.currentIndex)
+        }
+        if(states["folder_go_up"]) {
+            folderModel.goUp()
+        }
+        if(states["folder_go_home"]) {
+            folderModel.goHome()
         }
     }
 
@@ -50,7 +57,6 @@ Item {
         switch (event.key) {
         case Qt.Key_Return:
             root.cdIndex(view.currentIndex)
-
             break
         case Qt.Key_Escape:
             folderModel.goUp()
