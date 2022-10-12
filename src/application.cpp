@@ -74,6 +74,6 @@ Application::Application(int &argc, char **argv)
             return;
         }
 
-        QMetaObject::invokeMethod(m_activeFocusItem, "onSteamInputDigitalStatesChanged", Q_ARG(QVariantMap, states));
+        QMetaObject::invokeMethod(m_activeFocusItem, "onSteamInputDigitalStatesChanged", Q_ARG(QVariant, states));
     });
 }

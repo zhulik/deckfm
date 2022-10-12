@@ -28,6 +28,7 @@ Item {
 
     function onSteamInputDigitalStatesChanged(states) {
         totalLabel.text = JSON.stringify(states)
+
         if(states["folder_down"]) {
             view.moveCurrentIndexDown();
         }
