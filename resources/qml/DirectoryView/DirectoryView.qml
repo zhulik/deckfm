@@ -110,6 +110,13 @@ Item {
         GridView {
             id: view
 
+            Connections {
+                target: steam_input
+                function onAnalogActionStatesChanged(states) {
+                    view.flick(states["folder_scroll"].x * 100, states["folder_scroll"].y * 100)
+                }
+            }
+
             model: folderModel
             Layout.fillWidth: true
             Layout.fillHeight: true

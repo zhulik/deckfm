@@ -108,7 +108,7 @@ ApplicationWindow {
 
     Component.onCompleted: {
         steam_input.init()
-        gamepadWindow.open()
+//        gamepadWindow.open()
     }
 
     Component.onDestruction: {
