@@ -26,6 +26,11 @@ ToolBar {
             onClicked: root.logoClicked()
         }
 
+        Label {
+            font.pointSize: 24
+            text: `Action set: ${steam_input.actionSet}`
+        }
+
         Item {
             Layout.fillWidth: parent
         }

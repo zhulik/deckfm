@@ -26,6 +26,7 @@ struct DigitalAction {
     QString name;
     QList<EInputActionOrigin> origins;
     QStringList glyphs;
+    QStringList localizedNames;
 
     bool operator==(const DigitalAction &other) {
         return handle == other.handle;
@@ -38,6 +39,7 @@ struct AnalogAction {
     QString name;
     QList<EInputActionOrigin> origins;
     QStringList glyphs;
+    QStringList localizedNames;
 
     bool operator==(const AnalogAction &other) {
         return handle == other.handle;

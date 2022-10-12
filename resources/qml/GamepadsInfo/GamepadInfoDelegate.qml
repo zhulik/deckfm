@@ -52,7 +52,7 @@ Item {
                             height: parent.height
 
                             font.pixelSize: steam_input.digitalActionStates[name] ? 36 : 24
-                            text: name
+                            text: JSON.stringify(localizedNames)
                             verticalAlignment: Qt.AlignVCenter
                         }
                     }
