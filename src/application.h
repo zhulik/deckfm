@@ -13,6 +13,6 @@ public:
 
 private:
     QQmlApplicationEngine *m_engine;
-    QQuickItem *m_activeFocusItem = 0;
+    QQuickItem *m_activeFocusItem = nullptr;
 
 };

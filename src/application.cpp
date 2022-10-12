@@ -4,6 +4,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickWindow>
+#include <QQuickItem>
 #include <QtGamepad/QGamepadManager>
 
 #include <QDebug>
@@ -63,5 +64,16 @@ Application::Application(int &argc, char **argv)
     QObject::connect(mainWindow, &QQuickWindow::frameSwapped, runCallbacks);
     QObject::connect(mainWindow, &QQuickWindow::activeFocusItemChanged, [mainWindow, this](){
         m_activeFocusItem = mainWindow->activeFocusItem();
+        if (m_activeFocusItem == nullptr) {
+            return;
+        }
+    });
+
+    QObject::connect(steamInput, &SteamInputBridge::digitalActionStatesChanged, [this](auto states){
+        if (m_activeFocusItem == nullptr) {
+            return;
+        }
+
+        QMetaObject::invokeMethod(m_activeFocusItem, "onSteamInputDigitalStatesChanged", Q_ARG(QVariantMap, states));
     });
 }

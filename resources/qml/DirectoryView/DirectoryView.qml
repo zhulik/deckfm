@@ -26,6 +26,24 @@ Item {
         root.fileOpened(folderModel.get(index, "fileUrl"))
     }
 
+    function onSteamInputDigitalStatesChanged(states) {
+        if(states["folder_down"]) {
+            view.moveCurrentIndexDown();
+        }
+        if(states["folder_up"]) {
+            view.moveCurrentIndexUp();
+        }
+
+        if(states["folder_left"]) {
+            view.moveCurrentIndexLeft();
+        }
+
+        if(states["folder_right"]) {
+            view.moveCurrentIndexRight();
+        }
+    }
+
+
     Keys.onPressed: {
         event.accepted = true
 
