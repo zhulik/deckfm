@@ -153,16 +153,16 @@ Dialog {
                                 RowLayout {
                                     anchors.fill: parent
 
-//                                    Image {
-//                                        width: 40
-//                                        source: glyphs[0]
-//                                    }
+                                    Image {
+                                        width: 40
+                                        source: glyphs[0]
+                                    }
 
                                     Label {
                                         Layout.fillWidth: parent
                                         height: parent.height
 
-                                        font.pixelSize: 24
+                                        font.pixelSize: steam_input.digitalActionStates[name] ? 36 : 24
                                         text: name
                                         verticalAlignment: Qt.AlignVCenter
                                     }
