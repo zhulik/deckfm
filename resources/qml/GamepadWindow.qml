@@ -25,26 +25,21 @@ Dialog {
                 font.pointSize: 24
             }
 
-            ToolButton {
-                text: "TEST"
-
-                font.pointSize: 24
-                onClicked: {
-                    //                    console.log(steam_input.iconForAction("folder_down"))
-                    //                    console.log(steam_input.iconForAction("folder_go_up"))
-                    console.log(steam_input.iconForAction("folder_activated"))
-                }
-            }
-
             Item {
                 Layout.fillWidth: parent
+            }
+
+            MDI.Button {
+                iconName: "applicationSettings"
+                onClicked: {
+                    steam_input.showBindingPanel()
+                }
             }
 
             ToolSeparator {}
 
             MDI.Button {
                 iconName: "windowClose"
-                Layout.alignment: Qt.AlignRight
                 onClicked: root.close()
             }
         }

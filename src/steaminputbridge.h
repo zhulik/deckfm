@@ -67,6 +67,9 @@ public:
     Q_INVOKABLE
         void shutdown();
 
+    Q_INVOKABLE
+        void showBindingPanel();
+
     void poll();
 
     QVariantList connectedControllers() const;

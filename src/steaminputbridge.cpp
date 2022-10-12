@@ -93,6 +93,11 @@ void SteamInputBridge::shutdown()
     }
 }
 
+void SteamInputBridge::showBindingPanel()
+{
+    SteamInput()->ShowBindingPanel(m_connectedControllers[0].handle);
+}
+
 void SteamInputBridge::poll()
 {
     updateControllers();
