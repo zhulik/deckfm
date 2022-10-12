@@ -20,5 +20,6 @@
         <file>resources/images/controllers/Steam.png</file>
         <file>resources/images/controllers/XBox One.png</file>
         <file>resources/images/controllers/Steam Deck.png</file>
+        <file>resources/qml/models/ListModel.qml</file>
     </qresource>
 </RCC>

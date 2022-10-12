@@ -26,6 +26,14 @@
 				"folder_activate"		"#FolderActivate"
 				"folder_go_up"		"#FolderGoUp"
 			}
+			"StickPadGyro"
+			{
+				"folder_scroll"
+				{
+					"title"			"#FolderScroll"
+					"input_mode"	"absolute_mouse"
+				}
+			}
 		}
 	}
 	"action_layers"
@@ -46,6 +54,7 @@
 			"FolderRight"		"Folder Right"
 			"FolderActivate"		"Folder Activate"
 			"FolderGoUp"		"Folder Go Up"
+			"FolderScroll"	"Folder Scroll"
 		}
 	}
 }

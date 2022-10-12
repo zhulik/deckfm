@@ -19,6 +19,10 @@ static const QStringList digitalGameActions{
     "folder_go_up"
 };
 
+    static const QStringList analogGameActions{
+                                               "folder_scroll",
+                                               };
+
     static const QMap<ESteamInputType, QString> controllerNames{
                                                                 {k_ESteamInputType_SteamController, "Steam"},
                                                                 {k_ESteamInputType_XBox360Controller, "XBox 360"},
@@ -78,7 +82,7 @@ void SteamInputBridge::init()
     auto path = QDir::current().filePath("input.vdf");
 
     if (!SteamInput()->SetInputActionManifestFilePath(path.toLocal8Bit())) {
-        throw "error";
+        throw "ERROR";
     }
 }
 
@@ -121,6 +125,7 @@ void SteamInputBridge::updateControllers()
 
     fillActionSets();
     fillDigitalActions();
+    fillAnalogActions();
 
     if (updated == m_connectedControllers) {
         return;
@@ -141,17 +146,8 @@ void SteamInputBridge::pollControllers()
         return;
     }
 
-    auto states = QMap<QString, bool>();
-
-    foreach(auto &e, m_digitalActions.toStdMap()) {
-        auto digitalData = SteamInput()->GetDigitalActionData(m_connectedControllers[0].handle, e.second.handle);
-        states[e.first] = digitalData.bActive && digitalData.bState;
-    }
-
-    if (states != m_lastDigitalActionStates) {
-        m_lastDigitalActionStates = states;
-        emit digitalActionStatesChanged(digitalActionStates());
-    }
+    pollAnalogActions();
+    pollDigitalActions();
 
 
 
@@ -171,6 +167,39 @@ void SteamInputBridge::pollControllers()
     if (newSet != m_actionSet) {
         m_actionSet = newSet;
         emit actionSetChanged(newSet);
+    }
+}
+
+void SteamInputBridge::pollDigitalActions()
+{
+    auto states = QMap<QString, bool>();
+
+    foreach(auto &e, m_digitalActions.toStdMap()) {
+        auto digitalData = SteamInput()->GetDigitalActionData(m_connectedControllers[0].handle, e.second.handle);
+        states[e.first] = digitalData.bActive && digitalData.bState;
+    }
+
+    if (states != m_lastDigitalActionStates) {
+        m_lastDigitalActionStates = states;
+        emit digitalActionStatesChanged(digitalActionStates());
+    }
+}
+
+void SteamInputBridge::pollAnalogActions()
+{
+    auto states = QMap<QString, QPair<float, float>>();
+
+    foreach(auto &e, m_analogActions.toStdMap()) {
+        auto analogData = SteamInput()->GetAnalogActionData(m_connectedControllers[0].handle, e.second.handle);
+
+//        if (analogData.bActive) {
+            states[e.first] = QPair(analogData.x, analogData.y);
+//        }
+    }
+
+    if (states != m_lastAnalogActionStates) {
+        m_lastAnalogActionStates = states;
+        emit analogActionStatesChanged(analogActionStates());
     }
 }
 
@@ -200,13 +229,47 @@ void SteamInputBridge::fillDigitalActions()
         }
 
             m_digitalActions[action] = DigitalAction{
-                handle,
-                action,
-                origins,
-                glyphs,
-            };
+                                                     handle,
+                                                     action,
+                                                     origins,
+                                                     glyphs,
+                                                     };
     }
     emit digitalActionsChanged(digitalActions());
+}
+
+void SteamInputBridge::fillAnalogActions()
+{
+    if(!m_analogActions.empty() || m_connectedControllers.empty()) {
+        return;
+    }
+
+    foreach(auto &action, analogGameActions) {
+        auto handle = SteamInput()->GetAnalogActionHandle(action.toLocal8Bit());
+        if (handle == 0) {
+            throw "ERROR";
+        }
+
+        QList<EInputActionOrigin> origins;
+        QStringList glyphs;
+
+        EInputActionOrigin originsBuf[STEAM_INPUT_MAX_ORIGINS];
+
+        auto n = SteamInput()->GetAnalogActionOrigins(m_connectedControllers[0].handle, m_actionSets[m_actionSet].handle, handle, originsBuf);
+
+        for(int i = 0; i < n; i++) {
+            origins << originsBuf[i];
+            glyphs << SteamInput()->GetGlyphSVGForActionOrigin(originsBuf[i], 0);
+        }
+
+            m_analogActions[action] = AnalogAction{
+                                                     handle,
+                                                     action,
+                                                     origins,
+                                                     glyphs,
+                                                     };
+    }
+    emit analogActionsChanged(analogActions());
 }
 
 void SteamInputBridge::fillActionSets()
@@ -243,11 +306,11 @@ void SteamInputBridge::setActionSet(const QString &newActionSet)
 
 QVariantMap SteamInputBridge::digitalActionStates() const
 {
-        QVariantMap  result;
-        foreach(auto &e, m_lastDigitalActionStates.toStdMap()) {
-            result[e.first] = e.second;
-        }
-        return result;
+    QVariantMap  result;
+    foreach(auto &e, m_lastDigitalActionStates.toStdMap()) {
+        result[e.first] = e.second;
+    }
+    return result;
 }
 
 QVariantMap SteamInputBridge::digitalActions() const
@@ -256,7 +319,33 @@ QVariantMap SteamInputBridge::digitalActions() const
     foreach(auto &e, m_digitalActions.toStdMap()) {
         result[e.first] = QVariantMap{
             {"name", e.second.name},
+
             {"glyphs", e.second.glyphs}
+        };
+    }
+    return result;
+}
+
+QVariantMap SteamInputBridge::analogActions() const
+{
+    QVariantMap  result;
+    foreach(auto &e, m_analogActions.toStdMap()) {
+        result[e.first] = QVariantMap{
+            {"name", e.second.name},
+
+            {"glyphs", e.second.glyphs}
+        };
+    }
+    return result;
+}
+
+QVariantMap SteamInputBridge::analogActionStates() const
+{
+    QVariantMap  result;
+    foreach(auto &e, m_lastAnalogActionStates.toStdMap()) {
+        result[e.first] = QVariantMap{
+            {"x", e.second.first},
+            {"y", e.second.second}
         };
     }
     return result;

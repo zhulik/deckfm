@@ -6,6 +6,8 @@ import QtQuick.Controls.Material 2.12
 
 import "./MDI" as MDI
 
+import "./models" as Models
+
 Dialog {
     id: root
     Material.theme: Material.Dark
@@ -28,8 +30,8 @@ Dialog {
 
                 font.pointSize: 24
                 onClicked: {
-//                    console.log(steam_input.iconForAction("folder_down"))
-//                    console.log(steam_input.iconForAction("folder_go_up"))
+                    //                    console.log(steam_input.iconForAction("folder_down"))
+                    //                    console.log(steam_input.iconForAction("folder_go_up"))
                     console.log(steam_input.iconForAction("folder_activated"))
                 }
             }
@@ -60,20 +62,20 @@ Dialog {
 
             Repeater {
                 id: tabRepeater
-//                model: [
-//                    {
-//                        "name": "Steam",
-//                        "handle": 12345,
-//                        "image": "qrc:/resources/images/controllers/Steam.png",
-//                        "type": 1
-//                    },
-//                    {
-//                        "name": "Steam Deck",
-//                        "handle": 12346,
-//                        "image": "qrc:/resources/images/controllers/Steam Deck.png",
-//                        "type": 2
-//                    }
-//                ]
+                //                model: [
+                //                    {
+                //                        "name": "Steam",
+                //                        "handle": 12345,
+                //                        "image": "qrc:/resources/images/controllers/Steam.png",
+                //                        "type": 1
+                //                    },
+                //                    {
+                //                        "name": "Steam Deck",
+                //                        "handle": 12346,
+                //                        "image": "qrc:/resources/images/controllers/Steam Deck.png",
+                //                        "type": 2
+                //                    }
+                //                ]
                 model: steam_input.connectedControllers
                 TabButton {
                     text: modelData.name
@@ -107,7 +109,7 @@ Dialog {
                     anchors.fill: gamepadItem
 
                     ColumnLayout {
-                        Layout.preferredWidth: gamepadItem.width / 2
+                        Layout.preferredWidth: gamepadItem.width / 3
 
                         Label {
                             text: `Name: ${modelData.name}`
@@ -122,26 +124,23 @@ Dialog {
                             Layout.fillWidth: parent
                             clip: true
 
-                            model: ListModel {
-                                id: analogActionsModel
+                            model: Models.ListModel {
+                                id: digitalActionsModel
+                            }
 
-                                function populate(rows) {
-                                    analogActionsModel.clear()
-
-                                    for(let name in rows){
-                                        analogActionsModel.append(rows[name])
-                                    }
-                                }
-
-                                Component.onCompleted: {
-                                    analogActionsModel.populate(steam_input.digitalActions)
-                                }
+                            Component.onCompleted: {
+                                digitalActionsModel.populate(steam_input.digitalActions)
+                                analogActionsModel.populate(steam_input.analogActions)
                             }
 
                             Connections {
                                 target: steam_input
 
                                 function onDigitalActionsChanged(actions) {
+                                    digitalActionsModel.populate(actions)
+                                }
+
+                                function onAnalogActionsChanged(actions) {
                                     analogActionsModel.populate(actions)
                                 }
                             }
@@ -170,20 +169,49 @@ Dialog {
                                 }
                             }
                         }
+                    }
 
-//                        Label {
-//                            text: `Digital action states: ${JSON.stringify(steam_input.digitalActionStates, null, 2)}`
-//                        }
+                    ColumnLayout {
+                        Layout.preferredWidth: gamepadItem.width / 3
 
-//                        Label {
-//                            text: `Digital actions: ${JSON.stringify(steam_input.digitalActions, null, 2)}`
-//                        }
+                        ListView {
+                            Layout.fillHeight: parent
+                            Layout.fillWidth: parent
+                            clip: true
 
+                            model: Models.ListModel {
+                                id: analogActionsModel
+                            }
+
+                            delegate: Item {
+                                width: parent.width
+                                height: 70
+
+                                RowLayout {
+                                    anchors.fill: parent
+
+                                    Image {
+                                        width: 40
+                                        height: 40
+                                        source: `file://${glyphs[0]}`
+                                    }
+
+                                    Label {
+                                        Layout.fillWidth: parent
+                                        height: parent.height
+
+                                        font.pixelSize: 24
+                                        text: `${name}: ${steam_input.analogActionStates[name].x}x${steam_input.analogActionStates[name].y}`
+                                        verticalAlignment: Qt.AlignVCenter
+                                    }
+                                }
+                            }
+                        }
                     }
 
                     Image {
                         Layout.fillHeight: gamepadItem
-                        Layout.preferredWidth: gamepadItem.width / 2
+                        Layout.preferredWidth: gamepadItem.width / 3
 
                         verticalAlignment: Image.AlignVCenter
                         horizontalAlignment: Image.AlignHCenter
