@@ -21,5 +21,6 @@
         <file>resources/images/controllers/Steam Deck.png</file>
         <file>resources/qml/models/JSONListModel.qml</file>
         <file>resources/qml/GamepadsInfo/GamepadsInfo.qml</file>
+        <file>resources/qml/GamepadsInfo/GamepadInfoDelegate.qml</file>
     </qresource>
 </RCC>

@@ -87,7 +87,7 @@ ApplicationWindow {
 
     Component.onCompleted: {
         steam_input.init()
-//        gamepadWindow.open()
+        gamepadWindow.open()
     }
 
     Component.onDestruction: {
@@ -97,15 +97,10 @@ ApplicationWindow {
     GamepadWindow {
         id: gamepadWindow
 
-//        For some reason this does not work propertly on deck
-//        anchors.centerIn: parent
-//        width: parent.width - 40
-//        height: parent.height - 40
-
-        x: 20
-        y: 20
-        width: parent.width - 2 * x
-        height: parent.height - 2 * y
+        x: 0
+        y: 0
+        width: parent.width - x
+        height: parent.height - y
 
         onClosed: directoryView.forceActiveFocus()
     }
