@@ -163,7 +163,7 @@ Dialog {
                                         height: parent.height
 
                                         font.pixelSize: steam_input.digitalActionStates[name] ? 36 : 24
-                                        text: name
+                                        text: glyphs[0]
                                         verticalAlignment: Qt.AlignVCenter
                                     }
                                 }
