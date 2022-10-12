@@ -117,12 +117,57 @@ Dialog {
                             text: `Current action set: ${steam_input.actionSet}`
                         }
 
-                        Label {
-                            text: `Digital action states: ${JSON.stringify(steam_input.digitalActionStates, null, 2)}`
-                        }
+                        ListView {
+                            Layout.fillHeight: parent
+                            Layout.fillWidth: parent
+                            clip: true
 
-                        Label {
-                            text: `Digital actions: ${JSON.stringify(steam_input.digitalActions, null, 2)}`
+                            model: ListModel {
+                                id: analogActionsModel
+
+                                function populate(rows) {
+                                    analogActionsModel.clear()
+
+                                    for(let name in rows){
+                                        analogActionsModel.append(rows[name])
+                                    }
+                                }
+
+                                Component.onCompleted: {
+                                    analogActionsModel.populate(steam_api.digitalActions)
+                                }
+                            }
+
+                            Connections {
+                                target: steam_input
+
+                                function onDigitalActionsChanged(actions) {
+                                    analogActionsModel.populate(actions)
+                                }
+                            }
+
+                            delegate: Item {
+                                width: parent.width
+                                height: 70
+
+                                RowLayout {
+                                    anchors.fill: parent
+
+                                    Image {
+                                        width: 40
+                                        source: glyphs[0]
+                                    }
+
+                                    Label {
+                                        Layout.fillWidth: parent
+                                        height: parent.height
+
+                                        font.pixelSize: steam_input.digitalActionStates[name] ? 36 : 24
+                                        text: name
+                                        verticalAlignment: Qt.AlignVCenter
+                                    }
+                                }
+                            }
                         }
                     }
 
