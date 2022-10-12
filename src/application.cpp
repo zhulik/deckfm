@@ -47,7 +47,7 @@ Application::Application(int &argc, char **argv)
     if (m_engine->rootObjects().count() == 0) {
         throw "error";
     }
-    auto mainWindow = m_engine->rootObjects().at(0);
+    auto mainWindow = (QQuickWindow *)m_engine->rootObjects().at(0);
     m_engine->rootContext()->setContextProperty("gamepad_bridge", new GamepadBridge(mainWindow));
 
 
@@ -60,7 +60,8 @@ Application::Application(int &argc, char **argv)
     QObject::connect(callbackTimer, &QTimer::timeout, runCallbacks);
     callbackTimer->start(33);
 
-    QObject::connect((QQuickWindow *)mainWindow, &QQuickWindow::frameSwapped, runCallbacks);
-
-    QSGRendererInterface *rif = ((QQuickWindow *)mainWindow)->rendererInterface();
+    QObject::connect(mainWindow, &QQuickWindow::frameSwapped, runCallbacks);
+    QObject::connect(mainWindow, &QQuickWindow::activeFocusItemChanged, [mainWindow, this](){
+        m_activeFocusItem = mainWindow->activeFocusItem();
+    });
 }
