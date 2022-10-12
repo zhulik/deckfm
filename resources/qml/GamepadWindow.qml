@@ -169,6 +169,15 @@ Dialog {
                                 }
                             }
                         }
+
+                        Label {
+                            text: `Digital action states: ${JSON.stringify(steam_input.digitalActionStates, null, 2)}`
+                        }
+
+                        Label {
+                            text: `Digital actions: ${JSON.stringify(steam_input.digitalActions, null, 2)}`
+                        }
+
                     }
 
                     Image {
