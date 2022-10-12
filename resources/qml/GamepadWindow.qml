@@ -155,6 +155,7 @@ Dialog {
 
                                     Image {
                                         width: 40
+                                        height: 40
                                         source: glyphs[0]
                                     }
 
@@ -162,8 +163,8 @@ Dialog {
                                         Layout.fillWidth: parent
                                         height: parent.height
 
-                                        font.pixelSize: steam_input.digitalActionStates[name] ? 36 : 24
-                                        text: glyphs[0]
+                                        font.pixelSize: steam_input.digitalActionStates[name] ? 24
+                                        text: name
                                         verticalAlignment: Qt.AlignVCenter
                                     }
                                 }
