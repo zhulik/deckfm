@@ -119,25 +119,9 @@ Dialog {
                             Layout.fillWidth: parent
                             clip: true
 
-                            model: Models.ListModel {
+                            model: Models.JSONListModel {
                                 id: digitalActionsModel
-                            }
-
-                            Component.onCompleted: {
-                                digitalActionsModel.populate(steam_input.digitalActions)
-                                analogActionsModel.populate(steam_input.analogActions)
-                            }
-
-                            Connections {
-                                target: steam_input
-
-                                function onDigitalActionsChanged(actions) {
-                                    digitalActionsModel.populate(actions)
-                                }
-
-                                function onAnalogActionsChanged(actions) {
-                                    analogActionsModel.populate(actions)
-                                }
+                                data: steam_input.digitalActions
                             }
 
                             delegate: Item {
@@ -174,8 +158,9 @@ Dialog {
                             Layout.fillWidth: parent
                             clip: true
 
-                            model: Models.ListModel {
+                            model: Models.JSONListModel {
                                 id: analogActionsModel
+                                data: steam_input.analogActions
                             }
 
                             delegate: Item {

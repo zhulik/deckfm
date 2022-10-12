@@ -5,6 +5,7 @@ import QtQuick.Controls.Material 2.12
 import QtGraphicalEffects 1.15
 
 import "../MDI" as MDI
+import "../models" as Models
 
 ListView {
     id: root
@@ -41,26 +42,7 @@ ListView {
     clip: true
     orientation: ListView.Horizontal
 
-    onPathChanged: {
-        const parts = fs_bridge.pathToComponenets(path)
-
-        if (parts.length < listModel.count) {
-            listModel.remove(parts.length, listModel.count - parts.length)
-        }
-
-        parts.forEach(function (p, i) {
-            const existing = listModel.get(i)
-            if (existing) {
-                listModel.set(i, p)
-            } else {
-                listModel.insert(i, p)
-            }
-        })
-    }
-
-    onCountChanged: {
-        currentIndex = count - 1
-    }
+    onCountChanged: currentIndex = count - 1
 
     remove: Transition {
         id: _transition
@@ -74,8 +56,9 @@ ListView {
         }
     }
 
-    model: ListModel {
+    model: Models.JSONListModel {
         id: listModel
+        data: fs_bridge.pathToComponenets(path)
     }
 
     header: MDI.Button {
