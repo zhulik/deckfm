@@ -19,44 +19,25 @@ ApplicationWindow {
     width: 1280
     height: 800
 
-//    Gamepad {
-//        id: gamepad
-//    }
-
     header: Header {
-        onMenuClicked: {
-            drawer.visible = !drawer.visible
-        }
-
-        onLogoClicked: {
-            globalMenu.popup()
-        }
-
-        onExitClicked: {
-            mainWindow.close()
-        }
-
-        onGamepadClicked: {
-            gamepadWindow.open()
-        }
+        onMenuClicked: drawer.visible = !drawer.visible
+        onLogoClicked: globalMenu.popup()
+        onExitClicked: mainWindow.close()
+        onGamepadClicked: gamepadWindow.open()
     }
 
     Shortcut {
         sequence: "F1"
         context: Qt.ApplicationShortcut
 
-        onActivated: {
-            globalMenu.visible = !globalMenu.visible
-        }
+        onActivated: globalMenu.visible = !globalMenu.visible
     }
 
     Shortcut {
         sequence: "F2"
         context: Qt.ApplicationShortcut
 
-        onActivated: {
-            drawer.visible = !drawer.visible
-        }
+        onActivated: drawer.visible = !drawer.visible
     }
 
     Drawer {
@@ -65,9 +46,7 @@ ApplicationWindow {
         width: Math.max(parent.width * 0.3, 450)
         height: parent.height - header.height - footer.height
 
-        onClosed: {
-            directoryView.forceActiveFocus()
-        }
+        onClosed: directoryView.forceActiveFocus()
     }
 
     footer: Footer {}
@@ -128,8 +107,6 @@ ApplicationWindow {
         width: parent.width - 2 * x
         height: parent.height - 2 * y
 
-        onClosed: {
-            directoryView.forceActiveFocus()
-        }
+        onClosed: directoryView.forceActiveFocus()
     }
 }

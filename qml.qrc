@@ -6,7 +6,6 @@
         <file>resources/qml/DirectoryView/FileDelegate.qml</file>
         <file>resources/qml/DirectoryView/FilePathView.qml</file>
         <file>resources/qml/Footer.qml</file>
-        <file>resources/qml/Gamepad.qml</file>
         <file>resources/qml/GamepadInput.qml</file>
         <file>resources/qml/GlobalMenu.qml</file>
         <file>resources/qml/Header.qml</file>
@@ -21,5 +20,6 @@
         <file>resources/images/controllers/XBox One.png</file>
         <file>resources/images/controllers/Steam Deck.png</file>
         <file>resources/qml/models/JSONListModel.qml</file>
+        <file>resources/qml/GamepadsInfo/GamepadsInfo.qml</file>
     </qresource>
 </RCC>
