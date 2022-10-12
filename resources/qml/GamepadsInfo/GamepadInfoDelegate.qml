@@ -16,11 +16,7 @@ Item {
             Layout.preferredWidth: root.width / 3
 
             Label {
-                text: `Name: ${modelData.name}`
-            }
-
-            Label {
-                text: `Current action set: ${steam_input.actionSet}`
+                text: `Action set: ${steam_input.actionSet}`
             }
 
             ListView {
@@ -52,7 +48,7 @@ Item {
                             height: parent.height
 
                             font.pixelSize: steam_input.digitalActionStates[name] ? 36 : 24
-                            text: JSON.stringify(localizedNames)
+                            text: localizedName
                             verticalAlignment: Qt.AlignVCenter
                         }
                     }
@@ -91,8 +87,14 @@ Item {
                             height: parent.height
 
                             font.pixelSize: 24
-                            text: `${name}: ${steam_input.analogActionStates[name].x}x${steam_input.analogActionStates[name].y}`
+                            text: localizedName
                             verticalAlignment: Qt.AlignVCenter
+                        }
+
+                        Label {
+                            verticalAlignment: Qt.AlignVCenter
+                            font.pixelSize: 24
+                            text: `${steam_input.analogActionStates[name].x}x${steam_input.analogActionStates[name].y}`
                         }
                     }
                 }

@@ -24,9 +24,9 @@ struct DigitalAction {
     InputDigitalActionHandle_t handle;
 
     QString name;
-    QList<EInputActionOrigin> origins;
+    QString localizedName;
+    QStringList origins;
     QStringList glyphs;
-    QStringList localizedNames;
 
     bool operator==(const DigitalAction &other) {
         return handle == other.handle;
@@ -37,9 +37,9 @@ struct AnalogAction {
     InputAnalogActionHandle_t handle;
 
     QString name;
-    QList<EInputActionOrigin> origins;
+    QString localizedName;
+    QStringList origins;
     QStringList glyphs;
-    QStringList localizedNames;
 
     bool operator==(const AnalogAction &other) {
         return handle == other.handle;

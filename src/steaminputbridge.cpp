@@ -221,26 +221,29 @@ void SteamInputBridge::fillDigitalActions()
             throw "ERROR";
         }
 
-        QList<EInputActionOrigin> origins;
+        QStringList origins;
         QStringList glyphs;
-        QStringList localizedNames;
 
         EInputActionOrigin originsBuf[STEAM_INPUT_MAX_ORIGINS];
 
-        auto n = SteamInput()->GetDigitalActionOrigins(m_connectedControllers[0].handle, m_actionSets[m_actionSet].handle, handle, originsBuf);
+        auto n = SteamInput()->GetDigitalActionOrigins(m_connectedControllers[0].handle,
+                                                       m_actionSets[m_actionSet].handle,
+                                                       handle,
+                                                       originsBuf);
+
+        auto localizedName = SteamInput()->GetStringForDigitalActionName(handle);
 
         for(int i = 0; i < n; i++) {
-            origins << originsBuf[i];
+            origins << SteamInput()->GetStringForActionOrigin(originsBuf[i]);
             glyphs << SteamInput()->GetGlyphSVGForActionOrigin(originsBuf[i], 0);
-            localizedNames << SteamInput()->GetStringForActionOrigin(originsBuf[i]);
         }
 
             m_digitalActions[action] = DigitalAction{
                                                      handle,
                                                      action,
+                                                     localizedName,
                                                      origins,
                                                      glyphs,
-                                                     localizedNames,
                                                      };
     }
     emit digitalActionsChanged(digitalActions());
@@ -258,26 +261,25 @@ void SteamInputBridge::fillAnalogActions()
             throw "ERROR";
         }
 
-        QList<EInputActionOrigin> origins;
+        QStringList origins;
         QStringList glyphs;
-        QStringList localizedNames;
 
         EInputActionOrigin originsBuf[STEAM_INPUT_MAX_ORIGINS];
 
         auto n = SteamInput()->GetAnalogActionOrigins(m_connectedControllers[0].handle, m_actionSets[m_actionSet].handle, handle, originsBuf);
+        auto localizedName = SteamInput()->GetStringForAnalogActionName(handle);
 
         for(int i = 0; i < n; i++) {
-            origins << originsBuf[i];
+            origins << SteamInput()->GetStringForActionOrigin(originsBuf[i]);
             glyphs << SteamInput()->GetGlyphSVGForActionOrigin(originsBuf[i], 0);
-            localizedNames << SteamInput()->GetStringForActionOrigin(originsBuf[i]);
         }
 
             m_analogActions[action] = AnalogAction{
                                                    handle,
                                                    action,
+                                                   localizedName,
                                                    origins,
                                                    glyphs,
-                                                   localizedNames,
                                                    };
     }
     emit analogActionsChanged(analogActions());
@@ -330,8 +332,9 @@ QVariantMap SteamInputBridge::digitalActions() const
     foreach(auto &e, m_digitalActions.toStdMap()) {
         result[e.first] = QVariantMap{
             {"name", e.second.name},
+            {"localizedName", e.second.localizedName},
             {"glyphs", e.second.glyphs},
-            {"localizedNames", e.second.localizedNames}
+            {"origins", e.second.origins}
         };
     }
     return result;
@@ -343,8 +346,9 @@ QVariantMap SteamInputBridge::analogActions() const
     foreach(auto &e, m_analogActions.toStdMap()) {
         result[e.first] = QVariantMap{
             {"name", e.second.name},
+            {"localizedName", e.second.localizedName},
             {"glyphs", e.second.glyphs},
-            {"localizedNames", e.second.localizedNames}
+            {"origins", e.second.origins}
         };
     }
     return result;
