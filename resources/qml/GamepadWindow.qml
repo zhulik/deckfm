@@ -134,7 +134,7 @@ Dialog {
                                 }
 
                                 Component.onCompleted: {
-                                    analogActionsModel.populate(steam_api.digitalActions)
+                                    analogActionsModel.populate(steam_input.digitalActions)
                                 }
                             }
 
