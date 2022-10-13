@@ -13,6 +13,12 @@ Item {
 
     signal fileOpened(string path)
 
+    Binding {
+        target: fs_model
+        property: "showHidden"
+        value: showHiddenSwitch.position === 1.0
+    }
+
     function cdIndex(index) {
         if (fs_model.get(index).isDir) {
             fs_model.path = fs_model.get(index).path

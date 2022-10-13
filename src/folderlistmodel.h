@@ -27,6 +27,7 @@ class FolderListModel : public QAbstractListModel
     Q_PROPERTY(int count READ count NOTIFY countChanged);
     Q_PROPERTY(bool canGoUp READ canGoUp NOTIFY canGoUpChanged);
     Q_PROPERTY(QVariantList pathComponents READ pathComponents NOTIFY pathComponentsChanged)
+    Q_PROPERTY(bool showHidden READ showHidden WRITE setShowHidden NOTIFY showHiddenChanged)
 
     enum Role {
         IsDir = Qt::UserRole,
@@ -58,15 +59,23 @@ public:
 
     QVariantList pathComponents() const;
 
+    bool showHidden() const;
+    void setShowHidden(bool newShowHidden);
+
 signals:
     void pathChanged(const QString&);
     void countChanged(int);
     void canGoUpChanged(bool);
     void pathComponentsChanged(QVariantList);
 
+    void showHiddenChanged(bool);
+
 private:
     QList<FileInfo> m_folderContent;
     QString m_path;
 
     void updateContent();
+    bool m_showHidden;
+
+    QString sizeString(const QString &) const;
 };

@@ -30,20 +30,6 @@ QString icon(const QString &mime)
     return "file";
 }
 
-QString sizeStr(const QString &path) {
-    QFileInfo info(path);
-    if (info.isDir()) {
-        auto flags = QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot;
-        //        if (includeHidden) {
-        //            flags = flags | QDir::Hidden;
-        //        }
-        auto files = QDir(path).entryList(flags);
-        return QString("%1 Items").arg(files.count());
-    }
-
-    return QLocale().formattedDataSize(info.size());
-}
-
 FolderListModel::FolderListModel(QObject *parent)
     : QAbstractListModel{parent}
 {
@@ -168,7 +154,12 @@ void FolderListModel::updateContent()
     emit beginResetModel();
     m_folderContent.clear();
 
-    foreach(auto &info, QDir(m_path).entryInfoList()) {
+    auto flags = QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot;
+    if (m_showHidden) {
+        flags = flags | QDir::Hidden;
+    }
+
+    foreach(auto &info, QDir(m_path).entryInfoList(flags, QDir::Name | QDir::DirsFirst)) {
         auto mime = QMimeDatabase().mimeTypeForFile(info.filePath()).name();
         m_folderContent << FileInfo{
             info.isDir(),
@@ -176,7 +167,7 @@ void FolderListModel::updateContent()
             info.filePath(),
             mime,
             icon(mime),
-            sizeStr(info.filePath()),
+            sizeString(info.filePath()),
             info.isReadable(),
             info.isWritable()
         };
@@ -184,4 +175,34 @@ void FolderListModel::updateContent()
     emit endResetModel();
     emit countChanged(count());
     emit canGoUpChanged(canGoUp());
+}
+
+QString FolderListModel::sizeString(const QString &path) const
+{
+    QFileInfo info(path);
+    if (info.isDir()) {
+        auto flags = QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot;
+        if (m_showHidden) {
+            flags = flags | QDir::Hidden;
+        }
+        auto files = QDir(path).entryList(flags);
+        return QString("%1 Items").arg(files.count());
+    }
+
+    return QLocale().formattedDataSize(info.size());
+}
+
+bool FolderListModel::showHidden() const
+{
+    return m_showHidden;
+}
+
+void FolderListModel::setShowHidden(bool newShowHidden)
+{
+    if (m_showHidden == newShowHidden)
+        return;
+    m_showHidden = newShowHidden;
+
+    emit showHiddenChanged(m_showHidden);
+    updateContent();
 }
