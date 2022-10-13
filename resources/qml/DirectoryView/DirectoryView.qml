@@ -19,6 +19,14 @@ Item {
         value: showHiddenSwitch.position === 1.0
     }
 
+    Connections {
+        target: fs_model
+
+        function onModelReset() {
+            view.currentIndex = 0
+        }
+    }
+
     function cdIndex(index) {
         if (fs_model.get(index).isDir) {
             fs_model.path = fs_model.get(index).path

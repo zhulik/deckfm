@@ -73,7 +73,7 @@ QVariant FolderListModel::data(const QModelIndex &index, int role) const
 {
     auto roleE = (FolderListModel::Role) role;
     auto item = m_folderContent[index.row()];
-    //    return 0;
+
     switch(roleE) {
     case IsDir: return item.isDir; break;
     case Name: return item.name; break;
@@ -151,7 +151,7 @@ QVariantList FolderListModel::pathComponents() const
 
 void FolderListModel::updateContent()
 {
-    emit beginResetModel();
+    beginResetModel();
     m_folderContent.clear();
 
     auto flags = QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot;
@@ -172,7 +172,7 @@ void FolderListModel::updateContent()
             info.isWritable()
         };
     }
-    emit endResetModel();
+    endResetModel();
     emit countChanged(count());
     emit canGoUpChanged(canGoUp());
 }
