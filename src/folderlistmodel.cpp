@@ -128,6 +128,7 @@ void FolderListModel::setPath(const QString &newPath)
         return;
     m_path = newPath;
     emit pathChanged(m_path);
+    emit pathComponentsChanged(pathComponents());
     updateContent();
 }
 
@@ -139,6 +140,27 @@ int FolderListModel::count() const
 bool FolderListModel::canGoUp() const
 {
     return QDir(m_path).cdUp();
+}
+
+QVariantList FolderListModel::pathComponents() const
+{
+    QVariantList result;
+    auto parts = m_path.split(QDir::separator());
+
+    while (parts.count() > 0) {
+        auto full = parts.join(QDir::separator());
+
+        auto part = parts.takeLast();
+
+        if (part != "") {
+            result.prepend(QVariantMap({
+                {"name", part.replace(QDir::separator(), "")},
+                {"path", full }
+            }));
+        }
+
+    }
+    return result;
 }
 
 void FolderListModel::updateContent()

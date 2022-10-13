@@ -79,7 +79,8 @@ Item {
 
         RowLayout {
             FilePathView {
-                path: fs_model.path
+                pathComponents: fs_model.pathComponents
+
                 Layout.preferredHeight: 40
                 Layout.preferredWidth: 500
 

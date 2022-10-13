@@ -26,6 +26,7 @@ class FolderListModel : public QAbstractListModel
     Q_PROPERTY(QString path READ path WRITE setPath NOTIFY pathChanged);
     Q_PROPERTY(int count READ count NOTIFY countChanged);
     Q_PROPERTY(bool canGoUp READ canGoUp NOTIFY canGoUpChanged);
+    Q_PROPERTY(QVariantList pathComponents READ pathComponents NOTIFY pathComponentsChanged)
 
     enum Role {
         IsDir = Qt::UserRole,
@@ -55,10 +56,13 @@ public:
     int count() const;
     bool canGoUp() const;
 
+    QVariantList pathComponents() const;
+
 signals:
     void pathChanged(const QString&);
     void countChanged(int);
     void canGoUpChanged(bool);
+    void pathComponentsChanged(QVariantList);
 
 private:
     QList<FileInfo> m_folderContent;

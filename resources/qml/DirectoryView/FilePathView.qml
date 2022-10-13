@@ -9,7 +9,7 @@ import "../models" as Models
 
 ListView {
     id: root
-    property string path
+    property var pathComponents
 
     signal pathSelected(string path)
 
@@ -58,7 +58,7 @@ ListView {
 
     model: Models.JSONListModel {
         id: listModel
-        data: fs_bridge.pathToComponenets(path)
+        data: pathComponents
     }
 
     header: MDI.Button {

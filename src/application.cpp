@@ -12,7 +12,6 @@
 #include "steam/steam_api.h"
 
 #include "application.h"
-#include "fsbridge.h"
 #include "steaminputbridge.h"
 #include "steamutilsbridge.h"
 #include "folderlistmodel.h"
@@ -32,10 +31,6 @@ Application::Application(int &argc, char **argv)
     QQuickStyle::setStyle("Material");
 
     m_engine = new QQmlApplicationEngine();
-
-    auto fsBridge = new FSBridge(m_engine);
-    m_engine->rootContext()->setContextProperty("fs_bridge", fsBridge);
-
 
     SteamInputBridge *steamInput;
 
