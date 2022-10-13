@@ -62,12 +62,7 @@ class SteamInputBridge : public QObject
 
 public:
     explicit SteamInputBridge(QObject *parent = nullptr);
-
-    Q_INVOKABLE
-        void init();
-
-    Q_INVOKABLE
-        void shutdown();
+    virtual ~SteamInputBridge();
 
     Q_INVOKABLE
         void showBindingPanel();
@@ -105,6 +100,8 @@ private:
     void fillActionSets();
     void fillDigitalActions();
     void fillAnalogActions();
+
+    bool m_initialized = false;
 
     QList<ControllerInfo> m_connectedControllers;
 

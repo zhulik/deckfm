@@ -72,35 +72,37 @@ QList<ControllerInfo> getConnectedControllers()
 SteamInputBridge::SteamInputBridge(QObject *parent)
     : QObject{parent}
 {
+    m_initialized = SteamInput()->Init(true);
+    if (!m_initialized) {
+        qWarning() << "Cannot initialize steam input. Do you have controller connected?";
+    } else {
+        auto path = QDir::current().filePath("input.vdf");
 
+        if (!SteamInput()->SetInputActionManifestFilePath(path.toLocal8Bit())) {
+            throw "ERROR";
+        }
+    }
 }
 
-void SteamInputBridge::init()
+SteamInputBridge::~SteamInputBridge()
 {
-    if (!(SteamInput()->Init(true))) {
-        throw "ERROR";
-    }
-    auto path = QDir::current().filePath("input.vdf");
-
-    if (!SteamInput()->SetInputActionManifestFilePath(path.toLocal8Bit())) {
-        throw "ERROR";
-    }
+    SteamInput()->Shutdown();
 }
 
-void SteamInputBridge::shutdown()
-{
-    if (SteamInput()->Shutdown()) {
-        throw "ERROR";
-    }
-}
 
 void SteamInputBridge::showBindingPanel()
 {
+    if (!m_initialized) {
+        return;
+    }
     SteamInput()->ShowBindingPanel(m_connectedControllers[0].handle);
 }
 
 void SteamInputBridge::poll()
 {
+    if (!m_initialized) {
+        return;
+    }
     updateControllers();
     pollControllers();
 }
@@ -125,8 +127,11 @@ void SteamInputBridge::updateControllers()
 
     if(updated.empty()) {
         m_digitalActions.clear();
-        emit digitalActionsChanged(digitalActions());
+        m_analogActions.clear();
         m_actionSets.clear();
+
+        emit digitalActionsChanged(digitalActions());
+        emit analogActionsChanged(analogActions());
     }
 
     fillActionSets();
@@ -288,7 +293,7 @@ void SteamInputBridge::fillAnalogActions()
 
 void SteamInputBridge::fillActionSets()
 {
-    if(!m_actionSets.empty()) {
+    if(!m_actionSets.empty() || m_connectedControllers.empty()) {
         return;
     }
     foreach(auto &set, actionSets) {

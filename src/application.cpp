@@ -23,7 +23,6 @@
 Application::Application(int &argc, char **argv)
     : QGuiApplication{argc, argv}
 {
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QFontDatabase::addApplicationFont(":/resources/fonts/materialdesignicons-webfont.ttf");
     QQuickStyle::setStyle("Material");
 
@@ -46,7 +45,7 @@ Application::Application(int &argc, char **argv)
     m_engine->load("qrc:/resources/qml/MainWindow.qml");
 
     if (m_engine->rootObjects().count() == 0) {
-        throw "error";
+        throw "ERROR";
     }
     auto mainWindow = (QQuickWindow *)m_engine->rootObjects().at(0);
     m_engine->rootContext()->setContextProperty("gamepad_bridge", new GamepadBridge(mainWindow));
