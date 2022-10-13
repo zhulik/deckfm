@@ -11,7 +11,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt5 REQUIRED COMPONENTS Core Quick QuickControls2 Gamepad)
+find_package(Qt5 REQUIRED COMPONENTS Core Quick QuickControls2)
 
 include_directories(${CMAKE_SOURCE_DIR}/src ${CMAKE_SOURCE_DIR})
 
@@ -24,4 +24,4 @@ configure_file(${CMAKE_SOURCE_DIR}/input.vdf ${CMAKE_CURRENT_BINARY_DIR}/input.v
 configure_file(${CMAKE_SOURCE_DIR}/steam_controller.vdf ${CMAKE_CURRENT_BINARY_DIR}/steam_controller.vdf COPYONLY)
 
 add_executable(deckfm ${PROJECT_SOURCES})
-target_link_libraries(deckfm PRIVATE Qt5::Core Qt5::Quick Qt5::QuickControls2 Qt5::Gamepad ${CMAKE_SOURCE_DIR}/libsteam_api.so)
+target_link_libraries(deckfm PRIVATE Qt5::Core Qt5::Quick Qt5::QuickControls2 ${CMAKE_SOURCE_DIR}/libsteam_api.so)

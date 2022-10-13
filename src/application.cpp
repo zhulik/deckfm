@@ -5,7 +5,6 @@
 #include <QQmlContext>
 #include <QQuickWindow>
 #include <QQuickItem>
-#include <QtGamepad/QGamepadManager>
 
 #include <QDebug>
 #include <QSGRendererInterface>
