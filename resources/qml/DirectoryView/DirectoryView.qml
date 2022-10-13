@@ -11,19 +11,14 @@ import ".." as Core
 Item {
     id: root
 
-    signal fileOpened(string url)
-
-    DirectoryModel {
-        id: folderModel
-        _showHidden: showHiddenSwitch.position === 1.0
-    }
+    signal fileOpened(string path)
 
     function cdIndex(index) {
-        if (folderModel.get(index, "fileIsDir")) {
-            folderModel.cdIndex(index)
+        if (fs_model.get(index).isDir) {
+            fs_model.path = fs_model.get(index).path
             return
         }
-        root.fileOpened(folderModel.get(index, "fileUrl"))
+        root.fileOpened(fs_model.get(index).path)
     }
 
     function onSteamInputDigitalStatesChanged(states) {
@@ -43,10 +38,10 @@ Item {
             root.cdIndex(view.currentIndex)
         }
         if(states["folder_go_up"]) {
-            folderModel.goUp()
+            fs_model.goUp()
         }
         if(states["folder_go_home"]) {
-            folderModel.goHome()
+            fs_model.goHome()
         }
     }
 
@@ -59,10 +54,10 @@ Item {
             root.cdIndex(view.currentIndex)
             break
         case Qt.Key_Escape:
-            folderModel.goUp()
+            fs_model.goUp()
             break
         case Qt.Key_Home:
-            folderModel.goHome()
+            fs_model.goHome()
             break
         case Qt.Key_Up:
             view.moveCurrentIndexUp()
@@ -84,12 +79,12 @@ Item {
 
         RowLayout {
             FilePathView {
-                path: folderModel.path
+                path: fs_model.path
                 Layout.preferredHeight: 40
                 Layout.preferredWidth: 500
 
                 onPathSelected: {
-                    folderModel.cd(path)
+                    fs_model.path = path
                 }
             }
 
@@ -106,15 +101,15 @@ Item {
             MDI.Button {
                 iconName: "arrowUp"
                 onClicked: {
-                    folderModel.goUp()
+                    fs_model.goUp()
                 }
-                enabled: folderModel.canGoUp
+                enabled: fs_model.canGoUp
             }
 
             MDI.Button {
                 iconName: "home"
                 onClicked: {
-                    folderModel.goHome()
+                    fs_model.goHome()
                 }
             }
         }
@@ -129,7 +124,8 @@ Item {
                 }
             }
 
-            model: folderModel
+            model: fs_model
+
             Layout.fillWidth: true
             Layout.fillHeight: true
 
@@ -169,7 +165,6 @@ Item {
             delegate: FileDelegate {
                 width: view.cellWidth - 5
                 height: view.cellHeight - 5
-                model: folderModel
 
                 onClicked: {
                     root.cdIndex(index)
@@ -209,7 +204,7 @@ Item {
 
         RowLayout {
             Label {
-                text: `Total: ${folderModel.count}`
+                text: `Total: ${fs_model.count}`
                 font.pointSize: 14
                 verticalAlignment: Text.AlignVCenter
             }

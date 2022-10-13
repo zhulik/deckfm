@@ -79,7 +79,7 @@ QVariantList FSBridge::pathToComponenets(const QString &path) const
         if (part != "") {
             result.prepend(QVariantMap({
                                       {"name", part.replace(QDir::separator(), "")},
-                                      {"path", QString("file://%1").arg(full) }
+                                      {"path", full }
                                   }));
         }
 

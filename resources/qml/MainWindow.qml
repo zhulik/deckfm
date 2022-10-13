@@ -68,8 +68,7 @@ ApplicationWindow {
                 focus: true
 
                 onFileOpened: {
-                    const mime = fs_bridge.mime(url)
-                    console.log(mime[0])
+                    console.log(`Attempting to open ${path}`)
                 }
             }
         }

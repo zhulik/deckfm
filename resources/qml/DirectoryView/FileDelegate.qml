@@ -7,16 +7,14 @@ import QtQuick.Controls.Material 2.12
 import "../MDI" as MDI
 
 ItemDelegate {
-    property var model
-
-    enabled: model.canCd(filePath)
+    enabled: fileReadable
     clip: true
 
     RowLayout {
         anchors.fill: parent
 
         MDI.Icon {
-            name: model.icon(filePath)
+            name: fileIcon
             Layout.fillHeight: parent
         }
 
@@ -31,7 +29,7 @@ ItemDelegate {
             }
 
             Label {
-                text: model.fileSizeStr(filePath)
+                text: fileSizeString
                 Layout.fillWidth: parent
                 color: Material.accent
                 font.pointSize: 8
@@ -39,7 +37,7 @@ ItemDelegate {
         }
 
         Label {
-            text: model.mime(filePath).join("/")
+            text: fileMime
             elide: Text.ElideMiddle
             color: Material.accent
             Layout.alignment: Qt.AlignVCenter

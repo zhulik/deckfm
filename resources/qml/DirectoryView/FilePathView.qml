@@ -65,7 +65,7 @@ ListView {
         iconName: "harddisk"
         anchors.verticalCenter: parent.verticalCenter
         onClicked: {
-            pathSelected("file:///")
+            pathSelected("/")
         }
     }
 

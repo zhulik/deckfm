@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>resources/fonts/materialdesignicons-webfont.ttf</file>
-        <file>resources/qml/DirectoryView/DirectoryModel.qml</file>
         <file>resources/qml/DirectoryView/DirectoryView.qml</file>
         <file>resources/qml/DirectoryView/FileDelegate.qml</file>
         <file>resources/qml/DirectoryView/FilePathView.qml</file>

@@ -15,6 +15,7 @@
 #include "fsbridge.h"
 #include "steaminputbridge.h"
 #include "steamutilsbridge.h"
+#include "folderlistmodel.h"
 
 
 
@@ -48,6 +49,10 @@ Application::Application(int &argc, char **argv)
 
         m_engine->rootContext()->setContextProperty("steam_utils", steamUtils);
         m_engine->rootContext()->setContextProperty("steam_input", steamInput);
+
+        auto fsModel = new FolderListModel(m_engine);
+
+        m_engine->rootContext()->setContextProperty("fs_model", fsModel);
 
         QObject::connect(steamInput, &SteamInputBridge::digitalActionStatesChanged, [this](auto states){
             if (m_activeFocusItem == nullptr) {
