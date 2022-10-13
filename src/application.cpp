@@ -14,7 +14,6 @@
 
 #include "application.h"
 #include "fsbridge.h"
-#include "gamepadbridge.h"
 #include "steaminputbridge.h"
 #include "steamutilsbridge.h"
 
@@ -23,56 +22,71 @@
 Application::Application(int &argc, char **argv)
     : QGuiApplication{argc, argv}
 {
+    m_steamAPIInitialized = SteamAPI_Init();
+
+    if (!m_steamAPIInitialized) {
+        qWarning() << "\n\nSteamAPI cannot be initialized.\n";
+    }
+
     QFontDatabase::addApplicationFont(":/resources/fonts/materialdesignicons-webfont.ttf");
     QQuickStyle::setStyle("Material");
 
-
     m_engine = new QQmlApplicationEngine();
 
-    m_engine->rootContext()->setContextProperty("fs_bridge", new FSBridge(m_engine));
-    m_engine->rootContext()->setContextProperty("gamepad_bridge", new GamepadBridge(m_engine));
+    auto fsBridge = new FSBridge(m_engine);
+    m_engine->rootContext()->setContextProperty("fs_bridge", fsBridge);
 
-    auto steamUtils = new SteamUtilsBridge(m_engine);
 
-    m_engine->rootContext()->setContextProperty("steam_utils", steamUtils);
-    if (steamUtils->isOnDeck()) {
-        setOverrideCursor(QCursor(Qt::BlankCursor));
+    SteamInputBridge *steamInput;
+
+    if (m_steamAPIInitialized) {
+        auto steamUtils = new SteamUtilsBridge(m_engine);
+        steamInput = new SteamInputBridge(m_engine);
+
+        if (steamUtils->isOnDeck()) {
+            setOverrideCursor(QCursor(Qt::BlankCursor));
+        }
+
+        m_engine->rootContext()->setContextProperty("steam_utils", steamUtils);
+        m_engine->rootContext()->setContextProperty("steam_input", steamInput);
+
+        QObject::connect(steamInput, &SteamInputBridge::digitalActionStatesChanged, [this](auto states){
+            if (m_activeFocusItem == nullptr) {
+                return;
+            }
+
+            QMetaObject::invokeMethod(m_activeFocusItem, "onSteamInputDigitalStatesChanged", Q_ARG(QVariant, states));
+        });
     }
-
-    auto steamInput = new SteamInputBridge(m_engine);
-    m_engine->rootContext()->setContextProperty("steam_input", steamInput);
 
     m_engine->load("qrc:/resources/qml/MainWindow.qml");
 
     if (m_engine->rootObjects().count() == 0) {
         throw "ERROR";
     }
+
     auto mainWindow = (QQuickWindow *)m_engine->rootObjects().at(0);
-    m_engine->rootContext()->setContextProperty("gamepad_bridge", new GamepadBridge(mainWindow));
-
-
-    auto runCallbacks = [steamInput](){
-        SteamAPI_RunCallbacks();
-        steamInput->poll();
-    };
-
-    auto callbackTimer = new QTimer(m_engine);
-    QObject::connect(callbackTimer, &QTimer::timeout, runCallbacks);
-    callbackTimer->start(33);
-
-    QObject::connect(mainWindow, &QQuickWindow::frameSwapped, runCallbacks);
     QObject::connect(mainWindow, &QQuickWindow::activeFocusItemChanged, [mainWindow, this](){
         m_activeFocusItem = mainWindow->activeFocusItem();
-        if (m_activeFocusItem == nullptr) {
-            return;
-        }
     });
 
-    QObject::connect(steamInput, &SteamInputBridge::digitalActionStatesChanged, [this](auto states){
-        if (m_activeFocusItem == nullptr) {
-            return;
-        }
+    if (m_steamAPIInitialized) {
+        auto runCallbacks = [steamInput](){
+            SteamAPI_RunCallbacks();
+            steamInput->poll();
+        };
 
-        QMetaObject::invokeMethod(m_activeFocusItem, "onSteamInputDigitalStatesChanged", Q_ARG(QVariant, states));
-    });
+        auto callbackTimer = new QTimer(m_engine);
+        QObject::connect(callbackTimer, &QTimer::timeout, runCallbacks);
+        callbackTimer->start(33);
+
+        QObject::connect(mainWindow, &QQuickWindow::frameSwapped, runCallbacks);
+    }
+}
+
+Application::~Application()
+{
+    if(m_steamAPIInitialized) {
+        SteamAPI_Shutdown();
+    }
 }
