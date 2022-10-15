@@ -24,7 +24,7 @@ static const QStringList digitalGameActions{
                                                "folder_scroll",
                                                };
 
-static const QMap<ESteamInputType, QString> controllerNames{
+static const QMap<ESteamInputType, QString> controllerNames {
     {k_ESteamInputType_SteamController, "Steam"},
     {k_ESteamInputType_XBox360Controller, "XBox 360"},
     {k_ESteamInputType_XBoxOneController, "XBox One"},
@@ -41,7 +41,7 @@ static const QMap<ESteamInputType, QString> controllerNames{
     {k_ESteamInputType_MobileTouch, "Mobile Touch"}
 };
 
-QString nameForControllerType(ESteamInputType inputType)
+static QString nameForControllerType(ESteamInputType inputType)
 {
     if (controllerNames.contains(inputType)) {
         return controllerNames[inputType];

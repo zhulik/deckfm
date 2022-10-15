@@ -1,5 +1,6 @@
 #pragma once
 
+#include "qobjectdefs.h"
 #include <QObject>
 
 namespace QSteamworks {
@@ -11,8 +12,9 @@ class QSteamInput : public QObject
     Q_OBJECT
 public:
     explicit QSteamInput(QSteamAPI *parent = nullptr);
+    virtual ~QSteamInput();
 
-signals:
-
+    Q_INVOKABLE
+    void runFrame();
 };
 }
