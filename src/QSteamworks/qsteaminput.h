@@ -11,7 +11,7 @@ class QSteamInput : public QObject
 {
     Q_OBJECT
 public:
-    explicit QSteamInput(QSteamAPI *parent = nullptr);
+    explicit QSteamInput(QObject *parent = nullptr);
     virtual ~QSteamInput();
 
     Q_INVOKABLE

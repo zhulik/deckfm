@@ -7,7 +7,7 @@
 
 using namespace QSteamworks;
 
-QSteamUtils::QSteamUtils(QSteamAPI *parent)
+QSteamUtils::QSteamUtils(QObject *parent)
     : QObject{parent}
 {
 

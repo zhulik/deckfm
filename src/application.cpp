@@ -18,16 +18,15 @@
 
 #include "vdfparser.h"
 
+#include "QSteamworks/qsteamapi.h"
+#include "QSteamworks/qsteamutils.h"
+
 
 
 Application::Application(int &argc, char **argv)
     : QGuiApplication{argc, argv}
 {
-    m_steamAPIInitialized = SteamAPI_Init();
-
-    if (!m_steamAPIInitialized) {
-        qWarning() << "\n\nSteamAPI cannot be initialized.\n";
-    }
+    m_steamworks = new QSteamworks::QSteamAPI();
 
     QFontDatabase::addApplicationFont(":/resources/fonts/materialdesignicons-webfont.ttf");
     QQuickStyle::setStyle("Material");
@@ -40,15 +39,15 @@ Application::Application(int &argc, char **argv)
 
     SteamInputBridge *steamInput;
 
-    if (m_steamAPIInitialized) {
-        auto steamUtils = new SteamUtilsBridge(m_engine);
+    if (m_steamworks != nullptr) {
         steamInput = new SteamInputBridge(m_engine);
 
-        if (steamUtils->isOnDeck()) {
+        if (m_steamworks->steamUtils()->isSteamRunningOnSteamDeck()) {
             setOverrideCursor(QCursor(Qt::BlankCursor));
         }
 
-        m_engine->rootContext()->setContextProperty("steam_utils", steamUtils);
+
+        m_engine->rootContext()->setContextProperty("steam_utils", m_steamworks->steamUtils());
         m_engine->rootContext()->setContextProperty("steam_input", steamInput);
 
         QObject::connect(steamInput, &SteamInputBridge::digitalActionStatesChanged, [this](auto states){
@@ -71,7 +70,7 @@ Application::Application(int &argc, char **argv)
         m_activeFocusItem = mainWindow->activeFocusItem();
     });
 
-    if (m_steamAPIInitialized) {
+    if (m_steamworks != nullptr) {
         auto runCallbacks = [steamInput](){
             SteamAPI_RunCallbacks();
             steamInput->poll();
@@ -87,7 +86,5 @@ Application::Application(int &argc, char **argv)
 
 Application::~Application()
 {
-    if(m_steamAPIInitialized) {
-        SteamAPI_Shutdown();
-    }
+    delete m_steamworks;
 }

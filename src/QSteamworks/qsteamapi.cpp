@@ -16,11 +16,13 @@ QSteamAPI::QSteamAPI(QObject *parent)
         throw InitializationFailed("Cannot initialize SteamAPI.");
     }
     m_steamUtils = new QSteamUtils(this);
-    m_steamInput = new QSteamInput(this);
+//    m_steamInput = new QSteamInput(this);
 }
 
 QSteamAPI::~QSteamAPI()
 {
+    delete m_steamUtils;
+//    delete m_steamInput;
     SteamAPI_Shutdown();
 }
 

@@ -5,6 +5,10 @@
 class QQmlApplicationEngine;
 class QQuickItem;
 
+namespace QSteamworks {
+class QSteamAPI;
+}
+
 class Application : public QGuiApplication
 {
 
@@ -15,5 +19,5 @@ public:
 private:
     QQmlApplicationEngine *m_engine;
     QQuickItem *m_activeFocusItem = nullptr;
-    bool m_steamAPIInitialized = false;
+    QSteamworks::QSteamAPI *m_steamworks = nullptr;
 };

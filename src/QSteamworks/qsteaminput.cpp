@@ -34,7 +34,7 @@ static QString nameForControllerType(ESteamInputType inputType)
     return "Unknown";
 }
 
-QSteamInput::QSteamInput(QSteamAPI *parent)
+QSteamInput::QSteamInput(QObject *parent)
     : QObject{parent}
 {
     if(!SteamInput()->Init(true)) {
