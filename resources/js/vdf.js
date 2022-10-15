@@ -99,14 +99,6 @@ export const stringify = (object) => {
     }
     return create(object);
 };
-
-export const toJSONString = (vdf) => {
-    return JSON.stringify(parse(vdf), null, 2);
-}
-
-export const fromJSONString = (str) => {
-    return stringify(JSON.parse(str));
-}
 /**
  * @hidden
  */
