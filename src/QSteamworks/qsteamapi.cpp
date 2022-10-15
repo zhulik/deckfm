@@ -1,4 +1,6 @@
 #include "qsteamapi.h"
+#include "qsteamutils.h"
+#include "errors.h"
 
 #include "steam/steam_api.h"
 #include "steam/steam_api_common.h"
@@ -12,6 +14,7 @@ QSteamAPI::QSteamAPI(QObject *parent)
     if (!SteamAPI_Init()) {
         throw InitializationFailed("Cannot initialize SteamAPI.");
     }
+    m_steamUtils = new QSteamUtils(this);
 }
 
 QSteamAPI::~QSteamAPI()
@@ -22,4 +25,9 @@ QSteamAPI::~QSteamAPI()
 void QSteamAPI::runCallbacks() const
 {
     SteamAPI_RunCallbacks();
+}
+
+QSteamUtils *QSteamAPI::steamUtils() const
+{
+    return m_steamUtils;
 }

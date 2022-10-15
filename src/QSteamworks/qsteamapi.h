@@ -9,24 +9,12 @@
 
 namespace QSteamworks{
 
-class Exception: public std::exception {
-public:
-    Exception(const QString &what) : m_what(what) {}
-
-    char *what () { return m_what.toLocal8Bit().data(); }
-
-protected:
-    QString m_what;
-};
-
-class InitializationFailed: public Exception {
-public:
-    InitializationFailed(const QString &what) : Exception(what) {}
-};
+class QSteamUtils;
 
 class QSteamAPI : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QSteamUtils* steamUtils READ steamUtils CONSTANT)
 public:
     explicit QSteamAPI(QObject *parent = nullptr);
     virtual ~QSteamAPI();
@@ -34,7 +22,11 @@ public:
     Q_INVOKABLE
         void runCallbacks() const;
 
+    QSteamUtils *steamUtils() const;
+
 signals:
 
+private:
+    QSteamUtils *m_steamUtils = nullptr;
 };
 }
