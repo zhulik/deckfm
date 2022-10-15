@@ -40,6 +40,7 @@ Application::Application(int &argc, char **argv)
         m_steamworks->steamInput(); // initialize
 
         m_engine->rootContext()->setContextProperty("steam_utils", m_steamworks->steamUtils());
+        m_engine->rootContext()->setContextProperty("steam_input", m_steamworks->steamInput());
     }
 
     m_engine->load("qrc:/resources/qml/MainWindow.qml");

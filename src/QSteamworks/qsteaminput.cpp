@@ -72,3 +72,8 @@ void QSteamInput::runFrame()
 {
     SteamInput()->RunFrame();
 }
+
+const IGA &QSteamInput::iga() const
+{
+    return m_iga;
+}
