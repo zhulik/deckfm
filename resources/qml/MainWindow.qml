@@ -14,11 +14,7 @@ ApplicationWindow {
     title: "DeckFM"
     visible: true
 
-    visibility: {
-        console.log(steam_utils)
-        console.log(steam_utils.isSteamRunningOnSteamDeck)
-        steam_utils.isSteamRunningOnSteamDeck || steam_utils.isSteamInBigPictureMode ? "FullScreen" : "Windowed"
-    }
+    visibility: { steam_utils.isSteamRunningOnSteamDeck || steam_utils.isSteamInBigPictureMode ? "FullScreen" : "Windowed" }
 
     width: 1280
     height: 800

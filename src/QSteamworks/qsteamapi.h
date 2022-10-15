@@ -26,7 +26,7 @@ public:
 
     QSteamUtils *steamUtils() const;
 
-    QSteamInput *steamInput() const;
+    QSteamInput *steamInput();
 
 signals:
 

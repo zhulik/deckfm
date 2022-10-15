@@ -1,3 +1,5 @@
+#include <QDir>
+
 #include "qsteamapi.h"
 #include "qsteamutils.h"
 #include "qsteaminput.h"
@@ -16,13 +18,16 @@ QSteamAPI::QSteamAPI(QObject *parent)
         throw InitializationFailed("Cannot initialize SteamAPI.");
     }
     m_steamUtils = new QSteamUtils(this);
-//    m_steamInput = new QSteamInput(this);
+
 }
 
 QSteamAPI::~QSteamAPI()
 {
     delete m_steamUtils;
-//    delete m_steamInput;
+    if (m_steamInput != nullptr) {
+        delete m_steamInput;
+    }
+
     SteamAPI_Shutdown();
 }
 
@@ -36,7 +41,16 @@ QSteamUtils *QSteamAPI::steamUtils() const
     return m_steamUtils;
 }
 
-QSteamInput *QSteamAPI::steamInput() const
+QSteamInput *QSteamAPI::steamInput()
 {
+    if (m_steamInput == nullptr) {
+        auto vdf = QString(qgetenv("QSTEAMWORKS_IGA_PATH"));
+
+        if (vdf == "") {
+            vdf = QDir::current().filePath("input.vdf");
+        }
+
+        m_steamInput = new QSteamInput(vdf, this);
+    }
     return m_steamInput;
 }

@@ -12,16 +12,11 @@
 #include "steam/steam_api.h"
 
 #include "application.h"
-#include "steaminputbridge.h"
-#include "steamutilsbridge.h"
 #include "folderlistmodel.h"
-
-#include "vdfparser.h"
 
 #include "QSteamworks/qsteamapi.h"
 #include "QSteamworks/qsteamutils.h"
-
-
+#include "QSteamworks/qsteaminput.h"
 
 Application::Application(int &argc, char **argv)
     : QGuiApplication{argc, argv}
@@ -37,26 +32,14 @@ Application::Application(int &argc, char **argv)
 
     m_engine->rootContext()->setContextProperty("fs_model", fsModel);
 
-    SteamInputBridge *steamInput;
-
     if (m_steamworks != nullptr) {
-        steamInput = new SteamInputBridge(m_engine);
-
         if (m_steamworks->steamUtils()->isSteamRunningOnSteamDeck()) {
             setOverrideCursor(QCursor(Qt::BlankCursor));
         }
 
+        m_steamworks->steamInput(); // initialize
 
         m_engine->rootContext()->setContextProperty("steam_utils", m_steamworks->steamUtils());
-        m_engine->rootContext()->setContextProperty("steam_input", steamInput);
-
-        QObject::connect(steamInput, &SteamInputBridge::digitalActionStatesChanged, [this](auto states){
-            if (m_activeFocusItem == nullptr) {
-                return;
-            }
-
-            QMetaObject::invokeMethod(m_activeFocusItem, "onSteamInputDigitalStatesChanged", Q_ARG(QVariant, states));
-        });
     }
 
     m_engine->load("qrc:/resources/qml/MainWindow.qml");
@@ -71,9 +54,9 @@ Application::Application(int &argc, char **argv)
     });
 
     if (m_steamworks != nullptr) {
-        auto runCallbacks = [steamInput](){
-            SteamAPI_RunCallbacks();
-            steamInput->poll();
+        auto runCallbacks = [this](){
+            m_steamworks->runCallbacks();
+            m_steamworks->steamInput()->runFrame();
         };
 
         auto callbackTimer = new QTimer(m_engine);

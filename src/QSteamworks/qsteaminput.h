@@ -1,7 +1,9 @@
 #pragma once
 
-#include "qobjectdefs.h"
 #include <QObject>
+
+#include "iga.h"
+
 
 namespace QSteamworks {
 
@@ -11,10 +13,14 @@ class QSteamInput : public QObject
 {
     Q_OBJECT
 public:
-    explicit QSteamInput(QObject *parent = nullptr);
+    explicit QSteamInput(const QString &vdf, QObject *parent = nullptr);
     virtual ~QSteamInput();
 
     Q_INVOKABLE
     void runFrame();
+
+private:
+
+    IGA m_iga;
 };
 }

@@ -1,11 +1,14 @@
 #include <QMap>
+#include <QDebug>
+#include <QFile>
 
 #include "steam/isteaminput.h"
 #include "steam/steam_api.h"
 
-#include "qsteamapi.h"
 #include "qsteaminput.h"
 #include "errors.h"
+
+#include "vdfparser.h"
 
 using namespace QSteamworks;
 
@@ -34,12 +37,30 @@ static QString nameForControllerType(ESteamInputType inputType)
     return "Unknown";
 }
 
-QSteamInput::QSteamInput(QObject *parent)
+QString readFile(QString const &path) {
+    QFile f(path);
+
+    if (!f.open(QFile::ReadOnly | QFile::Text)) {
+        throw std::runtime_error(QString("Cannot read file %1").arg(path).toLocal8Bit());
+    }
+
+    return QTextStream(&f).readAll();
+}
+
+QSteamInput::QSteamInput(const QString &vdf, QObject *parent)
     : QObject{parent}
 {
     if(!SteamInput()->Init(true)) {
         throw InitializationFailed("Cannot initialize SteamInput");
     }
+
+    if (!SteamInput()->SetInputActionManifestFilePath(vdf.toLocal8Bit())) {
+        throw InitializationFailed(QString("Cannot read IGA file: %1").arg(vdf));
+    }
+
+    auto vdfContent = readFile(vdf);
+    m_iga = IGA(VDFParser().parse(vdfContent));
+
 }
 
 QSteamInput::~QSteamInput()
