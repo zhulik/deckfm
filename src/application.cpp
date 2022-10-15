@@ -16,12 +16,16 @@
 #include "steamutilsbridge.h"
 #include "folderlistmodel.h"
 
+#include "vdfparser.h"
+
 
 
 Application::Application(int &argc, char **argv)
     : QGuiApplication{argc, argv}
 {
     m_steamAPIInitialized = SteamAPI_Init();
+
+    VDFParser parser;
 
     if (!m_steamAPIInitialized) {
         qWarning() << "\n\nSteamAPI cannot be initialized.\n";
@@ -31,6 +35,10 @@ Application::Application(int &argc, char **argv)
     QQuickStyle::setStyle("Material");
 
     m_engine = new QQmlApplicationEngine();
+
+    auto fsModel = new FolderListModel(m_engine);
+
+    m_engine->rootContext()->setContextProperty("fs_model", fsModel);
 
     SteamInputBridge *steamInput;
 
@@ -44,10 +52,6 @@ Application::Application(int &argc, char **argv)
 
         m_engine->rootContext()->setContextProperty("steam_utils", steamUtils);
         m_engine->rootContext()->setContextProperty("steam_input", steamInput);
-
-        auto fsModel = new FolderListModel(m_engine);
-
-        m_engine->rootContext()->setContextProperty("fs_model", fsModel);
 
         QObject::connect(steamInput, &SteamInputBridge::digitalActionStatesChanged, [this](auto states){
             if (m_activeFocusItem == nullptr) {

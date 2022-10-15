@@ -19,6 +19,8 @@ file(GLOB_RECURSE sources "src/*.cpp")
 
 set(PROJECT_SOURCES ${sources} qml.qrc)
 
+add_subdirectory(tools/vdf)
+
 configure_file(${CMAKE_SOURCE_DIR}/steam_appid.txt ${CMAKE_CURRENT_BINARY_DIR}/steam_appid.txt COPYONLY)
 configure_file(${CMAKE_SOURCE_DIR}/input.vdf ${CMAKE_CURRENT_BINARY_DIR}/input.vdf COPYONLY)
 configure_file(${CMAKE_SOURCE_DIR}/steam_controller.vdf ${CMAKE_CURRENT_BINARY_DIR}/steam_controller.vdf COPYONLY)

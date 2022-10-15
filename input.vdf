@@ -6,7 +6,7 @@
 		{
 			"0"
 			{
-				"path" "steam_controller.vdf"
+				"path"		"steam_controller.vdf"
 			}
 		}
 	}
@@ -22,7 +22,6 @@
 				"folder_down"		"#FolderDown"
 				"folder_left"		"#FolderLeft"
 				"folder_right"		"#FolderRight"
-
 				"folder_activate"		"#FolderActivate"
 				"folder_go_up"		"#FolderGoUp"
 				"folder_go_home"		"#FolderGoHome"
@@ -31,8 +30,8 @@
 			{
 				"folder_scroll"
 				{
-					"title"			"#FolderScroll"
-					"input_mode"	"absolute_mouse"
+					"title"		"#FolderScroll"
+					"input_mode"		"absolute_mouse"
 				}
 			}
 		}
@@ -48,7 +47,6 @@
 			"description"		"DeckFM config"
 			"AnalogControls"		"Analog Controls"
 			"FolderNavigation"		"Folder Controls"
-
 			"FolderUp"		"Folder Up"
 			"FolderDown"		"Folder Down"
 			"FolderLeft"		"Folder Left"
@@ -56,7 +54,8 @@
 			"FolderActivate"		"Open"
 			"FolderGoUp"		"Go Up"
 			"FolderGoHome"		"Go Home"
-			"FolderScroll"	"Folder Scroll"
+			"FolderScroll"		"Folder Scroll"
 		}
 	}
 }
+
