@@ -16,12 +16,16 @@
 #include "steamutilsbridge.h"
 #include "folderlistmodel.h"
 
+#include "vdfparser.h"
+
 
 
 Application::Application(int &argc, char **argv)
     : QGuiApplication{argc, argv}
 {
     m_steamAPIInitialized = SteamAPI_Init();
+
+    VDFParser parser;
 
     if (!m_steamAPIInitialized) {
         qWarning() << "\n\nSteamAPI cannot be initialized.\n";

@@ -21,5 +21,6 @@
         <file>resources/qml/models/JSONListModel.qml</file>
         <file>resources/qml/GamepadsInfo/GamepadsInfo.qml</file>
         <file>resources/qml/GamepadsInfo/GamepadInfoDelegate.qml</file>
+        <file>resources/js/vdf.js</file>
     </qresource>
 </RCC>

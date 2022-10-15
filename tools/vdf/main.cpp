@@ -1,11 +1,11 @@
-#include <QJSEngine>
 #include <QCoreApplication>
 #include <QFile>
 #include <QFileInfo>
+#include <QJsonDocument>
 
 #include <iostream>
 
-#include <QDebug>
+#include "vdfparser.h"
 
 QString readFile(QString const &path) {
     QFile f(path);
@@ -27,13 +27,7 @@ int main(int argc, char *argv[])
 
     QCoreApplication app(argc, argv);
 
-    QJSEngine myEngine;
-    auto vdfModule =  myEngine.importModule(QCoreApplication::applicationDirPath() + "/vdf.js");
-
-    if (vdfModule.isError()) {
-        qDebug() << "Cannot load vdf.js:" << vdfModule.property("lineNumber").toInt()  << vdfModule.toString();
-        exit(1);
-    }
+    VDFParser parser;
 
     auto filePath = argv[1];
     auto inputFile = readFile(filePath);
@@ -43,15 +37,10 @@ int main(int argc, char *argv[])
     QString output;
 
     if (suffix == "json") {
-        auto parse = vdfModule.property("fromJSONString");
-        QJSValueList args;
-        args << inputFile;
-        output =  parse.call(args).toString();
+        auto json = QJsonDocument::fromJson(inputFile.toUtf8()).object();
+        output = parser.stringify(json);
     } else if (suffix == "vdf") {
-        auto parse = vdfModule.property("toJSONString");
-        QJSValueList args;
-        args << inputFile;
-        output =  parse.call(args).toString();
+        output = QJsonDocument(parser.parse(inputFile)).toJson(QJsonDocument::Indented);
     } else {
         qDebug() << "Unknown suffix:" << suffix;
         exit(1);
