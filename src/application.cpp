@@ -25,8 +25,6 @@ Application::Application(int &argc, char **argv)
 {
     m_steamAPIInitialized = SteamAPI_Init();
 
-    VDFParser parser;
-
     if (!m_steamAPIInitialized) {
         qWarning() << "\n\nSteamAPI cannot be initialized.\n";
     }
