@@ -49,7 +49,7 @@ QString readFile(QString const &path) {
 }
 
 QSteamInput::QSteamInput(const QString &vdf, QSteamAPI *parent)
-    : QObject{parent}
+    : QObject{parent}, m_vdf(vdf)
 {
     qRegisterMetaType<QSteamworks::IGA>();
     qRegisterMetaType<QSteamworks::ActionDefinition>();
@@ -59,7 +59,7 @@ QSteamInput::QSteamInput(const QString &vdf, QSteamAPI *parent)
         throw InitializationFailed("Cannot initialize SteamInput");
     }
 
-    if (!SteamInput()->SetInputActionManifestFilePath(vdf.toLocal8Bit())) {
+    if (!SteamInput()->SetInputActionManifestFilePath(m_vdf.toLocal8Bit())) {
         throw InitializationFailed(QString("Cannot read IGA file: %1").arg(vdf));
     }
 

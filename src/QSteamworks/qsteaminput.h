@@ -38,6 +38,7 @@ signals:
     void qmlControllersChanged();
 
 private:
+    QString m_vdf;
     IGA m_iga;
     QSet<Controller> m_controllers;
 };

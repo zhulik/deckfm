@@ -29,8 +29,9 @@ Item {
                 width: controllersView.width
                 height: 70
 
-                RowLayout {
+                onClicked: controllersView.currentIndex = index
 
+                RowLayout {
                     anchors.fill: parent
 
                     Image {
