@@ -12,5 +12,7 @@ cmake ..
 
 make -j8
 
-./deckfm.sh
+cd ..
+
+$(pwd)/deckfm.sh
 
