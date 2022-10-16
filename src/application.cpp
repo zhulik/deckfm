@@ -17,58 +17,59 @@
 #include "QSteamworks/qsteamapi.h"
 #include "QSteamworks/qsteamutils.h"
 #include "QSteamworks/qsteaminput.h"
+#include "QSteamworks/errors.h"
 
 Application::Application(int &argc, char **argv)
     : QGuiApplication{argc, argv}
 {
-    m_steamworks = new QSteamworks::QSteamAPI();
-
     QFontDatabase::addApplicationFont(":/resources/fonts/materialdesignicons-webfont.ttf");
     QQuickStyle::setStyle("Material");
 
     m_engine = new QQmlApplicationEngine();
 
-    auto fsModel = new FolderListModel(m_engine);
-
-    m_engine->rootContext()->setContextProperty("fs_model", fsModel);
-
-    if (m_steamworks != nullptr) {
+    try {
+        m_steamworks = new QSteamworks::QSteamAPI(m_engine);
         if (m_steamworks->steamUtils()->isSteamRunningOnSteamDeck()) {
             setOverrideCursor(QCursor(Qt::BlankCursor));
         }
 
-        m_steamworks->steamInput(); // initialize
-
         m_engine->rootContext()->setContextProperty("steam_utils", m_steamworks->steamUtils());
         m_engine->rootContext()->setContextProperty("steam_input", m_steamworks->steamInput());
+        m_steamworks->steamInput(); // initialize
+    } catch(QSteamworks::InitializationFailed &e) {
+        qDebug() << "\n" << e.what() << "\n";
     }
 
-    m_engine->load("qrc:/resources/qml/MainWindow.qml");
+    m_engine->rootContext()->setContextProperty("fs_model", new FolderListModel(m_engine));
 
-    if (m_engine->rootObjects().count() == 0) {
-        throw "ERROR";
-    }
+    connect(m_engine, &QQmlApplicationEngine::objectCreated, [this](auto obj) {
+        if(obj == nullptr) {
+            throw std::runtime_error("Cannot load qml.");
+        }
 
-    auto mainWindow = (QQuickWindow *)m_engine->rootObjects().at(0);
-    QObject::connect(mainWindow, &QQuickWindow::activeFocusItemChanged, [mainWindow, this](){
-        m_activeFocusItem = mainWindow->activeFocusItem();
+        auto mainWindow = (QQuickWindow *)m_engine->rootObjects().at(0);
+        QObject::connect(mainWindow, &QQuickWindow::activeFocusItemChanged, [mainWindow, this](){
+            m_activeFocusItem = mainWindow->activeFocusItem();
+        });
+
+        if (m_steamworks != nullptr) {
+            auto runCallbacks = [this](){
+                m_steamworks->runCallbacks();
+                m_steamworks->steamInput()->runFrame();
+            };
+
+            auto callbackTimer = new QTimer(m_engine);
+            QObject::connect(callbackTimer, &QTimer::timeout, runCallbacks);
+            callbackTimer->start(33);
+
+            QObject::connect(mainWindow, &QQuickWindow::frameSwapped, runCallbacks);
+        }
     });
 
-    if (m_steamworks != nullptr) {
-        auto runCallbacks = [this](){
-            m_steamworks->runCallbacks();
-            m_steamworks->steamInput()->runFrame();
-        };
-
-        auto callbackTimer = new QTimer(m_engine);
-        QObject::connect(callbackTimer, &QTimer::timeout, runCallbacks);
-        callbackTimer->start(33);
-
-        QObject::connect(mainWindow, &QQuickWindow::frameSwapped, runCallbacks);
-    }
+    m_engine->load("qrc:/resources/qml/MainWindow.qml");
 }
 
 Application::~Application()
 {
-    delete m_steamworks;
+    delete m_engine;
 }

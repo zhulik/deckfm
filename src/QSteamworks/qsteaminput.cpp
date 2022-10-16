@@ -5,6 +5,7 @@
 #include "steam/isteaminput.h"
 #include "steam/steam_api.h"
 
+#include "qsteamapi.h"
 #include "qsteaminput.h"
 #include "errors.h"
 
@@ -47,7 +48,7 @@ QString readFile(QString const &path) {
     return QTextStream(&f).readAll();
 }
 
-QSteamInput::QSteamInput(const QString &vdf, QObject *parent)
+QSteamInput::QSteamInput(const QString &vdf, QSteamAPI *parent)
     : QObject{parent}
 {
     qRegisterMetaType<QSteamworks::IGA>();

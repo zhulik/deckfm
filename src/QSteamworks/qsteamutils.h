@@ -14,7 +14,7 @@ class QSteamUtils : public QObject
     Q_PROPERTY(bool isSteamInBigPictureMode READ isSteamInBigPictureMode CONSTANT)
 
 public:
-    explicit QSteamUtils(QObject *parent = nullptr);
+    explicit QSteamUtils(QSteamworks::QSteamAPI *parent = nullptr);
 
     bool isSteamRunningOnSteamDeck() const;
     bool isSteamInBigPictureMode() const;

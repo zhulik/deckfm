@@ -14,7 +14,7 @@ class QSteamInput : public QObject
     Q_OBJECT
     Q_PROPERTY(QSteamworks::IGA iga READ iga CONSTANT)
 public:
-    explicit QSteamInput(const QString &vdf, QObject *parent = nullptr);
+    explicit QSteamInput(const QString &vdf, QSteamAPI *parent = nullptr);
     virtual ~QSteamInput();
 
     Q_INVOKABLE

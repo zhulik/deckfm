@@ -10,9 +10,9 @@ class Exception: public std::exception {
 public:
     Exception(const QString &what) : m_what(what) {}
 
-    char *what () { return m_what.toLocal8Bit().data(); }
+    virtual const char *what () { return m_what.toLocal8Bit().data(); }
 
-protected:
+private:
     QString m_what;
 };
 
