@@ -13,6 +13,8 @@
 
 using namespace QSteamworks;
 
+QSteamworks::QSteamInput *QSteamworks::QSteamInput::m_instance = nullptr;
+
 static const QMap<ESteamInputType, QString> controllerNames {
     {k_ESteamInputType_SteamController, "Steam"},
     {k_ESteamInputType_XBox360Controller, "XBox 360"},
@@ -48,9 +50,18 @@ QString readFile(QString const &path) {
     return QTextStream(&f).readAll();
 }
 
+
+QSteamInput *QSteamInput::instance()
+{
+    return m_instance;
+}
+
 QSteamInput::QSteamInput(const QString &vdf, QSteamAPI *parent)
     : QObject{parent}, m_vdf(vdf)
 {
+    if (m_instance != nullptr) {
+        throw InitializationFailed("Steam input is already initialized");
+    }
     qRegisterMetaType<QSteamworks::IGA>();
     qRegisterMetaType<QSteamworks::ActionDefinition>();
     qRegisterMetaType<QSteamworks::Controller>();
@@ -66,6 +77,16 @@ QSteamInput::QSteamInput(const QString &vdf, QSteamAPI *parent)
     auto vdfContent = readFile(vdf);
     m_iga = IGA(VDFParser().parse(vdfContent));
     SteamInput()->EnableDeviceCallbacks();
+
+    m_instance = this;
+
+    auto cb = [](SteamInputActionEvent_t *event) {
+        if (event->eEventType == ESteamInputActionEventType_DigitalAction) {
+            QSteamInput::instance()->onActionEvent(event);
+        }
+    };
+    SteamInput()->EnableActionEventCallbacks(cb);
+
 }
 
 QSteamInput::~QSteamInput()
@@ -92,6 +113,15 @@ QVariantList QSteamInput::qmlControllers() const
     }
 
     return result;
+}
+
+void QSteamInput::onActionEvent(SteamInputActionEvent_t *event)
+{
+    if (event->eEventType == ESteamInputActionEventType_DigitalAction) {
+        emit digitalEvent();
+    } else {
+        emit digitalEvent();
+    }
 }
 
 
