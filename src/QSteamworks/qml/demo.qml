@@ -42,8 +42,8 @@ ApplicationWindow {
 
             }
 
-            Item {
-                id: discoverTab
+            ControllerView {
+
             }
         }
     }

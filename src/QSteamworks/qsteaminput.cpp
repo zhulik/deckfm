@@ -53,6 +53,7 @@ QSteamInput::QSteamInput(const QString &vdf, QSteamAPI *parent)
 {
     qRegisterMetaType<QSteamworks::IGA>();
     qRegisterMetaType<QSteamworks::ActionDefinition>();
+    qRegisterMetaType<QSteamworks::Controller>();
 
     if(!SteamInput()->Init(true)) {
         throw InitializationFailed("Cannot initialize SteamInput");
@@ -64,7 +65,8 @@ QSteamInput::QSteamInput(const QString &vdf, QSteamAPI *parent)
 
     auto vdfContent = readFile(vdf);
     m_iga = IGA(VDFParser().parse(vdfContent));
-
+    runFrame();
+    updateControllers();
 }
 
 QSteamInput::~QSteamInput()
@@ -80,4 +82,35 @@ void QSteamInput::runFrame()
 const IGA &QSteamInput::iga() const
 {
     return m_iga;
+}
+
+QVariantList QSteamInput::qmlControllers() const
+{
+    QVariantList result;
+
+    foreach(auto &controller, m_controllers) {
+        result << QVariant::fromValue(controller);
+    }
+
+    return result;
+}
+
+void QSteamInput::updateControllers()
+{
+    m_controllers.clear();
+
+    QVector<ControllerHandle_t> handles(STEAM_INPUT_MAX_COUNT);
+    auto n = SteamInput()->GetConnectedControllers( handles.data() );
+    handles.resize(n);
+    qDebug() << "Found" << n << "controllers";
+
+    foreach(auto &handle, handles) {
+        auto inputType = SteamInput()->GetInputTypeForHandle(handle);
+        auto name = nameForControllerType(inputType);
+        auto image = QString("qrc:/resources/images/controllers/%1.png").arg(name);
+
+        m_controllers << Controller(handle, name, image);
+    }
+
+    emit qmlControllersChanged();
 }
