@@ -82,9 +82,16 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-//        gamepadWindow.open()
+        //        gamepadWindow.open()
         const iga = steam_input.iga
-        console.log(iga.actionsForSet(iga.actionSets[0]));
+        console.log("Action sets: "iga.actionSets);
+        console.log("Actions : "iga.actions);
+
+        iga.actionSets.forEach((actionSet)=>{
+                                   console.log("Action set: ", actionSet)
+                               })
+
+//        console.log(iga.actionsForSet(iga.actionSets[0]));
     }
 
     GamepadWindow {

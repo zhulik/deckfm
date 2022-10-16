@@ -21,7 +21,10 @@ IGA::IGA(const QJsonObject &definition)
     foreach(auto &actionSet, actions.toVariantMap().toStdMap()) {
 
         foreach(auto &type, actionTypes) {
-            m_actionSets[actionSet.first].append(actionSet.second.toMap()[type].toMap().keys());
+            foreach(auto &name, actionSet.second.toMap()[type].toMap().keys()) {
+                m_actionSets[actionSet.first].append(ActionDefinition(name, type, actionSet.first, true));
+            }
+
         }
     }
     //    auto actionLayers = definition["Action Manifest"].toObject()["action_layers"].toObject();
@@ -34,5 +37,20 @@ QStringList IGA::actionSets() const
 
 QStringList IGA::actionsForSet(const QString &name) const
 {
-    return m_actionSets[name];
+    QStringList result;
+    foreach(auto &action, m_actionSets[name]) {
+        result << action.name();
+    }
+    return result;
+}
+
+QStringList IGA::actions() const
+{
+    QStringList result;
+    foreach(auto &actionSet, m_actionSets.toStdMap()) {
+        foreach(auto &action, actionSet.second) {
+            result << action.name();
+        }
+    }
+    return result;
 }
