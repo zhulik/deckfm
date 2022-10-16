@@ -20,6 +20,9 @@ public:
     QStringList actionsForSet(const QString&) const;
 
     Q_INVOKABLE
+    QVariantList qmlActionsForSet(const QString&) const;
+
+    Q_INVOKABLE
     QStringList actions() const;
 
     Q_INVOKABLE

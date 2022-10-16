@@ -67,7 +67,7 @@ Application::Application(int &argc, char **argv)
     QString qmlPath = "qrc:/resources/qml/MainWindow.qml";
 
     if (arguments().count() > 1) {
-        qmlPath = arguments()[1];
+        qmlPath = arguments().at(1);
     }
 
     m_engine->load(qmlPath);

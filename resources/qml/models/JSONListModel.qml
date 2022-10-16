@@ -18,6 +18,10 @@ Q.ListModel {
         root.clear()
 
         newData.forEach(function(row){
+            if (typeof(row) !== 'object') {
+                row = {value: row}
+            }
+
             root.append(row)
         })
     }

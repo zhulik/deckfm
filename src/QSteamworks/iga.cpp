@@ -5,8 +5,8 @@
 using namespace QSteamworks;
 
 static const QMap<QString, bool> actionTypes {
-    {"Button", false},
-    {"StickPadGyro", true}
+    {"Button", true},
+    {"StickPadGyro", false}
 };
 
 IGA::IGA()
@@ -40,6 +40,16 @@ QStringList IGA::actionsForSet(const QString &name) const
     QStringList result;
     foreach(auto &action, m_actionSets[name]) {
         result << action.name();
+    }
+    return result;
+}
+
+QVariantList IGA::qmlActionsForSet(const QString &name) const
+{
+    QVariantList result;
+
+    foreach(auto &action, m_actionSets[name]) {
+        result << QVariant::fromValue(action);
     }
     return result;
 }
