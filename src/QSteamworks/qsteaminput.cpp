@@ -81,12 +81,10 @@ QSteamInput::QSteamInput(const QString &vdf, QSteamAPI *parent)
     m_instance = this;
 
     auto cb = [](SteamInputActionEvent_t *event) {
-        if (event->eEventType == ESteamInputActionEventType_DigitalAction) {
-            QSteamInput::instance()->onActionEvent(event);
-        }
+        QSteamInput::instance()->onActionEvent(event); // Dirty hack, but I didn't find a better way
     };
-    SteamInput()->EnableActionEventCallbacks(cb);
 
+    SteamInput()->EnableActionEventCallbacks(cb);
 }
 
 QSteamInput::~QSteamInput()

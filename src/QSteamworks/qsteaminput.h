@@ -24,8 +24,6 @@ class QSteamInput : public QObject
     STEAM_CALLBACK( QSteamInput, onControllerDisconnected, SteamInputDeviceDisconnected_t );
 
 public:
-    static QSteamInput *instance();
-
     explicit QSteamInput(const QString &vdf, QSteamAPI *parent = nullptr);
     virtual ~QSteamInput();
 
@@ -35,8 +33,6 @@ public:
     const IGA &iga() const;
 
     QVariantList qmlControllers() const;
-
-    void onActionEvent(SteamInputActionEvent_t *event);
 
 signals:
     void qmlControllersChanged();
@@ -48,8 +44,9 @@ private:
     IGA m_iga;
     QSet<Controller> m_controllers;
 
-protected:
+    static QSteamInput *instance();
     static QSteamInput *m_instance;
+    void onActionEvent(SteamInputActionEvent_t *event);
 };
 }
 
