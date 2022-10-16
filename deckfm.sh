@@ -1,4 +1,4 @@
 #!/usr/bin/bash
 
-./build/deckfm
+./build/deckfm ./src/QSteamworks/qml/demo.qml
 

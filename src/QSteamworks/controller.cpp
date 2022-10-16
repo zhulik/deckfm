@@ -27,3 +27,8 @@ const QString &Controller::image() const
 {
     return m_image;
 }
+
+bool Controller::operator==(const Controller &other) const
+{
+    return m_handle == other.handle();
+}

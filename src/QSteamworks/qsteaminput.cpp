@@ -65,8 +65,7 @@ QSteamInput::QSteamInput(const QString &vdf, QSteamAPI *parent)
 
     auto vdfContent = readFile(vdf);
     m_iga = IGA(VDFParser().parse(vdfContent));
-    runFrame();
-    updateControllers();
+    SteamInput()->EnableDeviceCallbacks();
 }
 
 QSteamInput::~QSteamInput()
@@ -95,22 +94,27 @@ QVariantList QSteamInput::qmlControllers() const
     return result;
 }
 
-void QSteamInput::updateControllers()
+
+void QSteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb)
 {
-    m_controllers.clear();
+    auto handle = cb->m_ulConnectedDeviceHandle;
 
-    QVector<ControllerHandle_t> handles(STEAM_INPUT_MAX_COUNT);
-    auto n = SteamInput()->GetConnectedControllers( handles.data() );
-    handles.resize(n);
-    qDebug() << "Found" << n << "controllers";
 
-    foreach(auto &handle, handles) {
-        auto inputType = SteamInput()->GetInputTypeForHandle(handle);
-        auto name = nameForControllerType(inputType);
-        auto image = QString("qrc:/resources/images/controllers/%1.png").arg(name);
+    auto inputType = SteamInput()->GetInputTypeForHandle(handle);
+    auto name = nameForControllerType(inputType);
+    auto image = QString("qrc:/resources/images/controllers/%1.png").arg(name);
 
-        m_controllers << Controller(handle, name, image);
-    }
-
+    m_controllers << Controller(handle, name, image);
     emit qmlControllersChanged();
 }
+
+void QSteamInput::onControllerDisconnected(SteamInputDeviceDisconnected_t *cb)
+{
+    auto handle = cb->m_ulDisconnectedDeviceHandle;
+    auto controller = Controller(handle, "", "");
+    if (m_controllers.contains(controller)) {
+        m_controllers.remove(controller);
+    }
+    emit qmlControllersChanged();
+}
+

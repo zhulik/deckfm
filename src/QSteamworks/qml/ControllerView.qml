@@ -97,7 +97,6 @@ Item {
                     fillMode: Image.PreserveAspectFit
                     source: controllersView.currentController.image
                 }
-
             }
 
         }

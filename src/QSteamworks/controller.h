@@ -24,11 +24,19 @@ public:
 
     const QString &image() const;
 
+    bool operator==(const Controller &) const;
+
 private:
     InputHandle_t m_handle;
     QString m_name;
     QString m_image;
 };
+
+inline uint qHash(const QSteamworks::Controller &key)
+{
+    return ::qHash(key.handle());
+}
+
 }
 
 Q_DECLARE_METATYPE(QSteamworks::Controller)
