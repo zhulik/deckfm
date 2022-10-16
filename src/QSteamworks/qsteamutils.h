@@ -6,17 +6,16 @@ namespace QSteamworks {
 
 class QSteamAPI;
 
-class QSteamUtils : public QObject
-{
-    Q_OBJECT
+class QSteamUtils : public QObject {
+  Q_OBJECT
 
-    Q_PROPERTY(bool isSteamRunningOnSteamDeck READ isSteamRunningOnSteamDeck CONSTANT)
-    Q_PROPERTY(bool isSteamInBigPictureMode READ isSteamInBigPictureMode CONSTANT)
+  Q_PROPERTY(bool isSteamRunningOnSteamDeck READ isSteamRunningOnSteamDeck CONSTANT)
+  Q_PROPERTY(bool isSteamInBigPictureMode READ isSteamInBigPictureMode CONSTANT)
 
 public:
-    explicit QSteamUtils(QSteamworks::QSteamAPI *parent = nullptr);
+  explicit QSteamUtils(QSteamworks::QSteamAPI *parent = nullptr);
 
-    bool isSteamRunningOnSteamDeck() const;
-    bool isSteamInBigPictureMode() const;
+  bool isSteamRunningOnSteamDeck() const;
+  bool isSteamInBigPictureMode() const;
 };
-};
+}; // namespace QSteamworks

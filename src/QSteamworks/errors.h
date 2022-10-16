@@ -4,20 +4,19 @@
 
 #include <stdexcept>
 
-
 namespace QSteamworks {
-class Exception: public std::exception {
+class Exception : public std::exception {
 public:
-    Exception(const QString &what) : m_what(what) {}
+  Exception(const QString &what) : m_what(what) {}
 
-    virtual const char *what () { return m_what.toLocal8Bit().data(); }
+  virtual const char *what() { return m_what.toLocal8Bit().data(); }
 
 private:
-    QString m_what;
+  QString m_what;
 };
 
-class InitializationFailed: public Exception {
+class InitializationFailed : public Exception {
 public:
-    InitializationFailed(const QString &what) : Exception(what) {}
+  InitializationFailed(const QString &what) : Exception(what) {}
 };
-}
+} // namespace QSteamworks

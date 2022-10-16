@@ -1,13 +1,13 @@
-#include <QMap>
 #include <QDebug>
 #include <QFile>
+#include <QMap>
 
 #include "steam/isteaminput.h"
 #include "steam/steam_api.h"
 
+#include "errors.h"
 #include "qsteamapi.h"
 #include "qsteaminput.h"
-#include "errors.h"
 
 #include "vdfparser.h"
 
@@ -15,7 +15,7 @@ using namespace QSteamworks;
 
 QSteamworks::QSteamInput *QSteamworks::QSteamInput::m_instance = nullptr;
 
-static const QMap<ESteamInputType, QString> controllerNames {
+static const QMap<ESteamInputType, QString> controllerNames{
     {k_ESteamInputType_SteamController, "Steam"},
     {k_ESteamInputType_XBox360Controller, "XBox 360"},
     {k_ESteamInputType_XBoxOneController, "XBox One"},
@@ -29,120 +29,162 @@ static const QMap<ESteamInputType, QString> controllerNames {
     {k_ESteamInputType_SwitchJoyConPair, "Switch JoyCon Pair"},
     {k_ESteamInputType_SwitchJoyConSingle, "Switch JoyCon Single"},
     {k_ESteamInputType_SwitchProController, "Switch Pro"},
-    {k_ESteamInputType_MobileTouch, "Mobile Touch"}
-};
+    {k_ESteamInputType_MobileTouch, "Mobile Touch"}};
 
-static QString nameForControllerType(ESteamInputType inputType)
-{
-    if (controllerNames.contains(inputType)) {
-        return controllerNames[inputType];
-    }
-    return "Unknown";
+static QString nameForControllerType(ESteamInputType inputType) {
+  if (controllerNames.contains(inputType)) {
+    return controllerNames[inputType];
+  }
+  return "Unknown";
 }
 
 QString readFile(QString const &path) {
-    QFile f(path);
+  QFile f(path);
 
-    if (!f.open(QFile::ReadOnly | QFile::Text)) {
-        throw std::runtime_error(QString("Cannot read file %1").arg(path).toLocal8Bit());
-    }
+  if (!f.open(QFile::ReadOnly | QFile::Text)) {
+    throw std::runtime_error(QString("Cannot read file %1").arg(path).toLocal8Bit());
+  }
 
-    return QTextStream(&f).readAll();
+  return QTextStream(&f).readAll();
 }
 
+QSteamInput *QSteamInput::instance() { return m_instance; }
 
-QSteamInput *QSteamInput::instance()
-{
-    return m_instance;
+QSteamInput::QSteamInput(const QString &vdf, QSteamAPI *parent) : QObject{parent}, m_vdf(vdf) {
+  if (m_instance != nullptr) {
+    throw InitializationFailed("Steam input is already initialized");
+  }
+  qRegisterMetaType<QSteamworks::IGA>();
+  qRegisterMetaType<QSteamworks::ActionDefinition>();
+  qRegisterMetaType<QSteamworks::Controller>();
+
+  if (!SteamInput()->Init(true)) {
+    throw InitializationFailed("Cannot initialize SteamInput");
+  }
+
+  if (!SteamInput()->SetInputActionManifestFilePath(m_vdf.toLocal8Bit())) {
+    throw InitializationFailed(QString("Cannot read IGA file: %1").arg(vdf));
+  }
+
+  auto vdfContent = readFile(vdf);
+  m_iga = IGA(VDFParser().parse(vdfContent));
+  SteamInput()->EnableDeviceCallbacks();
+
+  m_instance = this;
+
+  auto cb = [](SteamInputActionEvent_t *event) {
+    QSteamInput::instance()->onActionEvent(event); // Dirty hack, but I didn't find a better way
+  };
+
+  SteamInput()->EnableActionEventCallbacks(cb);
 }
 
-QSteamInput::QSteamInput(const QString &vdf, QSteamAPI *parent)
-    : QObject{parent}, m_vdf(vdf)
-{
-    if (m_instance != nullptr) {
-        throw InitializationFailed("Steam input is already initialized");
+QSteamInput::~QSteamInput() { SteamInput()->Shutdown(); }
+
+void QSteamInput::runFrame() { SteamInput()->RunFrame(); }
+
+const IGA &QSteamInput::iga() const { return m_iga; }
+
+QVariantList QSteamInput::qmlControllers() const {
+  QVariantList result;
+
+  foreach (auto &controller, m_controllers) {
+    result << QVariant::fromValue(controller);
+  }
+
+  return result;
+}
+
+void QSteamInput::onActionEvent(SteamInputActionEvent_t *event) {
+  foreach (auto &controller, m_controllers) {
+    if (controller.handle() == event->controllerHandle) {
+      setCurrentController(controller);
     }
-    qRegisterMetaType<QSteamworks::IGA>();
-    qRegisterMetaType<QSteamworks::ActionDefinition>();
-    qRegisterMetaType<QSteamworks::Controller>();
+  }
+  if (event->eEventType == ESteamInputActionEventType_DigitalAction) {
+    emit digitalEvent();
+  } else {
+    emit digitalEvent();
+  }
+}
 
-    if(!SteamInput()->Init(true)) {
-        throw InitializationFailed("Cannot initialize SteamInput");
+void QSteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb) {
+  auto handle = cb->m_ulConnectedDeviceHandle;
+
+  auto inputType = SteamInput()->GetInputTypeForHandle(handle);
+  auto name = nameForControllerType(inputType);
+  auto image = QString("qrc:/resources/images/controllers/%1.png").arg(name);
+
+  auto controller = Controller(handle, name, image);
+  m_controllers << controller;
+  setCurrentController(controller);
+  emit qmlControllersChanged();
+}
+
+void QSteamInput::onControllerDisconnected(SteamInputDeviceDisconnected_t *cb) {
+  auto handle = cb->m_ulDisconnectedDeviceHandle;
+  auto controller = Controller(handle, "", "");
+  if (m_controllers.contains(controller)) {
+    m_controllers.remove(controller);
+  }
+  emit qmlControllersChanged();
+}
+
+const Controller &QSteamInput::currentController() const { return m_currentController; }
+
+void QSteamInput::setCurrentController(const Controller &newCurrentController) {
+  if (m_currentController == newCurrentController)
+    return;
+
+  m_currentController = newCurrentController;
+  emit currentControllerChanged();
+}
+
+QList<Action> QSteamInput::getActions(InputActionSetHandle_t actionSetHandle,
+                                      const QList<ActionDefinition> &actions) const {
+  QList<Action> result;
+
+  foreach (auto &action, actions) {
+    auto handle = SteamInput()->GetDigitalActionHandle(action.name().toLocal8Bit());
+
+    if (handle == 0) {
+      throw "ERROR";
     }
 
-    if (!SteamInput()->SetInputActionManifestFilePath(m_vdf.toLocal8Bit())) {
-        throw InitializationFailed(QString("Cannot read IGA file: %1").arg(vdf));
+    QStringList origins;
+    QStringList glyphs;
+
+    QVector<EInputActionOrigin> originsBuf(STEAM_INPUT_MAX_ORIGINS);
+
+    auto n =
+        SteamInput()->GetDigitalActionOrigins(m_currentController.handle(), actionSetHandle, handle, originsBuf.data());
+
+    originsBuf.resize(n);
+
+    auto localizedName = SteamInput()->GetStringForDigitalActionName(handle);
+
+    foreach (auto &origin, originsBuf) {
+      origins << SteamInput()->GetStringForActionOrigin(origin);
+      glyphs << SteamInput()->GetGlyphSVGForActionOrigin(origin, 0);
     }
 
-    auto vdfContent = readFile(vdf);
-    m_iga = IGA(VDFParser().parse(vdfContent));
-    SteamInput()->EnableDeviceCallbacks();
-
-    m_instance = this;
-
-    auto cb = [](SteamInputActionEvent_t *event) {
-        QSteamInput::instance()->onActionEvent(event); // Dirty hack, but I didn't find a better way
+    result << Action{
+        handle, action, localizedName, origins, glyphs,
     };
+  }
 
-    SteamInput()->EnableActionEventCallbacks(cb);
+  return result;
 }
 
-QSteamInput::~QSteamInput()
-{
-    SteamInput()->Shutdown();
+void QSteamInput::updateActionSets() {
+  m_actionSets.clear();
+
+  foreach (auto &actionSet, m_iga.actionSets().toStdMap()) {
+    auto handle = SteamInput()->GetActionSetHandle(actionSet.first.toLocal8Bit());
+    m_actionSets << ActionSet{
+        handle,
+        actionSet.first,
+        getActions(handle, actionSet.second),
+    };
+  }
 }
-
-void QSteamInput::runFrame()
-{
-    SteamInput()->RunFrame();
-}
-
-const IGA &QSteamInput::iga() const
-{
-    return m_iga;
-}
-
-QVariantList QSteamInput::qmlControllers() const
-{
-    QVariantList result;
-
-    foreach(auto &controller, m_controllers) {
-        result << QVariant::fromValue(controller);
-    }
-
-    return result;
-}
-
-void QSteamInput::onActionEvent(SteamInputActionEvent_t *event)
-{
-    if (event->eEventType == ESteamInputActionEventType_DigitalAction) {
-        emit digitalEvent();
-    } else {
-        emit digitalEvent();
-    }
-}
-
-
-void QSteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb)
-{
-    auto handle = cb->m_ulConnectedDeviceHandle;
-
-
-    auto inputType = SteamInput()->GetInputTypeForHandle(handle);
-    auto name = nameForControllerType(inputType);
-    auto image = QString("qrc:/resources/images/controllers/%1.png").arg(name);
-
-    m_controllers << Controller(handle, name, image);
-    emit qmlControllersChanged();
-}
-
-void QSteamInput::onControllerDisconnected(SteamInputDeviceDisconnected_t *cb)
-{
-    auto handle = cb->m_ulDisconnectedDeviceHandle;
-    auto controller = Controller(handle, "", "");
-    if (m_controllers.contains(controller)) {
-        m_controllers.remove(controller);
-    }
-    emit qmlControllersChanged();
-}
-

@@ -4,21 +4,10 @@
 
 #include "qsteamutils.h"
 
-
 using namespace QSteamworks;
 
-QSteamUtils::QSteamUtils(QSteamAPI *parent)
-    : QObject{parent}
-{
+QSteamUtils::QSteamUtils(QSteamAPI *parent) : QObject{parent} {}
 
-}
+bool QSteamUtils::isSteamRunningOnSteamDeck() const { return SteamUtils()->IsSteamRunningOnSteamDeck(); }
 
-bool QSteamUtils::isSteamRunningOnSteamDeck() const
-{
-    return SteamUtils()->IsSteamRunningOnSteamDeck();
-}
-
-bool QSteamUtils::isSteamInBigPictureMode() const
-{
-    return SteamUtils()->IsSteamInBigPictureMode();
-}
+bool QSteamUtils::isSteamInBigPictureMode() const { return SteamUtils()->IsSteamInBigPictureMode(); }

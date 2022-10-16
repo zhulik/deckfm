@@ -16,7 +16,7 @@ find_package(Qt5 REQUIRED COMPONENTS Core Quick QuickControls2)
 include_directories(${CMAKE_SOURCE_DIR}/src ${CMAKE_SOURCE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/src/QSteamworks)
 
-file(GLOB_RECURSE sources "src/*.cpp")
+file(GLOB_RECURSE sources "src/*.cpp" "src/*.h")
 
 set(PROJECT_SOURCES ${sources} qml.qrc)
 

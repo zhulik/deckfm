@@ -9,15 +9,14 @@ namespace QSteamworks {
 class QSteamAPI;
 }
 
-class Application : public QGuiApplication
-{
+class Application : public QGuiApplication {
 
 public:
-    explicit Application(int &argc, char **argv);
-    virtual ~Application();
+  explicit Application(int &argc, char **argv);
+  virtual ~Application();
 
 private:
-    QQmlApplicationEngine *m_engine;
-    QQuickItem *m_activeFocusItem = nullptr;
-    QSteamworks::QSteamAPI *m_steamworks = nullptr;
+  QQmlApplicationEngine *m_engine;
+  QQuickItem *m_activeFocusItem = nullptr;
+  QSteamworks::QSteamAPI *m_steamworks = nullptr;
 };

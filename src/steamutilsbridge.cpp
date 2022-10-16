@@ -2,18 +2,8 @@
 
 #include "steamutilsbridge.h"
 
-SteamUtilsBridge::SteamUtilsBridge(QObject *parent)
-    : QObject{parent}
-{
+SteamUtilsBridge::SteamUtilsBridge(QObject *parent) : QObject{parent} {}
 
-}
+bool SteamUtilsBridge::isOnDeck() const { return SteamUtils()->IsSteamRunningOnSteamDeck(); }
 
-bool SteamUtilsBridge::isOnDeck() const
-{
-    return SteamUtils()->IsSteamRunningOnSteamDeck();
-}
-
-bool SteamUtilsBridge::isBigPicture() const
-{
-    return SteamUtils()->IsSteamInBigPictureMode();
-}
+bool SteamUtilsBridge::isBigPicture() const { return SteamUtils()->IsSteamInBigPictureMode(); }

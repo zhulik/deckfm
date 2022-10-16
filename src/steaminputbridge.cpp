@@ -6,25 +6,16 @@
 
 #include "steaminputbridge.h"
 
-static const QStringList actionSets{
-    "folder_navigation"
+static const QStringList actionSets{"folder_navigation"};
+
+static const QStringList digitalGameActions{"folder_up",       "folder_down",  "folder_left",   "folder_right",
+                                            "folder_activate", "folder_go_up", "folder_go_home"};
+
+static const QStringList analogGameActions{
+    "folder_scroll",
 };
 
-static const QStringList digitalGameActions{
-    "folder_up",
-    "folder_down",
-    "folder_left",
-    "folder_right",
-    "folder_activate",
-    "folder_go_up",
-    "folder_go_home"
-};
-
-    static const QStringList analogGameActions{
-                                               "folder_scroll",
-                                               };
-
-static const QMap<ESteamInputType, QString> controllerNames {
+static const QMap<ESteamInputType, QString> controllerNames{
     {k_ESteamInputType_SteamController, "Steam"},
     {k_ESteamInputType_XBox360Controller, "XBox 360"},
     {k_ESteamInputType_XBoxOneController, "XBox One"},
@@ -38,336 +29,284 @@ static const QMap<ESteamInputType, QString> controllerNames {
     {k_ESteamInputType_SwitchJoyConPair, "Switch JoyCon Pair"},
     {k_ESteamInputType_SwitchJoyConSingle, "Switch JoyCon Single"},
     {k_ESteamInputType_SwitchProController, "Switch Pro"},
-    {k_ESteamInputType_MobileTouch, "Mobile Touch"}
-};
+    {k_ESteamInputType_MobileTouch, "Mobile Touch"}};
 
-static QString nameForControllerType(ESteamInputType inputType)
-{
-    if (controllerNames.contains(inputType)) {
-        return controllerNames[inputType];
-    }
-    return "Unknown";
+static QString nameForControllerType(ESteamInputType inputType) {
+  if (controllerNames.contains(inputType)) {
+    return controllerNames[inputType];
+  }
+  return "Unknown";
 }
 
-QList<ControllerInfo> getConnectedControllers()
-{
-    QList<ControllerInfo> result;
-    ControllerHandle_t handles[STEAM_INPUT_MAX_COUNT];
-    auto n = SteamInput()->GetConnectedControllers( handles );
+QList<ControllerInfo> getConnectedControllers() {
+  QList<ControllerInfo> result;
+  ControllerHandle_t handles[STEAM_INPUT_MAX_COUNT];
+  auto n = SteamInput()->GetConnectedControllers(handles);
 
-    for(int i = 0; i < n; i++) {
-        auto inputType = SteamInput()->GetInputTypeForHandle(handles[i]);
-        auto name = nameForControllerType(inputType);
+  for (int i = 0; i < n; i++) {
+    auto inputType = SteamInput()->GetInputTypeForHandle(handles[i]);
+    auto name = nameForControllerType(inputType);
 
-        result << ControllerInfo{
-            handles[i],
-            name,
-            inputType,
-            QString("qrc:/resources/images/controllers/%1.png").arg(name)
-        };
-    }
-    return result;
+    result << ControllerInfo{handles[i], name, inputType,
+                             QString("qrc:/resources/images/controllers/%1.png").arg(name)};
+  }
+  return result;
 }
 
-SteamInputBridge::SteamInputBridge(QObject *parent)
-    : QObject{parent}
-{
-    m_initialized = SteamInput()->Init(true);
-    if (!m_initialized) {
-        qWarning() << "Cannot initialize steam input. Do you have controller connected?";
-    } else {
-        auto path = QDir::current().filePath("input.vdf");
+SteamInputBridge::SteamInputBridge(QObject *parent) : QObject{parent} {
+  m_initialized = SteamInput()->Init(true);
+  if (!m_initialized) {
+    qWarning() << "Cannot initialize steam input. Do you have controller connected?";
+  } else {
+    auto path = QDir::current().filePath("input.vdf");
 
-        if (!SteamInput()->SetInputActionManifestFilePath(path.toLocal8Bit())) {
-            throw "ERROR";
-        }
+    if (!SteamInput()->SetInputActionManifestFilePath(path.toLocal8Bit())) {
+      throw "ERROR";
     }
+  }
 }
 
-SteamInputBridge::~SteamInputBridge()
-{
-    SteamInput()->Shutdown();
+SteamInputBridge::~SteamInputBridge() { SteamInput()->Shutdown(); }
+
+void SteamInputBridge::showBindingPanel() {
+  if (!m_initialized) {
+    return;
+  }
+  SteamInput()->ShowBindingPanel(m_connectedControllers[0].handle);
 }
 
-
-void SteamInputBridge::showBindingPanel()
-{
-    if (!m_initialized) {
-        return;
-    }
-    SteamInput()->ShowBindingPanel(m_connectedControllers[0].handle);
+void SteamInputBridge::poll() {
+  if (!m_initialized) {
+    return;
+  }
+  updateControllers();
+  pollControllers();
 }
 
-void SteamInputBridge::poll()
-{
-    if (!m_initialized) {
-        return;
-    }
-    updateControllers();
-    pollControllers();
+QVariantList SteamInputBridge::connectedControllers() const {
+  QVariantList result;
+  foreach (auto &info, m_connectedControllers) {
+    result << QVariantMap({{"handle", info.handle},
+                           {"type", info.type},
+                           {"name", info.name},
+                           {"image", QString("qrc:/resources/images/controllers/%1.png").arg(info.name)}});
+  }
+  return result;
 }
 
-QVariantList SteamInputBridge::connectedControllers() const
-{
-    QVariantList result;
-    foreach(auto &info, m_connectedControllers) {
-        result << QVariantMap({
-            { "handle", info.handle },
-            { "type", info.type },
-            { "name", info.name },
-            { "image", QString("qrc:/resources/images/controllers/%1.png").arg(info.name) }
-        });
-    }
-    return result;
-}
+void SteamInputBridge::updateControllers() {
+  auto updated = ::getConnectedControllers();
 
-void SteamInputBridge::updateControllers()
-{
-    auto updated = ::getConnectedControllers();
+  if (updated.empty()) {
+    m_digitalActions.clear();
+    m_analogActions.clear();
+    m_actionSets.clear();
 
-    if(updated.empty()) {
-        m_digitalActions.clear();
-        m_analogActions.clear();
-        m_actionSets.clear();
-
-        emit digitalActionsChanged(digitalActions());
-        emit analogActionsChanged(analogActions());
-    }
-
-    fillActionSets();
-    fillDigitalActions();
-    fillAnalogActions();
-
-    if (updated == m_connectedControllers) {
-        return;
-    }
-
-    m_connectedControllers = updated;
-
-    emit connectedControllersChanged(connectedControllers());
-
-    if (m_actionSet == "") {
-        setActionSet("folder_navigation");
-    }
-}
-
-void SteamInputBridge::pollControllers()
-{
-    if (m_connectedControllers.empty()) {
-        return;
-    }
-
-    pollAnalogActions();
-    pollDigitalActions();
-
-
-
-    auto handle = SteamInput()->GetCurrentActionSet(m_connectedControllers[0].handle);
-
-    QString newSet;
-    foreach(auto &s, m_actionSets.toStdMap()) {
-        if (s.second.handle == handle) {
-            newSet = s.first;
-        }
-    }
-
-    if (newSet == "") {
-        throw "ERROR";
-    }
-
-    if (newSet != m_actionSet) {
-        m_actionSet = newSet;
-        emit actionSetChanged(newSet);
-    }
-}
-
-void SteamInputBridge::pollDigitalActions()
-{
-    auto states = QMap<QString, bool>();
-
-    foreach(auto &e, m_digitalActions.toStdMap()) {
-        auto digitalData = SteamInput()->GetDigitalActionData(m_connectedControllers[0].handle, e.second.handle);
-        states[e.first] = digitalData.bActive && digitalData.bState;
-    }
-
-    if (states != m_lastDigitalActionStates) {
-        m_lastDigitalActionStates = states;
-        emit digitalActionStatesChanged(digitalActionStates());
-    }
-}
-
-void SteamInputBridge::pollAnalogActions()
-{
-    auto states = QMap<QString, QPair<float, float>>();
-
-    foreach(auto &e, m_analogActions.toStdMap()) {
-        auto analogData = SteamInput()->GetAnalogActionData(m_connectedControllers[0].handle, e.second.handle);
-
-        //        if (analogData.bActive) {
-        states[e.first] = QPair(analogData.x, analogData.y);
-        //        }
-    }
-
-    if (states != m_lastAnalogActionStates) {
-        m_lastAnalogActionStates = states;
-        emit analogActionStatesChanged(analogActionStates());
-    }
-}
-
-void SteamInputBridge::fillDigitalActions()
-{
-    if(!m_digitalActions.empty() || m_connectedControllers.empty()) {
-        return;
-    }
-
-    foreach(auto &action, digitalGameActions) {
-        auto handle = SteamInput()->GetDigitalActionHandle(action.toLocal8Bit());
-
-        if (handle == 0) {
-            throw "ERROR";
-        }
-
-        QStringList origins;
-        QStringList glyphs;
-
-        EInputActionOrigin originsBuf[STEAM_INPUT_MAX_ORIGINS];
-
-        auto n = SteamInput()->GetDigitalActionOrigins(m_connectedControllers[0].handle,
-                                                       m_actionSets[m_actionSet].handle,
-                                                       handle,
-                                                       originsBuf);
-
-        auto localizedName = SteamInput()->GetStringForDigitalActionName(handle);
-
-        for(int i = 0; i < n; i++) {
-            origins << SteamInput()->GetStringForActionOrigin(originsBuf[i]);
-            glyphs << SteamInput()->GetGlyphSVGForActionOrigin(originsBuf[i], 0);
-        }
-
-            m_digitalActions[action] = DigitalAction{
-                                                     handle,
-                                                     action,
-                                                     localizedName,
-                                                     origins,
-                                                     glyphs,
-                                                     };
-    }
     emit digitalActionsChanged(digitalActions());
-}
-
-void SteamInputBridge::fillAnalogActions()
-{
-    if(!m_analogActions.empty() || m_connectedControllers.empty()) {
-        return;
-    }
-
-    foreach(auto &action, analogGameActions) {
-        auto handle = SteamInput()->GetAnalogActionHandle(action.toLocal8Bit());
-        if (handle == 0) {
-            throw "ERROR";
-        }
-
-        QStringList origins;
-        QStringList glyphs;
-
-        EInputActionOrigin originsBuf[STEAM_INPUT_MAX_ORIGINS];
-
-        auto n = SteamInput()->GetAnalogActionOrigins(m_connectedControllers[0].handle, m_actionSets[m_actionSet].handle, handle, originsBuf);
-        auto localizedName = SteamInput()->GetStringForAnalogActionName(handle);
-
-        for(int i = 0; i < n; i++) {
-            origins << SteamInput()->GetStringForActionOrigin(originsBuf[i]);
-            glyphs << SteamInput()->GetGlyphSVGForActionOrigin(originsBuf[i], 0);
-        }
-
-            m_analogActions[action] = AnalogAction{
-                                                   handle,
-                                                   action,
-                                                   localizedName,
-                                                   origins,
-                                                   glyphs,
-                                                   };
-    }
     emit analogActionsChanged(analogActions());
+  }
+
+  fillActionSets();
+  fillDigitalActions();
+  fillAnalogActions();
+
+  if (updated == m_connectedControllers) {
+    return;
+  }
+
+  m_connectedControllers = updated;
+
+  emit connectedControllersChanged(connectedControllers());
+
+  if (m_actionSet == "") {
+    setActionSet("folder_navigation");
+  }
 }
 
-void SteamInputBridge::fillActionSets()
-{
-    if(!m_actionSets.empty() || m_connectedControllers.empty()) {
-        return;
+void SteamInputBridge::pollControllers() {
+  if (m_connectedControllers.empty()) {
+    return;
+  }
+
+  pollAnalogActions();
+  pollDigitalActions();
+
+  auto handle = SteamInput()->GetCurrentActionSet(m_connectedControllers[0].handle);
+
+  QString newSet;
+  foreach (auto &s, m_actionSets.toStdMap()) {
+    if (s.second.handle == handle) {
+      newSet = s.first;
     }
-    foreach(auto &set, actionSets) {
-        auto handle = SteamInput()->GetActionSetHandle(set.toLocal8Bit());
+  }
 
-        if (handle == 0) {
-            throw "ERROR";
-        }
+  if (newSet == "") {
+    throw "ERROR";
+  }
 
-            m_actionSets[set] = ActionSet{
-                                          handle,
-                                          set,
-                                          };
+  if (newSet != m_actionSet) {
+    m_actionSet = newSet;
+    emit actionSetChanged(newSet);
+  }
+}
 
+void SteamInputBridge::pollDigitalActions() {
+  auto states = QMap<QString, bool>();
+
+  foreach (auto &e, m_digitalActions.toStdMap()) {
+    auto digitalData = SteamInput()->GetDigitalActionData(m_connectedControllers[0].handle, e.second.handle);
+    states[e.first] = digitalData.bActive && digitalData.bState;
+  }
+
+  if (states != m_lastDigitalActionStates) {
+    m_lastDigitalActionStates = states;
+    emit digitalActionStatesChanged(digitalActionStates());
+  }
+}
+
+void SteamInputBridge::pollAnalogActions() {
+  auto states = QMap<QString, QPair<float, float>>();
+
+  foreach (auto &e, m_analogActions.toStdMap()) {
+    auto analogData = SteamInput()->GetAnalogActionData(m_connectedControllers[0].handle, e.second.handle);
+
+    //        if (analogData.bActive) {
+    states[e.first] = QPair(analogData.x, analogData.y);
+    //        }
+  }
+
+  if (states != m_lastAnalogActionStates) {
+    m_lastAnalogActionStates = states;
+    emit analogActionStatesChanged(analogActionStates());
+  }
+}
+
+void SteamInputBridge::fillDigitalActions() {
+  if (!m_digitalActions.empty() || m_connectedControllers.empty()) {
+    return;
+  }
+
+  foreach (auto &action, digitalGameActions) {
+    auto handle = SteamInput()->GetDigitalActionHandle(action.toLocal8Bit());
+
+    if (handle == 0) {
+      throw "ERROR";
     }
-}
 
-const QString &SteamInputBridge::actionSet() const
-{
-    return m_actionSet;
-}
+    QStringList origins;
+    QStringList glyphs;
 
-void SteamInputBridge::setActionSet(const QString &newActionSet)
-{
-    if (m_actionSet == newActionSet)
-        return;
-    SteamInput()->ActivateActionSet(m_connectedControllers[0].handle, m_actionSets[newActionSet].handle);
-}
+    EInputActionOrigin originsBuf[STEAM_INPUT_MAX_ORIGINS];
 
-QVariantMap SteamInputBridge::digitalActionStates() const
-{
-    QVariantMap  result;
-    foreach(auto &e, m_lastDigitalActionStates.toStdMap()) {
-        result[e.first] = e.second;
+    auto n = SteamInput()->GetDigitalActionOrigins(m_connectedControllers[0].handle, m_actionSets[m_actionSet].handle,
+                                                   handle, originsBuf);
+
+    auto localizedName = SteamInput()->GetStringForDigitalActionName(handle);
+
+    for (int i = 0; i < n; i++) {
+      origins << SteamInput()->GetStringForActionOrigin(originsBuf[i]);
+      glyphs << SteamInput()->GetGlyphSVGForActionOrigin(originsBuf[i], 0);
     }
-    return result;
+
+    m_digitalActions[action] = DigitalAction{
+        handle, action, localizedName, origins, glyphs,
+    };
+  }
+  emit digitalActionsChanged(digitalActions());
 }
 
-QVariantMap SteamInputBridge::digitalActions() const
-{
-    QVariantMap  result;
-    foreach(auto &e, m_digitalActions.toStdMap()) {
-        result[e.first] = QVariantMap{
-            {"name", e.second.name},
-            {"localizedName", e.second.localizedName},
-            {"glyphs", e.second.glyphs},
-            {"origins", e.second.origins}
-        };
+void SteamInputBridge::fillAnalogActions() {
+  if (!m_analogActions.empty() || m_connectedControllers.empty()) {
+    return;
+  }
+
+  foreach (auto &action, analogGameActions) {
+    auto handle = SteamInput()->GetAnalogActionHandle(action.toLocal8Bit());
+    if (handle == 0) {
+      throw "ERROR";
     }
-    return result;
+
+    QStringList origins;
+    QStringList glyphs;
+
+    EInputActionOrigin originsBuf[STEAM_INPUT_MAX_ORIGINS];
+
+    auto n = SteamInput()->GetAnalogActionOrigins(m_connectedControllers[0].handle, m_actionSets[m_actionSet].handle,
+                                                  handle, originsBuf);
+    auto localizedName = SteamInput()->GetStringForAnalogActionName(handle);
+
+    for (int i = 0; i < n; i++) {
+      origins << SteamInput()->GetStringForActionOrigin(originsBuf[i]);
+      glyphs << SteamInput()->GetGlyphSVGForActionOrigin(originsBuf[i], 0);
+    }
+
+    m_analogActions[action] = AnalogAction{
+        handle, action, localizedName, origins, glyphs,
+    };
+  }
+  emit analogActionsChanged(analogActions());
 }
 
-QVariantMap SteamInputBridge::analogActions() const
-{
-    QVariantMap  result;
-    foreach(auto &e, m_analogActions.toStdMap()) {
-        result[e.first] = QVariantMap{
-            {"name", e.second.name},
-            {"localizedName", e.second.localizedName},
-            {"glyphs", e.second.glyphs},
-            {"origins", e.second.origins}
-        };
+void SteamInputBridge::fillActionSets() {
+  if (!m_actionSets.empty() || m_connectedControllers.empty()) {
+    return;
+  }
+  foreach (auto &set, actionSets) {
+    auto handle = SteamInput()->GetActionSetHandle(set.toLocal8Bit());
+
+    if (handle == 0) {
+      throw "ERROR";
     }
-    return result;
+
+    m_actionSets[set] = ActionSet{
+        handle,
+        set,
+    };
+  }
 }
 
-QVariantMap SteamInputBridge::analogActionStates() const
-{
-    QVariantMap  result;
-    foreach(auto &e, m_lastAnalogActionStates.toStdMap()) {
-        result[e.first] = QVariantMap{
-            {"x", e.second.first},
-            {"y", e.second.second}
-        };
-    }
-    return result;
+const QString &SteamInputBridge::actionSet() const { return m_actionSet; }
+
+void SteamInputBridge::setActionSet(const QString &newActionSet) {
+  if (m_actionSet == newActionSet)
+    return;
+  SteamInput()->ActivateActionSet(m_connectedControllers[0].handle, m_actionSets[newActionSet].handle);
+}
+
+QVariantMap SteamInputBridge::digitalActionStates() const {
+  QVariantMap result;
+  foreach (auto &e, m_lastDigitalActionStates.toStdMap()) {
+    result[e.first] = e.second;
+  }
+  return result;
+}
+
+QVariantMap SteamInputBridge::digitalActions() const {
+  QVariantMap result;
+  foreach (auto &e, m_digitalActions.toStdMap()) {
+    result[e.first] = QVariantMap{{"name", e.second.name},
+                                  {"localizedName", e.second.localizedName},
+                                  {"glyphs", e.second.glyphs},
+                                  {"origins", e.second.origins}};
+  }
+  return result;
+}
+
+QVariantMap SteamInputBridge::analogActions() const {
+  QVariantMap result;
+  foreach (auto &e, m_analogActions.toStdMap()) {
+    result[e.first] = QVariantMap{{"name", e.second.name},
+                                  {"localizedName", e.second.localizedName},
+                                  {"glyphs", e.second.glyphs},
+                                  {"origins", e.second.origins}};
+  }
+  return result;
+}
+
+QVariantMap SteamInputBridge::analogActionStates() const {
+  QVariantMap result;
+  foreach (auto &e, m_lastAnalogActionStates.toStdMap()) {
+    result[e.first] = QVariantMap{{"x", e.second.first}, {"y", e.second.second}};
+  }
+  return result;
 }
