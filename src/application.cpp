@@ -4,10 +4,8 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickWindow>
-#include <QQuickItem>
 
 #include <QDebug>
-#include <QSGRendererInterface>
 
 #include "steam/steam_api.h"
 
@@ -66,7 +64,13 @@ Application::Application(int &argc, char **argv)
         }
     });
 
-    m_engine->load("qrc:/resources/qml/MainWindow.qml");
+    QString qmlPath = "qrc:/resources/qml/MainWindow.qml";
+
+    if (arguments().count() > 1) {
+        qmlPath = arguments()[1];
+    }
+
+    m_engine->load(qmlPath);
 }
 
 Application::~Application()
