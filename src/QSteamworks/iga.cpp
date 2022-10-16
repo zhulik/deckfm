@@ -11,8 +11,7 @@ static const QMap<QString, bool> actionTypes {
 
 IGA::IGA()
 {
-    qRegisterMetaType<QSteamworks::ActionDefinition>();
-    qRegisterMetaType<QSteamworks::ActionDefinition>();
+
 }
 
 IGA::IGA(const QJsonObject &definition)

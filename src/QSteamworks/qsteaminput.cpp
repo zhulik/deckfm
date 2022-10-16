@@ -50,6 +50,9 @@ QString readFile(QString const &path) {
 QSteamInput::QSteamInput(const QString &vdf, QObject *parent)
     : QObject{parent}
 {
+    qRegisterMetaType<QSteamworks::IGA>();
+    qRegisterMetaType<QSteamworks::ActionDefinition>();
+
     if(!SteamInput()->Init(true)) {
         throw InitializationFailed("Cannot initialize SteamInput");
     }
