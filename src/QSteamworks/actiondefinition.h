@@ -6,10 +6,10 @@ namespace QSteamworks {
 class ActionDefinition
 {
     Q_GADGET
-    Q_PROPERTY(bool isDigital READ isDigital CONSTANT)
     Q_PROPERTY(QString name READ name CONSTANT)
     Q_PROPERTY(QString type READ type CONSTANT)
     Q_PROPERTY(QString actionSet READ actionSet CONSTANT)
+    Q_PROPERTY(bool isDigital READ isDigital CONSTANT)
 
 public:
     ActionDefinition();
@@ -31,4 +31,3 @@ private:
 };
 }
 Q_DECLARE_METATYPE(QSteamworks::ActionDefinition)
-Q_DECLARE_METATYPE(QList<QSteamworks::ActionDefinition>)

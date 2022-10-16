@@ -22,6 +22,9 @@ public:
     Q_INVOKABLE
     QStringList actions() const;
 
+    Q_INVOKABLE
+    QSteamworks::ActionDefinition actionDefinition(const QString &) const;
+
 private:
     QMap<QString, QList<ActionDefinition>> m_actionSets;
 };

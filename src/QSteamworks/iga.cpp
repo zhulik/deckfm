@@ -4,14 +4,15 @@
 
 using namespace QSteamworks;
 
-static const QStringList actionTypes {
-    "Button",
-    "StickPadGyro"
+static const QMap<QString, bool> actionTypes {
+    {"Button", false},
+    {"StickPadGyro", true}
 };
 
 IGA::IGA()
 {
-
+    qRegisterMetaType<QSteamworks::ActionDefinition>();
+    qRegisterMetaType<QSteamworks::ActionDefinition>();
 }
 
 IGA::IGA(const QJsonObject &definition)
@@ -20,9 +21,9 @@ IGA::IGA(const QJsonObject &definition)
 
     foreach(auto &actionSet, actions.toVariantMap().toStdMap()) {
 
-        foreach(auto &type, actionTypes) {
-            foreach(auto &name, actionSet.second.toMap()[type].toMap().keys()) {
-                m_actionSets[actionSet.first].append(ActionDefinition(name, type, actionSet.first, true));
+        foreach(auto &type, actionTypes.toStdMap()) {
+            foreach(auto &name, actionSet.second.toMap()[type.first].toMap().keys()) {
+                m_actionSets[actionSet.first].append(ActionDefinition(name, type.first, actionSet.first, type.second));
             }
 
         }
@@ -53,4 +54,16 @@ QStringList IGA::actions() const
         }
     }
     return result;
+}
+
+QSteamworks::ActionDefinition IGA::actionDefinition(const QString &name) const
+{
+    foreach(auto &actionSet, m_actionSets.toStdMap()) {
+        foreach(auto &action, actionSet.second) {
+            if (action.name() == name) {
+                return action;
+            }
+        }
+    }
+    return ActionDefinition();
 }
