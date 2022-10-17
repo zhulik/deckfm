@@ -10,18 +10,6 @@ import "../../../resources/qml/MDI" as MDI
 Item {
     id: root
 
-    Connections {
-        target: steam_input
-
-        function onDigitalAction() {
-            logView.log("Analog action")
-        }
-
-        function onAnalogAction() {
-            logView.log("Digital action")
-        }
-    }
-
     RowLayout {
         anchors.fill: parent
 
@@ -169,7 +157,6 @@ Item {
                                             Layout.fillWidth: parent
                                             height: parent.height
 
-                                            //                                        font.pixelSize: steam_input.digitalActionStates[name] ? 36 : 24
                                             text: localizedName
                                             verticalAlignment: Qt.AlignVCenter
                                         }
@@ -181,6 +168,19 @@ Item {
                                 id: logView
                                 Layout.fillHeight: parent
                                 Layout.preferredWidth: stack.width / 2
+
+                                Connections {
+                                    target: steam_input
+
+                                    function onDigitalEvent() {
+                                        logView.log("Analog action")
+                                    }
+
+                                    function onAnalogEvent() {
+                                        logView.log("Digital action")
+                                    }
+                                }
+
 
                                 function log(msg) {
                                     logModel.append({msg: msg})
