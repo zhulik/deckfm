@@ -23,6 +23,7 @@ ApplicationWindow {
         TabBar {
             id: bar
             Layout.fillWidth: parent
+            currentIndex: 1
 
             TabButton {
                 text: "IGA"

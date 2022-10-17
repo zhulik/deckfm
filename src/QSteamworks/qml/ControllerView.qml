@@ -10,6 +10,18 @@ import "../../../resources/qml/MDI" as MDI
 Item {
     id: root
 
+    Connections {
+        target: steam_input
+
+        function onDigitalAction() {
+            logView.log("Analog action")
+        }
+
+        function onAnalogAction() {
+            logView.log("Digital action")
+        }
+    }
+
     RowLayout {
         anchors.fill: parent
 
@@ -102,15 +114,100 @@ Item {
                     text: `Handle: ${controllersView.currentController.handle}`
                 }
 
-                Image {
-                    Layout.fillHeight: parent
+                TabBar {
+                    id: bar
+
                     Layout.fillWidth: parent
 
-                    verticalAlignment: Image.AlignVCenter
-                    horizontalAlignment: Image.AlignHCenter
+                    Repeater {
+                        model: steam_input.actionSets
 
-                    fillMode: Image.PreserveAspectFit
-                    source: controllersView.currentController.image
+                        TabButton {
+                            text: modelData.name
+                        }
+                    }
+                }
+
+                StackLayout {
+                    id: stack
+                    Layout.fillWidth: parent
+                    Layout.fillHeight: parent
+
+                    currentIndex: bar.currentIndex
+
+                    Repeater {
+                        model: steam_input.actionSets
+
+                        RowLayout {
+                            Layout.fillHeight: parent
+                            Layout.fillWidth: parent
+
+                            ListView {
+                                Layout.fillHeight: parent
+                                Layout.preferredWidth: stack.width / 2
+
+                                clip: true
+
+                                model: Models.JSONListModel {
+                                    data: steam_input.actionSets[stack.currentIndex].actions
+                                }
+
+                                delegate: Item {
+                                    width: parent.width
+                                    height: 70
+
+                                    RowLayout {
+                                        anchors.fill: parent
+
+                                        Image {
+                                            width: height
+                                            height: parent.height
+                                            source: `file://${glyphs[0]}`
+                                        }
+
+                                        Label {
+                                            Layout.fillWidth: parent
+                                            height: parent.height
+
+                                            //                                        font.pixelSize: steam_input.digitalActionStates[name] ? 36 : 24
+                                            text: `"${localizedName}" ${actionDefinition.name} ${JSON.stringify(origins)}`
+                                            verticalAlignment: Qt.AlignVCenter
+                                        }
+                                    }
+                                }
+                            }
+
+                            ListView {
+                                id: logView
+                                Layout.fillHeight: parent
+                                Layout.preferredWidth: stack.width / 2
+
+                                function log(msg) {
+                                    logModel.append({msg: msg})
+                                }
+
+                                clip: true
+
+                                model: Models.JSONListModel {
+                                    id: logModel
+                                    data: []
+                                }
+
+                                delegate: Item {
+                                    width: parent.width
+                                    height: 70
+
+                                    Label {
+                                        Layout.fillWidth: parent
+                                        height: parent.height
+
+                                        text: JSON.stringify(modelData)
+                                        verticalAlignment: Qt.AlignVCenter
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
 

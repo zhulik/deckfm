@@ -57,6 +57,8 @@ QSteamInput::QSteamInput(const QString &vdf, QSteamAPI *parent) : QObject{parent
   qRegisterMetaType<QSteamworks::IGA>();
   qRegisterMetaType<QSteamworks::ActionDefinition>();
   qRegisterMetaType<QSteamworks::Controller>();
+  qRegisterMetaType<QSteamworks::Action>();
+  qRegisterMetaType<QSteamworks::ActionSet>();
 
   if (!SteamInput()->Init(true)) {
     throw InitializationFailed("Cannot initialize SteamInput");
@@ -123,6 +125,7 @@ void QSteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb) {
   m_controllers << controller;
   setCurrentController(controller);
   emit qmlControllersChanged();
+  updateActionSets();
 }
 
 void QSteamInput::onControllerDisconnected(SteamInputDeviceDisconnected_t *cb) {
@@ -131,10 +134,25 @@ void QSteamInput::onControllerDisconnected(SteamInputDeviceDisconnected_t *cb) {
   if (m_controllers.contains(controller)) {
     m_controllers.remove(controller);
   }
+
   emit qmlControllersChanged();
+
+  if (!m_controllers.empty()) {
+    updateActionSets();
+  }
 }
 
 const Controller &QSteamInput::currentController() const { return m_currentController; }
+
+QVariantList QSteamInput::qmlActionSets() const {
+  QVariantList result;
+
+  foreach (auto &actionSet, m_actionSets) {
+    result << QVariant::fromValue(actionSet);
+  }
+
+  return result;
+}
 
 void QSteamInput::setCurrentController(const Controller &newCurrentController) {
   if (m_currentController == newCurrentController)
@@ -149,11 +167,14 @@ QList<Action> QSteamInput::getActions(InputActionSetHandle_t actionSetHandle,
   QList<Action> result;
 
   foreach (auto &action, actions) {
-    auto handle = SteamInput()->GetDigitalActionHandle(action.name().toLocal8Bit());
-
-    if (handle == 0) {
-      throw "ERROR";
+    unsigned long long handle = 0;
+    if (action.isDigital()) {
+      handle = SteamInput()->GetDigitalActionHandle(action.name().toLocal8Bit());
+    } else {
+      handle = SteamInput()->GetAnalogActionHandle(action.name().toLocal8Bit());
     }
+
+    Q_ASSERT(handle != 0);
 
     QStringList origins;
     QStringList glyphs;
@@ -176,7 +197,6 @@ QList<Action> QSteamInput::getActions(InputActionSetHandle_t actionSetHandle,
         handle, action, localizedName, origins, glyphs,
     };
   }
-
   return result;
 }
 
@@ -185,10 +205,7 @@ void QSteamInput::updateActionSets() {
 
   foreach (auto &actionSet, m_iga.actionSets().toStdMap()) {
     auto handle = SteamInput()->GetActionSetHandle(actionSet.first.toLocal8Bit());
-    m_actionSets << ActionSet{
-        handle,
-        actionSet.first,
-        getActions(handle, actionSet.second),
-    };
+    m_actionSets << ActionSet(handle, actionSet.first, getActions(handle, actionSet.second));
   }
+  emit actionSetsChanged();
 }
