@@ -198,8 +198,6 @@ QList<Action> QSteamInput::getActions(InputActionSetHandle_t actionSetHandle,
   return result;
 }
 
-#include <unistd.h>
-
 void QSteamInput::updateActionSets() {
   m_actionSets.clear();
 
@@ -208,4 +206,9 @@ void QSteamInput::updateActionSets() {
     m_actionSets << ActionSet(handle, actionSet.first, getActions(handle, actionSet.second));
   }
   emit actionSetsChanged();
+}
+
+void QSteamInput::onConfigurationLoaded(SteamInputConfigurationLoaded_t *) {
+  updateActionSets();
+  emit configurationLoaded();
 }

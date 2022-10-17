@@ -85,6 +85,7 @@ class QSteamInput : public QObject {
 
   STEAM_CALLBACK(QSteamInput, onControllerConnected, SteamInputDeviceConnected_t);
   STEAM_CALLBACK(QSteamInput, onControllerDisconnected, SteamInputDeviceDisconnected_t);
+  STEAM_CALLBACK(QSteamInput, onConfigurationLoaded, SteamInputConfigurationLoaded_t);
 
 public:
   explicit QSteamInput(const QString &vdf, QSteamAPI *parent = nullptr);
@@ -110,6 +111,7 @@ signals:
 
   void currentControllerChanged();
   void actionSetsChanged();
+  void configurationLoaded();
 
 private:
   QString m_vdf;
