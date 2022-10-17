@@ -167,13 +167,10 @@ QList<Action> QSteamInput::getActions(InputActionSetHandle_t actionSetHandle,
   QList<Action> result;
 
   foreach (auto &action, actions) {
-    unsigned long long handle = 0;
-
-    if (action.isDigital()) {
-      handle = SteamInput()->GetDigitalActionHandle(action.name().toLocal8Bit());
-    } else {
-      handle = SteamInput()->GetAnalogActionHandle(action.name().toLocal8Bit());
+    if (!action.isDigital()) {
+      continue;
     }
+    auto handle = SteamInput()->GetDigitalActionHandle(action.name().toLocal8Bit());
 
     Q_ASSERT(handle != 0);
 
@@ -199,8 +196,15 @@ QList<Action> QSteamInput::getActions(InputActionSetHandle_t actionSetHandle,
   return result;
 }
 
+#include <unistd.h>
+
 void QSteamInput::updateActionSets() {
   m_actionSets.clear();
+
+  for (int i = 0; i < 3; i++) {
+    runFrame();
+    sleep(1);
+  }
 
   foreach (auto &actionSet, m_iga.actionSets().toStdMap()) {
     auto handle = SteamInput()->GetActionSetHandle(actionSet.first.toLocal8Bit());

@@ -91,8 +91,8 @@ public:
   virtual ~QSteamInput();
 
   Q_INVOKABLE
-
   void runFrame();
+
   Q_INVOKABLE
   virtual bool showBindingPanel(unsigned long long inputHandle) const;
 
