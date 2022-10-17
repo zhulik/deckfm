@@ -169,24 +169,32 @@ QList<Action> QSteamInput::getActions(InputActionSetHandle_t actionSetHandle,
   QList<Action> result;
 
   foreach (auto &action, actions) {
-    if (!action.isDigital()) {
-      continue;
-    }
-    auto handle = SteamInput()->GetDigitalActionHandle(action.name().toLocal8Bit());
-
-    Q_ASSERT(handle != 0);
-
     QStringList origins;
     QStringList glyphs;
 
     QVector<EInputActionOrigin> originsBuf(STEAM_INPUT_MAX_ORIGINS);
 
-    auto n =
-        SteamInput()->GetDigitalActionOrigins(m_currentController.handle(), actionSetHandle, handle, originsBuf.data());
+    unsigned long long handle = 0;
+    int n = 0;
+    QString localizedName;
 
+    if (action.isDigital()) {
+      handle = SteamInput()->GetDigitalActionHandle(action.name().toLocal8Bit());
+      Q_ASSERT(handle != 0);
+
+      n = SteamInput()->GetDigitalActionOrigins(m_currentController.handle(), actionSetHandle, handle,
+                                                originsBuf.data());
+
+      localizedName = SteamInput()->GetStringForDigitalActionName(handle);
+    } else {
+      handle = SteamInput()->GetAnalogActionHandle(action.name().toLocal8Bit());
+      Q_ASSERT(handle != 0);
+
+      n = SteamInput()->GetAnalogActionOrigins(m_currentController.handle(), actionSetHandle, handle,
+                                               originsBuf.data());
+      localizedName = SteamInput()->GetStringForAnalogActionName(handle);
+    }
     originsBuf.resize(n);
-
-    auto localizedName = SteamInput()->GetStringForDigitalActionName(handle);
 
     foreach (auto &origin, originsBuf) {
       origins << SteamInput()->GetStringForActionOrigin(origin);
