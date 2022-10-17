@@ -126,9 +126,6 @@ void QSteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb) {
   setCurrentController(controller);
   emit qmlControllersChanged();
 
-  for (int i = 0; i < 10; i++) {
-    runFrame();
-  }
   updateActionSets();
 }
 
