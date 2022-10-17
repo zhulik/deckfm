@@ -83,7 +83,10 @@ QSteamInput::QSteamInput(const QString &vdf, QSteamAPI *parent) : QObject{parent
 
 QSteamInput::~QSteamInput() { SteamInput()->Shutdown(); }
 
-void QSteamInput::runFrame() { SteamInput()->RunFrame(); }
+void QSteamInput::runFrame() {
+  SteamInput()->RunFrame();
+  updateActionSets();
+}
 
 bool QSteamInput::showBindingPanel(unsigned long long inputHandle) const {
   return SteamInput()->ShowBindingPanel(inputHandle);
@@ -125,7 +128,6 @@ void QSteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb) {
   m_controllers << controller;
   setCurrentController(controller);
   emit qmlControllersChanged();
-  runFrame();
   updateActionSets();
 }
 
@@ -137,7 +139,6 @@ void QSteamInput::onControllerDisconnected(SteamInputDeviceDisconnected_t *cb) {
   }
 
   emit qmlControllersChanged();
-  runFrame();
 
   if (!m_controllers.empty()) {
     updateActionSets();
