@@ -125,6 +125,7 @@ void QSteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb) {
   m_controllers << controller;
   setCurrentController(controller);
   emit qmlControllersChanged();
+  runFrame();
   updateActionSets();
 }
 
@@ -136,6 +137,7 @@ void QSteamInput::onControllerDisconnected(SteamInputDeviceDisconnected_t *cb) {
   }
 
   emit qmlControllersChanged();
+  runFrame();
 
   if (!m_controllers.empty()) {
     updateActionSets();
@@ -200,11 +202,6 @@ QList<Action> QSteamInput::getActions(InputActionSetHandle_t actionSetHandle,
 
 void QSteamInput::updateActionSets() {
   m_actionSets.clear();
-
-  for (int i = 0; i < 3; i++) {
-    runFrame();
-    sleep(1);
-  }
 
   foreach (auto &actionSet, m_iga.actionSets().toStdMap()) {
     auto handle = SteamInput()->GetActionSetHandle(actionSet.first.toLocal8Bit());
