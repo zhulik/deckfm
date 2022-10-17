@@ -168,6 +168,7 @@ QList<Action> QSteamInput::getActions(InputActionSetHandle_t actionSetHandle,
 
   foreach (auto &action, actions) {
     unsigned long long handle = 0;
+
     if (action.isDigital()) {
       handle = SteamInput()->GetDigitalActionHandle(action.name().toLocal8Bit());
     } else {
@@ -193,9 +194,7 @@ QList<Action> QSteamInput::getActions(InputActionSetHandle_t actionSetHandle,
       glyphs << SteamInput()->GetGlyphSVGForActionOrigin(origin, 0);
     }
 
-    result << Action{
-        handle, action, localizedName, origins, glyphs,
-    };
+    result << Action(handle, action, localizedName, origins, glyphs);
   }
   return result;
 }

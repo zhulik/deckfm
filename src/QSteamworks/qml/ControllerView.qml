@@ -153,8 +153,8 @@ Item {
                                 }
 
                                 delegate: Item {
-                                    width: parent.width
-                                    height: 70
+                                    width: stack.width
+                                    height: 210
 
                                     RowLayout {
                                         anchors.fill: parent
@@ -170,7 +170,7 @@ Item {
                                             height: parent.height
 
                                             //                                        font.pixelSize: steam_input.digitalActionStates[name] ? 36 : 24
-                                            text: `"${localizedName}" ${actionDefinition.name} ${JSON.stringify(origins)}`
+                                            text: JSON.stringify(steam_input.actionSets[stack.currentIndex].actions[index], null,2)
                                             verticalAlignment: Qt.AlignVCenter
                                         }
                                     }
