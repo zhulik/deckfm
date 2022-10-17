@@ -55,6 +55,12 @@ Item {
                     Item {
                         Layout.fillWidth: parent
                     }
+
+                    MDI.Icon {
+                        name: "star"
+                        height: parent.height
+                        visible: handle === steam_input.currentController.handle
+                    }
                 }
             }
 

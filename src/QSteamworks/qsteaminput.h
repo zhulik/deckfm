@@ -34,8 +34,8 @@ class QSteamInput : public QObject {
   Q_OBJECT
   Q_PROPERTY(QSteamworks::IGA iga READ iga CONSTANT)
   Q_PROPERTY(QVariantList controllers READ qmlControllers NOTIFY qmlControllersChanged)
-  Q_PROPERTY(
-      Controller currentController READ currentController WRITE setCurrentController NOTIFY currentControllerChanged)
+  Q_PROPERTY(QSteamworks::Controller currentController READ currentController WRITE setCurrentController NOTIFY
+                 currentControllerChanged)
 
   STEAM_CALLBACK(QSteamInput, onControllerConnected, SteamInputDeviceConnected_t);
   STEAM_CALLBACK(QSteamInput, onControllerDisconnected, SteamInputDeviceDisconnected_t);
