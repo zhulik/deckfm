@@ -31,7 +31,7 @@ public:
 
   const QSteamworks::ActionDefinition &actionDefinition() { return m_definition; }
   unsigned long long handle() const { return m_handle; }
-  QString localizedName() const { return QString("%1: %2").arg(m_localizedName).arg(m_origins.count()); }
+  const QString &localizedName() const { return m_localizedName }
   const QStringList &glyphs() const { return m_glyphs; }
   const QStringList &origins() const { return m_origins; }
 
