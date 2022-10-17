@@ -48,8 +48,16 @@ Item {
                     Label {
                         height: parent.height
                         verticalAlignment: Text.AlignVCenter
-                        font.pointSize: 36
+                        font.pointSize: 24
                         text: name
+                    }
+
+                    MDI.Button{
+                        iconName: "applicationSettings"
+                        height: parent.height
+                        onClicked: {
+                            steam_input.showBindingPanel(handle)
+                        }
                     }
 
                     Item {

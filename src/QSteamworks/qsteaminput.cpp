@@ -83,6 +83,10 @@ QSteamInput::~QSteamInput() { SteamInput()->Shutdown(); }
 
 void QSteamInput::runFrame() { SteamInput()->RunFrame(); }
 
+bool QSteamInput::showBindingPanel(unsigned long long inputHandle) const {
+  return SteamInput()->ShowBindingPanel(inputHandle);
+}
+
 const IGA &QSteamInput::iga() const { return m_iga; }
 
 QVariantList QSteamInput::qmlControllers() const {

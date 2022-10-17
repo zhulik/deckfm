@@ -7,6 +7,7 @@
 
 #include "iga.h"
 
+#include "qobjectdefs.h"
 #include "steam/steam_api.h"
 
 namespace QSteamworks {
@@ -45,7 +46,10 @@ public:
   virtual ~QSteamInput();
 
   Q_INVOKABLE
+
   void runFrame();
+  Q_INVOKABLE
+  virtual bool showBindingPanel(unsigned long long inputHandle) const;
 
   const IGA &iga() const;
 
