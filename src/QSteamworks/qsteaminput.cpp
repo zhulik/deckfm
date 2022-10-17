@@ -128,8 +128,8 @@ void QSteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb) {
 
   for (int i = 0; i < 10; i++) {
     runFrame();
-    updateActionSets();
   }
+  updateActionSets();
 }
 
 void QSteamInput::onControllerDisconnected(SteamInputDeviceDisconnected_t *cb) {
