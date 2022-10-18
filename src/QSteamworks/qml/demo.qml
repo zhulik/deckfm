@@ -35,7 +35,7 @@ ApplicationWindow {
         TabBar {
             id: bar
             Layout.fillWidth: parent
-            currentIndex: 1
+            currentIndex: 2
 
             TabButton {
                 text: "IGA"
@@ -43,6 +43,10 @@ ApplicationWindow {
 
             TabButton {
                 text: "Controllers"
+            }
+
+            TabButton {
+                text: "Visual"
             }
         }
 
@@ -56,6 +60,10 @@ ApplicationWindow {
             }
 
             ControllerView {
+
+            }
+
+            VisualView {
 
             }
         }
