@@ -188,10 +188,10 @@ Item {
                                 Layout.preferredWidth: stack.width / 2 - 10
                                 Layout.fillHeight: parent
 
-                                Connections {
-                                    target: steam_input
+                                SteamInputScope {
+                                    events: ["button_a", "button_b"]
 
-                                    function onInputEvent(event){
+                                    onInputEvent: {
                                         logLabel.text = JSON.stringify(event, null, 2)
                                     }
                                 }

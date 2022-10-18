@@ -121,9 +121,7 @@ class QSteamInput : public QObject {
   Q_PROPERTY(QVariantList controllers READ qmlControllers NOTIFY qmlControllersChanged)
   Q_PROPERTY(QSteamworks::Controller currentController READ currentController WRITE setCurrentController NOTIFY
                  currentControllerChanged)
-
   Q_PROPERTY(QVariantList actionSets READ qmlActionSets NOTIFY actionSetsChanged)
-
   Q_PROPERTY(QString actionSet READ qmlActionSet WRITE qmlSetActionSet NOTIFY actionSetChanged)
 
   STEAM_CALLBACK(QSteamInput, onControllerConnected, SteamInputDeviceConnected_t);
