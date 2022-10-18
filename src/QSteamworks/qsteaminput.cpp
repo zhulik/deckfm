@@ -291,3 +291,16 @@ void QSteamInput::setActionSet(const QSteamworks::ActionSet &newActionSet) {
   m_actionSet = newActionSet;
   emit actionSetChanged();
 }
+
+const QString &QSteamInput::qmlActionSet() const { return m_actionSet.name(); }
+
+void QSteamInput::qmlSetActionSet(const QString &newActionSet) {
+  if (m_actionSet.name() == newActionSet)
+    return;
+  foreach (auto &actionSet, m_actionSets) {
+    if (actionSet.name() == newActionSet) {
+      m_actionSet = actionSet;
+      emit actionSetChanged();
+    }
+  }
+}

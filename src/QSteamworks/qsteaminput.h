@@ -124,7 +124,7 @@ class QSteamInput : public QObject {
 
   Q_PROPERTY(QVariantList actionSets READ qmlActionSets NOTIFY actionSetsChanged)
 
-  Q_PROPERTY(QSteamworks::ActionSet actionSet READ actionSet NOTIFY actionSetChanged)
+  Q_PROPERTY(QString actionSet READ qmlActionSet WRITE qmlSetActionSet NOTIFY actionSetChanged)
 
   STEAM_CALLBACK(QSteamInput, onControllerConnected, SteamInputDeviceConnected_t);
   STEAM_CALLBACK(QSteamInput, onControllerDisconnected, SteamInputDeviceDisconnected_t);
@@ -148,6 +148,9 @@ public:
   QVariantList qmlActionSets() const;
 
   const QSteamworks::ActionSet &actionSet() const;
+
+  const QString &qmlActionSet() const;
+  void qmlSetActionSet(const QString &newActionSet);
 
 signals:
   void qmlControllersChanged();

@@ -107,7 +107,7 @@ Item {
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
                     font.pointSize: 24
-                    text: `ActionSet: ${steam_input.actionSet.name}`
+                    text: `ActionSet: ${steam_input.actionSet}`
                 }
 
                 TabBar {
