@@ -52,14 +52,6 @@ Item {
                         text: name
                     }
 
-                    MDI.Button{
-                        iconName: "applicationSettings"
-                        height: parent.height
-                        onClicked: {
-                            steam_input.showBindingPanel(handle)
-                        }
-                    }
-
                     Item {
                         Layout.fillWidth: parent
                     }
@@ -86,13 +78,24 @@ Item {
             ColumnLayout {
                 anchors.fill: parent
 
-                Label {
-                    Layout.fillWidth: parent
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
-                    font.pointSize: 24
-                    text: `Name: ${controllersView.currentController.name}`
+
+                RowLayout {
+                    Label {
+                        Layout.fillWidth: parent
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+                        font.pointSize: 24
+                        text: `Name: ${controllersView.currentController.name}`
+                    }
+
+                    MDI.Button{
+                        iconName: "applicationSettings"
+                        height: parent.height
+                        onClicked: {
+                        steam_input.showBindingPanel(controllersView.currentController.handle)
+                    }
                 }
+            }
 
                 Label {
                     Layout.fillWidth: parent
@@ -200,7 +203,6 @@ Item {
                     }
                 }
             }
-
         }
     }
 }
