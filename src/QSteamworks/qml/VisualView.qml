@@ -28,14 +28,16 @@ Item {
             onInputEvent: {
                 let sphere;
 
-                if (event.action.actionDefinition.name === "LeftPad") {
-                    sphere = leftSphere
-                } else {
-                    sphere = rightSphere
+                switch(event.action.actionDefinition.name) {
+                case "LeftPad":
+                    leftSphere.eulerRotation.y += event.analogX
+                    leftSphere.eulerRotation.z -= event.analogY / 5
+                    break
+                case "RightPad":
+                    rightSphere.eulerRotation.y += event.analogX / 5
+                    rightSphere.eulerRotation.z += event.analogY / 5
+                    break
                 }
-
-                sphere.eulerRotation.y += event.analogX / 5
-                sphere.eulerRotation.z += event.analogY / 5
             }
         }
 
