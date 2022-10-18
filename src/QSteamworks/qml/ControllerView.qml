@@ -142,7 +142,7 @@ Item {
 
                                 delegate: Item {
                                     width: stack.width
-                                    height: 70
+                                    height: 50
 
                                     RowLayout {
                                         anchors.fill: parent
@@ -191,7 +191,7 @@ Item {
 
                                 delegate: Item {
                                     width: parent.width
-                                    height: 70
+                                    height: 30
 
                                     Label {
                                         Layout.fillWidth: parent
