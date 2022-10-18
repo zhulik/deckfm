@@ -3,6 +3,7 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
 import QtQuick.Controls.Material 2.12
+import "../../../resources/qml/MDI" as MDI
 
 ApplicationWindow {
     id: mainWindow
@@ -16,6 +17,17 @@ ApplicationWindow {
 
     width: 1280
     height: 800
+
+    header: ToolBar{
+        MDI.Button {
+            MDI.Button {
+                iconName: "windowClose"
+                Layout.alignment: Qt.AlignRight
+                onClicked: Qt.quit()
+            }
+        }
+
+    }
 
     ColumnLayout {
         anchors.fill: parent
