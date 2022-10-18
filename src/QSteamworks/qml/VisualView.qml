@@ -27,7 +27,7 @@ Item {
 
             onInputEvent: {
                 rightSphere.eulerRotation.y += event.analogX
-                rightSphere.eulerrotation.x += event.analogY
+                rightSphere.eulerRotation.x += event.analogY
                 //                     logLabel.text = JSON.stringify(event, null, 2)
             }
         }
