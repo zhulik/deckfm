@@ -27,6 +27,7 @@ Item {
 
             onInputEvent: {
                 let sphere;
+
                 if (event.action.actionDefinition.name === "LeftPad") {
                     sphere = leftSphere
                 } else {
