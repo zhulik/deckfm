@@ -295,10 +295,10 @@ const QString &QSteamInput::qmlActionSet() const { return m_actionSet.name(); }
 void QSteamInput::qmlSetActionSet(const QString &newActionSet) {
   if (m_actionSet.name() == newActionSet)
     return;
+
   foreach (auto &actionSet, m_actionSets) {
     if (actionSet.name() == newActionSet) {
-      m_actionSet = actionSet;
-      emit actionSetChanged();
+      SteamInput()->ActivateActionSet(m_currentController.handle(), actionSet.handle());
     }
   }
 }
