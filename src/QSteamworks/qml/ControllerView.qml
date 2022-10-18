@@ -120,6 +120,7 @@ Item {
 
                         TabButton {
                             text: modelData.name
+                            onClicked: steam_input.actionSet = modelData.name
                         }
                     }
                 }
