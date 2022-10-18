@@ -64,7 +64,7 @@ ApplicationWindow {
             }
 
             VisualView {
-
+                visible: false
             }
         }
     }
