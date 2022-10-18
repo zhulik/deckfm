@@ -15,7 +15,8 @@ Item {
 
         PerspectiveCamera {
             id: camera
-            position: Qt.vector3d(0, 000, 200)
+            position: Qt.vector3d(0, 000, 300)
+            eulerRotation.x: 20
         }
 
         DirectionalLight {
@@ -43,11 +44,14 @@ Item {
 
         Model {
             id: rightSphere
-            position: Qt.vector3d(100, 0, 0)
+            position: Qt.vector3d(200, 0, 0)
             source: "#Sphere"
             materials: [ DefaultMaterial {
+
                     diffuseMap: Texture {
-                        source: "./right.png"
+                        source: "./sphere.png"
+                        scaleU: 2
+                        scaleV: 1
                     }
                 }
             ]
@@ -56,11 +60,13 @@ Item {
 
         Model {
             id: leftSphere
-            position: Qt.vector3d(-100, 0, 0)
+            position: Qt.vector3d(-200, 0, 0)
             source: "#Sphere"
             materials: [ DefaultMaterial {
                     diffuseMap: Texture {
-                        source: "./right.png"
+                        scaleU: 2
+                        scaleV: 1
+                        source: "./sphere.png"
                     }
                 }
             ]
