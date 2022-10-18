@@ -4,7 +4,7 @@
 
 using namespace QSteamworks;
 
-static const QMap<QString, bool> actionTypes{{"Button", true}, {"StickPadGyro", false}};
+static const QMap<QString, bool> actionTypes{{"Button", true}, {"StickPadGyro", false}, {"AnalogTrigger", false}};
 
 IGA::IGA() {}
 

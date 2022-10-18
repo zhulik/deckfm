@@ -102,6 +102,14 @@ Item {
                     text: `Handle: ${controllersView.currentController.handle}`
                 }
 
+                Label {
+                    Layout.fillWidth: parent
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                    font.pointSize: 24
+                    text: `ActionSet: ${steam_input.actionSet.name}`
+                }
+
                 TabBar {
                     id: bar
 
@@ -132,7 +140,7 @@ Item {
 
                             ListView {
                                 Layout.fillHeight: parent
-                                Layout.preferredWidth: stack.width / 2
+                                Layout.preferredWidth: stack.width / 2 - 10
 
                                 clip: true
 
@@ -156,6 +164,7 @@ Item {
                                         Label {
                                             Layout.fillWidth: parent
                                             height: parent.height
+                                            font.pointSize: 20
 
                                             text: localizedName
                                             verticalAlignment: Qt.AlignVCenter
@@ -164,43 +173,27 @@ Item {
                                 }
                             }
 
-                            ListView {
+                            Connections {
+                                target: steam_input
+
+                                function onInputEvent(event){
+                                    logView.log({event: event})
+                                }
+                            }
+
+//                            Timer {
+//                                running: true
+//                                interval: 300
+//                                repeat: true
+//                                onTriggered: {
+//                                    logView.log({timestamp: new Date().valueOf(), foo: "Bar"})
+//                                }
+//                            }
+
+                            LogView {
                                 id: logView
                                 Layout.fillHeight: parent
-                                Layout.preferredWidth: stack.width / 2
-
-                                Connections {
-                                    target: steam_input
-
-                                    function onInputEvent(event){
-                                        logView.log(JSON.stringify(event))
-                                    }
-                                }
-
-
-                                function log(msg) {
-                                    logModel.append({msg: msg})
-                                }
-
-                                clip: true
-
-                                model: Models.JSONListModel {
-                                    id: logModel
-                                    data: []
-                                }
-
-                                delegate: Item {
-                                    width: parent.width
-                                    height: 30
-
-                                    Label {
-                                        Layout.fillWidth: parent
-                                        height: parent.height
-
-                                        text: `Message: ${JSON.stringify(modelData)}`
-                                        verticalAlignment: Qt.AlignVCenter
-                                    }
-                                }
+                                Layout.preferredWidth: stack.width / 2 - 10
                             }
                         }
                     }

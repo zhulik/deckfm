@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  deckfm:
+    build: .
+    privileged: true
+    ipc: host
+    network_mode: host
+    volumes:
+      - $XDG_RUNTIME_DIR/$WAYLAND_DISPLAY:/tmp/$WAYLAND_DISPLAY
+      - /home/zhulik/.local/share/Steam/linux64/steamclient.so:/home/deck/.steam/sdk64/steamclient.so
+      - /dev:/dev
+    environment:
+      - XDG_RUNTIME_DIR=/tmp
+      - WAYLAND_DISPLAY=$WAYLAND_DISPLAY
+    user: $UID:$GID
+    command: "./build/deckfm"

@@ -84,7 +84,22 @@ QSteamInput::QSteamInput(const QString &vdf, QSteamAPI *parent) : QObject{parent
 
 QSteamInput::~QSteamInput() { SteamInput()->Shutdown(); }
 
-void QSteamInput::runFrame() { SteamInput()->RunFrame(); }
+void QSteamInput::runFrame() {
+  SteamInput()->RunFrame();
+
+  if (m_currentController.handle() != 0 && !m_actionSets.empty()) {
+
+    SteamInput()->ActivateActionSet(m_currentController.handle(), m_actionSets.first().handle()); // TODO: remove it
+
+    auto handle = SteamInput()->GetCurrentActionSet(m_currentController.handle());
+
+    foreach (auto &actionSet, m_actionSets) {
+      if (actionSet.handle() == handle) {
+        setActionSet(actionSet);
+      }
+    }
+  }
+}
 
 bool QSteamInput::showBindingPanel(unsigned long long inputHandle) const {
   return SteamInput()->ShowBindingPanel(inputHandle);
@@ -129,7 +144,11 @@ void QSteamInput::onActionEvent(SteamInputActionEvent_t *event) {
     analogY = event->analogAction.analogActionData.y;
   }
 
-  emit inputEvent(InputEvent(type, event->controllerHandle, actionHandle, digitalState, analogX, analogY));
+  auto a = action(actionHandle, event->eEventType == ESteamInputActionEventType_DigitalAction);
+
+  Q_ASSERT(a.handle() != 0);
+
+  emit inputEvent(InputEvent(type, m_currentController, a, digitalState, analogX, analogY));
 }
 
 void QSteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb) {
@@ -224,6 +243,28 @@ QList<Action> QSteamInput::getActions(InputActionSetHandle_t actionSetHandle,
   return result;
 }
 
+Action QSteamInput::action(const QString &name, bool digital) const {
+  foreach (auto &actionSet, m_actionSets) {
+    foreach (auto &action, actionSet.actions()) {
+      if (action.actionDefinition().name() == name && action.actionDefinition().isDigital() == digital) {
+        return action;
+      }
+    }
+  }
+  return Action();
+}
+
+Action QSteamInput::action(unsigned long long handle, bool digital) const {
+  foreach (auto &actionSet, m_actionSets) {
+    foreach (auto &action, actionSet.actions()) {
+      if (action.handle() == handle && action.actionDefinition().isDigital() == digital) {
+        return action;
+      }
+    }
+  }
+  return Action();
+}
+
 void QSteamInput::updateActionSets() {
   m_actionSets.clear();
 
@@ -238,4 +279,15 @@ void QSteamInput::onConfigurationLoaded(SteamInputConfigurationLoaded_t *) {
   runFrame();
   updateActionSets();
   emit configurationLoaded();
+}
+
+const QSteamworks::ActionSet &QSteamInput::actionSet() const { return m_actionSet; }
+
+void QSteamInput::setActionSet(const QSteamworks::ActionSet &newActionSet) {
+  Q_ASSERT(newActionSet.handle() != 0);
+
+  if (m_actionSet == newActionSet)
+    return;
+  m_actionSet = newActionSet;
+  emit actionSetChanged();
 }

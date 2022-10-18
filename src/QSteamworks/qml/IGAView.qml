@@ -35,6 +35,7 @@ Item {
                     font.pointSize: 36
                     text: value
                 }
+                onClicked: actionSetsView.currentIndex = index
             }
 
             highlight: Rectangle {
