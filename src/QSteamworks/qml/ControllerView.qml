@@ -173,7 +173,7 @@ Item {
                                     target: steam_input
 
                                     function onInputEvent(event){
-                                        logView.log(JSON.stringify(event))
+                                        logView.log(event.type)
                                     }
                                 }
 
