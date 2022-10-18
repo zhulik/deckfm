@@ -15,8 +15,7 @@ Item {
 
         PerspectiveCamera {
             id: camera
-            position: Qt.vector3d(0, 200, 300)
-            eulerRotation.x: -30
+            position: Qt.vector3d(0, 000, 200)
         }
 
         DirectionalLight {
@@ -28,7 +27,7 @@ Item {
 
             onInputEvent: {
                 rightSphere.eulerRotation.y += event.analogX
-//                rightSphere.eulerrotation.y += event.analogY
+                rightSphere.eulerrotation.x += event.analogY
                 //                     logLabel.text = JSON.stringify(event, null, 2)
             }
         }
