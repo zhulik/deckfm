@@ -197,7 +197,7 @@ Item {
                                         Layout.fillWidth: parent
                                         height: parent.height
 
-                                        text: JSON.stringify(modelData)
+                                        text: `Message: ${JSON.stringify(modelData)}`
                                         verticalAlignment: Qt.AlignVCenter
                                     }
                                 }

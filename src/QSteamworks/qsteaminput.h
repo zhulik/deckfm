@@ -137,7 +137,7 @@ public:
 
 signals:
   void qmlControllersChanged();
-  void inputEvent(InputEvent);
+  void inputEvent(QSteamworks::InputEvent);
 
   void currentControllerChanged();
   void actionSetsChanged();
