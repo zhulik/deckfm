@@ -59,6 +59,7 @@ QSteamInput::QSteamInput(const QString &vdf, QSteamAPI *parent) : QObject{parent
   qRegisterMetaType<QSteamworks::Controller>();
   qRegisterMetaType<QSteamworks::Action>();
   qRegisterMetaType<QSteamworks::ActionSet>();
+  qRegisterMetaType<QSteamworks::InputEvent>();
 
   if (!SteamInput()->Init(true)) {
     throw InitializationFailed("Cannot initialize SteamInput");
@@ -107,11 +108,27 @@ void QSteamInput::onActionEvent(SteamInputActionEvent_t *event) {
       setCurrentController(controller);
     }
   }
+
+  unsigned long long actionHandle = 0;
+  QString type;
+  bool digitalState = false;
+  float analogX = 0;
+  float analogY = 0;
+
   if (event->eEventType == ESteamInputActionEventType_DigitalAction) {
-    emit digitalEvent();
+    type = "digital";
+    actionHandle = event->digitalAction.actionHandle;
+    digitalState = event->digitalAction.digitalActionData.bActive;
   } else {
-    emit digitalEvent();
+    type = "analog";
+    actionHandle = event->analogAction.actionHandle;
+
+    // TODO: add support for event->analogAction.analogActionData.eMode
+    analogX = event->analogAction.analogActionData.x;
+    analogY = event->analogAction.analogActionData.y;
   }
+
+  emit inputEvent(InputEvent(type, event->controllerHandle, actionHandle, digitalState, analogX, analogY));
 }
 
 void QSteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb) {

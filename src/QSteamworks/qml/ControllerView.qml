@@ -172,12 +172,8 @@ Item {
                                 Connections {
                                     target: steam_input
 
-                                    function onDigitalEvent() {
-                                        logView.log("Analog action")
-                                    }
-
-                                    function onAnalogEvent() {
-                                        logView.log("Digital action")
+                                    function onInputEvent(event){
+                                        logView.log(JSON.stringify(event))
                                     }
                                 }
 

@@ -74,6 +74,37 @@ private:
   QList<Action> m_actions;
 };
 
+class InputEvent {
+  Q_GADGET
+  Q_PROPERTY(QString type READ type CONSTANT)
+
+  Q_PROPERTY(unsigned long long controllerHandle READ controllerHandle CONSTANT)
+  Q_PROPERTY(unsigned long long actionHandle READ controllerHandle CONSTANT)
+
+  Q_PROPERTY(bool digitalState READ digitalState CONSTANT)
+  Q_PROPERTY(float analogX READ analogX CONSTANT)
+  Q_PROPERTY(float analogY READ analogY CONSTANT)
+
+public:
+  InputEvent() {}
+
+  InputEvent(const QString &type, unsigned long long controllerHandle, unsigned long long actionHandle,
+             bool digitalState, float analogX, float analogY) {}
+
+  const QString &type() const { return m_type; }
+  unsigned long long controllerHandle() const { return m_controllerHandle; }
+  bool digitalState() const { return m_digitalState; }
+  float analogX() const { return m_analogX; }
+  float analogY() const { return m_analogY; }
+
+private:
+  QString m_type;
+  unsigned long long m_controllerHandle = 0;
+  bool m_digitalState = false;
+  float m_analogX = 0;
+  float m_analogY = 0;
+};
+
 class QSteamInput : public QObject {
   Q_OBJECT
   Q_PROPERTY(QSteamworks::IGA iga READ iga CONSTANT)
@@ -106,8 +137,7 @@ public:
 
 signals:
   void qmlControllersChanged();
-  void digitalEvent();
-  void analogEvent();
+  void inputEvent(InputEvent);
 
   void currentControllerChanged();
   void actionSetsChanged();
@@ -132,3 +162,4 @@ private:
 
 Q_DECLARE_METATYPE(QSteamworks::ActionSet)
 Q_DECLARE_METATYPE(QSteamworks::Action)
+Q_DECLARE_METATYPE(QSteamworks::InputEvent)
