@@ -174,14 +174,6 @@ Item {
                                 }
                             }
 
-                            Connections {
-                                target: steam_input
-
-                                function onInputEvent(event){
-                                    logView.log({event: event})
-                                }
-                            }
-
 //                            Timer {
 //                                running: true
 //                                interval: 300
@@ -191,10 +183,18 @@ Item {
 //                                }
 //                            }
 
-                            LogView {
-                                id: logView
-                                Layout.fillHeight: parent
+                            Label {
+                                id: logLabel
                                 Layout.preferredWidth: stack.width / 2 - 10
+                                Layout.fillHeight: parent
+
+                                Connections {
+                                    target: steam_input
+
+                                    function onInputEvent(event){
+                                        logLabel.text = JSON.stringify(event, null, 2)
+                                    }
+                                }
                             }
                         }
                     }
