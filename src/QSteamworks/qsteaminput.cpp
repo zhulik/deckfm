@@ -88,9 +88,6 @@ void QSteamInput::runFrame() {
   SteamInput()->RunFrame();
 
   if (m_currentController.handle() != 0 && !m_actionSets.empty()) {
-
-    SteamInput()->ActivateActionSet(m_currentController.handle(), m_actionSets.first().handle()); // TODO: remove it
-
     auto handle = SteamInput()->GetCurrentActionSet(m_currentController.handle());
 
     foreach (auto &actionSet, m_actionSets) {
@@ -272,6 +269,7 @@ void QSteamInput::updateActionSets() {
     auto handle = SteamInput()->GetActionSetHandle(actionSet.first.toLocal8Bit());
     m_actionSets << ActionSet(handle, actionSet.first, getActions(handle, actionSet.second));
   }
+  SteamInput()->ActivateActionSet(m_currentController.handle(), m_actionSets.first().handle());
   emit actionSetsChanged();
 }
 
