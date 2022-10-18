@@ -31,7 +31,7 @@ Item {
                 switch(event.action.actionDefinition.name) {
                 case "LeftPad":
                     leftSphere.eulerRotation.y += event.analogX
-                    leftSphere.eulerRotation.z -= event.analogY / 5
+                    leftSphere.eulerRotation.z -= event.analogY
                     break
                 case "RightPad":
                     rightSphere.eulerRotation.y += event.analogX / 5
