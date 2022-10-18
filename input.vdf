@@ -2,13 +2,6 @@
 {
 	"configurations"
 	{
-		"controller_steamcontroller_gordon"
-		{
-			"0"
-			{
-				"path"		"steam_controller.vdf"
-			}
-		}
 	}
 	"actions"
 	{
@@ -62,6 +55,12 @@
 				"button_r3"		"#ButtonR3"
 				"button_r4"		"#ButtonR4"
 				"button_r5"		"#ButtonR5"
+
+				"touch_lstick"	"#TouchLStick"
+				"touch_rstick"	"#TouchRStick"
+
+				"touch_lpad"	"#TouchLPad"
+				"touch_rpad"	"#TouchRPad"
 
 				"trackpad_l"	"#TrackpadL"
 				"trackpad_r"	"#TrackpadR"
