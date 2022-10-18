@@ -118,6 +118,7 @@ void QSteamInput::onActionEvent(SteamInputActionEvent_t *event) {
   if (event->eEventType == ESteamInputActionEventType_DigitalAction) {
     type = "digital";
     actionHandle = event->digitalAction.actionHandle;
+
     digitalState = event->digitalAction.digitalActionData.bActive;
   } else {
     type = "analog";
