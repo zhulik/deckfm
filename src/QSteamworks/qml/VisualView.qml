@@ -26,20 +26,37 @@ Item {
             events: ["LeftPad", "RightPad"]
 
             onInputEvent: {
-                rightSphere.eulerRotation.y += event.analogX / 5
-                rightSphere.eulerRotation.z += event.analogY / 5
-                //                     logLabel.text = JSON.stringify(event, null, 2)
+                let sphere;
+                if (event.name === "LeftPad") {
+                    sphere = leftSphere
+                } else {
+                    sphere = rightSphere
+                }
+
+                sphere.eulerRotation.y += event.analogX / 5
+                sphere.eulerRotation.z += event.analogY / 5
             }
         }
 
         Model {
             id: rightSphere
-            //                 visible: root.visible
-            position: Qt.vector3d(0, 0, 0)
+            position: Qt.vector3d(100, 0, 0)
             source: "#Sphere"
             materials: [ DefaultMaterial {
                     diffuseMap: Texture {
-                        id: texture
+                        source: "./right.png"
+                    }
+                }
+            ]
+            eulerRotation.y: 90
+        }
+
+        Model {
+            id: leftSphere
+            position: Qt.vector3d(-100, 0, 0)
+            source: "#Sphere"
+            materials: [ DefaultMaterial {
+                    diffuseMap: Texture {
                         source: "./right.png"
                     }
                 }
