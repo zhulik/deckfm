@@ -189,7 +189,7 @@ Item {
                                 Layout.fillHeight: parent
 
                                 SteamInputScope {
-                                    events: ["button_a", "button_b"]
+//                                    events: ["button_a", "button_b"]
 
                                     onInputEvent: {
                                         logLabel.text = JSON.stringify(event, null, 2)

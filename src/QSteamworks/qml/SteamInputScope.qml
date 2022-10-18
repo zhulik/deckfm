@@ -12,7 +12,7 @@ Item {
         target: steam_input
 
         function onInputEvent(event) {
-            if (events.includes(event.action.actionDefinition.name)) {
+            if (events.includes(event.action.actionDefinition.name) || events.length == 0) {
               root.inputEvent(event)
             }
         }
