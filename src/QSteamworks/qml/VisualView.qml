@@ -27,7 +27,7 @@ Item {
             events: ["LeftPad", "RightPad"]
 
             onInputEvent: {
-                rightSphere.eulerRotation.x += event.analogX / Math.abs(event.analogX) * 10
+                rightSphere.eulerRotation.x += event.analogX
 //                rightSphere.rotation.y += event.analogY
                 //                     logLabel.text = JSON.stringify(event, null, 2)
             }
