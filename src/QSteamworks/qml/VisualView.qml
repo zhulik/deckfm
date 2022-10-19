@@ -1,7 +1,7 @@
 import QtQuick 2.15
 import QtQuick3D 1.15
 import QtQuick3D.Materials 1.15
-
+import QtQuick3D.Helpers 1.15
 
 
 View3D {
@@ -21,29 +21,29 @@ View3D {
         antialiasingQuality: SceneEnvironment.VeryHigh
     }
 
-    MouseArea {
-        id: mouseArea
-        anchors.fill: parent
-        hoverEnabled: true
+//    MouseArea {
+//        id: mouseArea
+//        anchors.fill: parent
+//        hoverEnabled: true
 
-        property int prevX: -1
-        property int prevY: -1
+//        property int prevX: -1
+//        property int prevY: -1
 
-        signal mouseMoved(var delta)
+//        signal mouseMoved(var delta)
 
-        onPositionChanged: {
-            if (prevX != -1) {
-                const dX = mouse.x - prevX
-                const dY = mouse.y - prevY
+//        onPositionChanged: {
+//            if (prevX != -1) {
+//                const dX = mouse.x - prevX
+//                const dY = mouse.y - prevY
 
-                if (dX != 0 || dY != 0) {
-                    mouseArea.mouseMoved({x: dX, y: dY})
-                }
-            }
-            prevX = mouse.x
-            prevY = mouse.y
-        }
-    }
+//                if (dX != 0 || dY != 0) {
+//                    mouseArea.mouseMoved({x: dX, y: dY})
+//                }
+//            }
+//            prevX = mouse.x
+//            prevY = mouse.y
+//        }
+//    }
 
     Connections {
         target: mouseArea
@@ -53,6 +53,10 @@ View3D {
         }
     }
 
+    WasdController {
+        controlledObject: camera
+    }
+
     PerspectiveCamera {
         id: camera
         position: Qt.vector3d(0, 300, 0)
@@ -60,14 +64,13 @@ View3D {
         function move(dX, dY) {
             const direction = camera.forward
 
-            const direction = forward
-            var velocity = Qt.vector3d(direction.x + dX,
+            var velocity = Qt.vector3d(direction.x + dX * 10,
                                        0,
-                                       direction.z + dY);
+                                       direction.z + dY * 10);
 
-            position = Qt.vector3d(x + velocity.x,
-                                   y + velocity.y,
-                                   z + velocity.z);
+            position = Qt.vector3d(position.x + velocity.x,
+                                   position.y + velocity.y,
+                                   position.z + velocity.z);
         }
 
         function pan(dX, dY) {
