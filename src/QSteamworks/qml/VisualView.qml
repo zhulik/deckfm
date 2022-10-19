@@ -64,17 +64,26 @@ View3D {
         function move(dX, dY) {
             const direction = camera.forward
 
-            var velocity = Qt.vector3d(direction.x + dX * 10,
+            var velocity = Qt.vector3d(direction.x * dX * 10,
                                        0,
-                                       direction.z + dY * 10);
+                                       direction.z * dY * 10);
 
             position = Qt.vector3d(position.x + velocity.x,
                                    position.y + velocity.y,
                                    position.z + velocity.z);
         }
 
-        function pan(dX, dY) {
+        onEulerRotationChanged: {
+            if (camera.eulerRotation.x > 90) {
+                camera.eulerRotation.x = 90
+            }
 
+            if (camera.eulerRotation.x < -90) {
+                camera.eulerRotation.x = -90
+            }
+        }
+
+        function pan(dX, dY) {
             camera.eulerRotation.y -= dX
             camera.eulerRotation.x -= dY
 
