@@ -94,9 +94,9 @@ View3D {
 //            case "select":
 //                Qt.quit()
 //                break
-            case "menu":
-                overlay.visible = !overlay.visible
-                break
+//            case "menu":
+//                overlay.visible = !overlay.visible
+//                break
             }
         }
     }
