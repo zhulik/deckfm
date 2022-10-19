@@ -97,7 +97,7 @@ View3D {
 //            case "menu":
 //                overlay.visible = !overlay.visible
 //                break
-//            }
+            }
         }
     }
 
