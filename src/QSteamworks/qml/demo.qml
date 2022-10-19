@@ -22,8 +22,6 @@ ApplicationWindow {
     VisualView {
         anchors.fill: parent
 
-        renderMode: View3D.Overlay
-
         RowLayout {
             anchors.right: parent.right
 

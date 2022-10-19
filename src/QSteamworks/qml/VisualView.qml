@@ -21,38 +21,6 @@ View3D {
         antialiasingQuality: SceneEnvironment.VeryHigh
     }
 
-//    MouseArea {
-//        id: mouseArea
-//        anchors.fill: parent
-//        hoverEnabled: true
-
-//        property int prevX: -1
-//        property int prevY: -1
-
-//        signal mouseMoved(var delta)
-
-//        onPositionChanged: {
-//            if (prevX != -1) {
-//                const dX = mouse.x - prevX
-//                const dY = mouse.y - prevY
-
-//                if (dX != 0 || dY != 0) {
-//                    mouseArea.mouseMoved({x: dX, y: dY})
-//                }
-//            }
-//            prevX = mouse.x
-//            prevY = mouse.y
-//        }
-//    }
-
-    Connections {
-        target: mouseArea
-
-        function onMouseMoved(delta) {
-            camera.pan(delta.x, delta.y)
-        }
-    }
-
     WasdController {
         controlledObject: camera
     }
@@ -62,17 +30,17 @@ View3D {
         position: Qt.vector3d(0, 300, 0)
 
         function move(dX, dY) {
-            const direction = camera.forward
+            const fdir = camera.forward
 
-            var forwardVelocity = Qt.vector3d(direction.x * dY * 3,
-                                       direction.y * dY * 3,
-                                       direction.z * dY * 3);
+            var forwardVelocity = Qt.vector3d(fdir.x * dY * 3,
+                                       fdir.y * dY * 3,
+                                       fdir.z * dY * 3);
 
-            direction = camera.right
+            const sdir = camera.right
 
-            var strafeVelocity = Qt.vector3d(direction.x * dX * 3,
-                                       direction.y * dX * 3,
-                                       direction.z * dX * 3);
+            var strafeVelocity = Qt.vector3d(sdir.x * dX * 3,
+                                       sdir.y * dX * 3,
+                                       sdir.z * dX * 3);
 
             position = Qt.vector3d(position.x + forwardVelocity.x + strafeVelocity.x,
                                    position.y + forwardVelocity.y + strafeVelocity.y,
