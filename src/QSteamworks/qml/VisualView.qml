@@ -40,19 +40,13 @@ View3D {
             return Qt.vector3d(x, y, z)
         }
 
+        function v3dMulC(vec, n) { // multiple Vetctor3D arguments
+            return Qt.vector3d(vec.x * n, vec.y * n, vec.z * n);
+        }
+
         function move(dX, dY) {
-            const fdir = camera.forward
-
-            var forwardVelocity = Qt.vector3d(fdir.x * dY * 3,
-                                              fdir.y * dY * 3,
-                                              fdir.z * dY * 3);
-
-            const sdir = camera.right
-
-            var strafeVelocity = Qt.vector3d(sdir.x * dX * 3,
-                                             sdir.y * dX * 3,
-                                             sdir.z * dX * 3);
-
+            var forwardVelocity = v3dMulC(camera.forward, dY * 3)
+            var strafeVelocity = v3dMulC(camera.right, dX * 3)
             position = v3dSum(position, forwardVelocity, strafeVelocity)
         }
 
