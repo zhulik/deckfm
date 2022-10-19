@@ -60,6 +60,12 @@ View3D {
             }
         }
 
+        onPositionChanged: {
+            if (position.y != 300) {
+                position.y = 300
+            }
+        }
+
         function pan(dX, dY) {
             camera.eulerRotation.y -= dX
             camera.eulerRotation.x -= dY
