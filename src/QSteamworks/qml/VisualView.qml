@@ -60,8 +60,8 @@ View3D {
         function move(dX, dY) {
             const dir = mapDirectionToScene(Qt.vector3d(dX, 0, dY))
 
-            camera.x += dir.x
-            camera.z += dir.y
+            camera.x -= dir.x
+            camera.z -= dir.y
         }
 
         function pan(dX, dY) {
