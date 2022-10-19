@@ -10,17 +10,75 @@ Item {
         id: view
         anchors.fill: parent
         camera: camera
-        renderMode: View3D.Overlay
         visible: root.visible
+
+        environment: SceneEnvironment {
+            backgroundMode: SceneEnvironment.SkyBox
+
+            lightProbe: Texture {
+                source: "sky.hdr"
+            }
+
+            antialiasingMode: SceneEnvironment.SSAA
+            antialiasingQuality: SceneEnvironment.VeryHigh
+        }
+
+        MouseArea {
+            id: mouseArea
+            anchors.fill: parent
+            hoverEnabled: true
+
+            property int prevX: -1
+            property int prevY: -1
+
+            signal mouseMoved(var delta)
+
+            onPositionChanged: {
+                if (prevX != -1) {
+                    const dX = mouse.x - prevX
+                    const dY = mouse.y - prevY
+
+                    if (dX != 0 || dY != 0) {
+                        mouseArea.mouseMoved({x: dX, y: dY})
+                    }
+                }
+                prevX = mouse.x
+                prevY = mouse.y
+            }
+        }
+
+        Connections {
+            target: mouseArea
+
+            function onMouseMoved(delta) {
+                camera.pan(delta.x, delta.y)
+            }
+        }
 
         PerspectiveCamera {
             id: camera
-            position: Qt.vector3d(0, 000, 300)
-            eulerRotation.x: 20
+            position: Qt.vector3d(0, 300, 0)
+
+            function pan(dX, dY) {
+                camera.eulerRotation.y -= dX
+                camera.eulerRotation.x -= dY
+
+                if (Math.abs(camera.eulerRotation.x) > 90) {
+                    camera.eulerRotation.x += dY
+                }
+
+            }
         }
 
-        DirectionalLight {
-            eulerRotation.x: -30
+        Model {
+            id: ground
+            position: Qt.vector3d(0, 0, 0)
+            source: "#Cylinder"
+            scale: Qt.vector3d(4, 0.1, 4)
+            materials: [ DefaultMaterial {
+                    diffuseColor: "green"
+                }
+            ]
         }
 
         SteamInputScope {
@@ -35,42 +93,20 @@ Item {
                     leftSphere.eulerRotation.z -= event.analogY
                     break
                 case "RightPad":
-                    rightSphere.eulerRotation.y += event.analogX / 5
-                    rightSphere.eulerRotation.z += event.analogY / 5
+                    camera.pan(event.analogX / 5, event.analogY / 5)
                     break
                 }
             }
         }
 
-        Model {
-            id: rightSphere
-            position: Qt.vector3d(200, 0, 0)
-            source: "#Sphere"
-            materials: [ DefaultMaterial {
+//        Model {
+//            id: rightSphere
+//            position: Qt.vector3d(0, 0, 0)
+//            source: "#Sphere"
+//            materials: [ SteelMilledConcentricMaterial {
 
-                    diffuseMap: Texture {
-                        source: "./sphere.png"
-                        scaleU: 2
-                        scaleV: 1
-                    }
-                }
-            ]
-            eulerRotation.y: 90
-        }
-
-        Model {
-            id: leftSphere
-            position: Qt.vector3d(-200, 0, 0)
-            source: "#Sphere"
-            materials: [ DefaultMaterial {
-                    diffuseMap: Texture {
-                        scaleU: 2
-                        scaleV: 1
-                        source: "./sphere.png"
-                    }
-                }
-            ]
-            eulerRotation.y: 90
-        }
+//                }
+//            ]
+//        }
     }
 }
