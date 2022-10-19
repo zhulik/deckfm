@@ -57,7 +57,15 @@ View3D {
         id: camera
         position: Qt.vector3d(0, 300, 0)
 
+        function move(dX, dY) {
+            const dir = mapDirectionToScene(Qt.vector3d(dX, 0, event.dY))
+
+            camera.x += dir.x
+            camera.z += dir.y
+        }
+
         function pan(dX, dY) {
+
             camera.eulerRotation.y -= dX
             camera.eulerRotation.x -= dY
 
@@ -85,8 +93,7 @@ View3D {
         onInputEvent: {
             switch(event.action.actionDefinition.name) {
             case "LeftStick":
-                camera.x += event.analogX
-                camera.z += event.analogY
+                camera.move(event.analogX, event.analogY)
                 break
             case "RightPad":
                 camera.pan(event.analogX / 5, event.analogY / 5)
