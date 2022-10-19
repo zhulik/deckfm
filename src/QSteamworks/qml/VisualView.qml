@@ -58,10 +58,16 @@ View3D {
         position: Qt.vector3d(0, 300, 0)
 
         function move(dX, dY) {
-            const dir = mapDirectionFromNode(camera, Qt.vector3d(dX, 0, dY))
+            const direction = camera.forward
 
-            camera.x -= dir.x
-            camera.z -= dir.y
+            const direction = forward
+            var velocity = Qt.vector3d(direction.x + dX,
+                                       0,
+                                       direction.z + dY);
+
+            position = Qt.vector3d(x + velocity.x,
+                                   y + velocity.y,
+                                   z + velocity.z);
         }
 
         function pan(dX, dY) {
