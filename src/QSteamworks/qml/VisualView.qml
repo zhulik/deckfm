@@ -84,20 +84,20 @@ View3D {
 
         onInputEvent: {
             switch(event.action.actionDefinition.name) {
-            case "LeftStick":
-                camera.x += event.analogX
-                camera.y += event.analogY
-                break
+//            case "LeftStick":
+//                camera.x += event.analogX
+//                camera.y += event.analogY
+//                break
             case "RightPad":
                 camera.pan(event.analogX / 5, event.analogY / 5)
                 break
-            case "select":
-                Qt.quit()
-                break
-            case "menu":
-                overlay.visible = !overlay.visible
-                break
-            }
+//            case "select":
+//                Qt.quit()
+//                break
+//            case "menu":
+//                overlay.visible = !overlay.visible
+//                break
+//            }
         }
     }
 
