@@ -95,7 +95,9 @@ View3D {
                 //                Qt.quit()
                 //                break
             case "menu":
-                overlay.visible = !overlay.visible && event.digitalState
+                if (event.digitalState) {
+                    overlay.visible = !overlay.visible
+                }
                 break
             }
         }
