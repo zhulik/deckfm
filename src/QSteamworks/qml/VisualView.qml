@@ -29,22 +29,31 @@ View3D {
         id: camera
         position: Qt.vector3d(0, 300, 0)
 
+        function v3dSum() { // multiple Vetctor3D arguments
+            let [x, y, z] = [0 , 0, 0]
+
+            for (var i = 0; i < arguments.length; i++) {
+                x += arguments[i].x
+                y += arguments[i].y
+                z += arguments[i].z
+            }
+            return Qt.vector3d(x, y, z)
+        }
+
         function move(dX, dY) {
             const fdir = camera.forward
 
             var forwardVelocity = Qt.vector3d(fdir.x * dY * 3,
-                                       fdir.y * dY * 3,
-                                       fdir.z * dY * 3);
+                                              fdir.y * dY * 3,
+                                              fdir.z * dY * 3);
 
             const sdir = camera.right
 
             var strafeVelocity = Qt.vector3d(sdir.x * dX * 3,
-                                       sdir.y * dX * 3,
-                                       sdir.z * dX * 3);
+                                             sdir.y * dX * 3,
+                                             sdir.z * dX * 3);
 
-            position = Qt.vector3d(position.x + forwardVelocity.x + strafeVelocity.x,
-                                   position.y + forwardVelocity.y + strafeVelocity.y,
-                                   position.z + forwardVelocity.z + strafeVelocity.z);
+            position = v3dSum(position, forwardVelocity, strafeVelocity)
         }
 
         onEulerRotationChanged: {
