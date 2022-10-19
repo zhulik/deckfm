@@ -58,7 +58,7 @@ View3D {
         position: Qt.vector3d(0, 300, 0)
 
         function move(dX, dY) {
-            const dir = mapDirectionToNode(camera, Qt.vector3d(dX, 0, dY))
+            const dir = mapDirectionFromNode(camera, Qt.vector3d(dX, 0, dY))
 
             camera.x -= dir.x
             camera.z -= dir.y
