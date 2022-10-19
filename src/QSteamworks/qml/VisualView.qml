@@ -68,9 +68,9 @@ View3D {
                                        0,
                                        direction.z * dY * 10);
 
-            position = Qt.vector3d(position.x + velocity.x,
-                                   position.y + velocity.y,
-                                   position.z + velocity.z);
+            position = Qt.vector3d(position.x + velocity.y,
+                                   position.y,
+                                   position.z + velocity.x);
         }
 
         onEulerRotationChanged: {
