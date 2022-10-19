@@ -18,53 +18,76 @@ ApplicationWindow {
     width: 1280
     height: 800
 
-    header: ToolBar{
-        MDI.Button {
-            MDI.Button {
-                iconName: "windowClose"
-                Layout.alignment: Qt.AlignRight
-                onClicked: Qt.quit()
-            }
-        }
 
-    }
-
-    ColumnLayout {
+    VisualView {
         anchors.fill: parent
 
-        TabBar {
-            id: bar
-            Layout.fillWidth: parent
-            currentIndex: 2
+        renderMode: View3D.Overlay
 
-            TabButton {
-                text: "IGA"
+        RowLayout {
+            anchors.right: parent.right
+
+            MDI.Button {
+                MDI.Button {
+                    iconName: "windowClose"
+                    Layout.alignment: Qt.AlignRight
+                    onClicked: Qt.quit()
+                }
             }
-
-            TabButton {
-                text: "Controllers"
-            }
-
-            TabButton {
-                text: "Visual"
+            MDI.Button {
+                iconName: "projectorScreen"
+                Layout.alignment: Qt.AlignRight
+                onClicked: overlay.visible = true
             }
         }
 
-        StackLayout {
-            Layout.fillWidth: parent
+        Rectangle {
+            anchors.fill: parent
+            id: overlay
+            color: "black"
+            opacity: 0.5
+            visible: false
 
-            currentIndex: bar.currentIndex
+            ColumnLayout {
 
-            IGAView {
+                anchors.fill: parent
 
-            }
+                RowLayout {
 
-            ControllerView {
+                    TabBar {
+                        id: bar
+                        Layout.fillWidth: parent
 
-            }
+                        TabButton {
+                            text: "IGA"
+                        }
 
-            VisualView {
-                visible: false
+                        TabButton {
+                            text: "Controllers"
+                        }
+                    }
+                    MDI.Button {
+                        MDI.Button {
+                            iconName: "projectorScreen"
+                            Layout.alignment: Qt.AlignRight
+                            onClicked: overlay.visible = false
+                        }
+                    }
+                }
+
+                StackLayout {
+                    Layout.fillWidth: parent
+
+                    currentIndex: bar.currentIndex
+
+                    IGAView {
+
+                    }
+
+                    ControllerView {
+
+                    }
+                }
             }
         }
     }
