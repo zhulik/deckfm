@@ -80,18 +80,22 @@ View3D {
     }
 
     SteamInputScope {
-        events: ["LeftPad", "RightPad"]
+        events: ["LeftStick", "RightPad", "select", "menu"]
 
         onInputEvent: {
-            let sphere;
-
             switch(event.action.actionDefinition.name) {
-            case "LeftPad":
-                leftSphere.eulerRotation.y += event.analogX
-                leftSphere.eulerRotation.z -= event.analogY
+            case "LeftStick":
+                camera.x += event.analogX
+                camera.y += event.analogY
                 break
             case "RightPad":
                 camera.pan(event.analogX / 5, event.analogY / 5)
+                break
+            case "select":
+                Qt.quit()
+                break
+            case "menu":
+                overlay.visible = !overlay.visible
                 break
             }
         }
