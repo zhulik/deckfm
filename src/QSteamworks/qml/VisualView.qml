@@ -114,10 +114,11 @@ View3D {
     }
 
     SteamInputScope {
-        events: ["LeftStick", "RightPad", "select", "menu", "touch_rstick", "RightStick"]
+        events: ["LeftStick", "RightPad", "LeftPad", "select", "menu", "touch_rstick", "RightStick"]
 
         onInputEvent: {
             switch(event.action.actionDefinition.name) {
+            case "LeftPad":
             case "LeftStick":
                 camera.move(event.analogX, event.analogY)
                 break
