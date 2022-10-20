@@ -139,8 +139,8 @@ View3D {
                 break
             case "RightStick":
                 if (pickedObject) {
-                    pickedObject.eulerRotation.y += event.analogX
-                    pickedObject.eulerRotation.z += event.analogY
+                    pickedObject.eulerRotation.y += event.analogX / 10
+                    pickedObject.eulerRotation.z += event.analogY / 10
                 }
                 break;
             }
