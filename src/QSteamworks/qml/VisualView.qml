@@ -27,6 +27,16 @@ View3D {
         antialiasingQuality: SceneEnvironment.VeryHigh
     }
 
+    Rectangle {
+        anchors.centerIn: parent
+
+        width: 18
+        height: width
+        radius: width / 2
+        opacity: 0.5
+
+    }
+
     WasdController {
         controlledObject: camera
     }
@@ -137,8 +147,6 @@ View3D {
         anchors.bottom: parent.bottom
         visible: enableDebug
     }
-
-
 
     RowLayout {
         anchors.right: parent.right
