@@ -134,7 +134,7 @@ View3D {
                 break
             case "touch_rstick":
                 if (pickedObject) {
-                    pickedObject.animated = false
+                    pickedObject.animated = !event.digitalState
                 }
             }
         }
