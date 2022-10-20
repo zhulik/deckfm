@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import QtQuick3D 1.15
 import QtQuick3D.Materials 1.15
@@ -170,6 +171,15 @@ View3D {
             }
         ]
     }
+
+    CameraInfo {
+        camera: camera
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        visible: enableDebug
+    }
+
+
 
     RowLayout {
         anchors.right: parent.right
