@@ -5,6 +5,7 @@ PerspectiveCamera {
     id: root
 
     fieldOfView: 75
+    clipNear: 0.1
 
     function move(dX, dY) {
         const forwardVelocity = v3dMulC(root.forward, dY * 3)

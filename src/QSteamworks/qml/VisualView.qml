@@ -114,7 +114,7 @@ View3D {
     }
 
     SteamInputScope {
-        events: ["LeftStick", "RightPad", "select", "menu", "touch_rstick"]
+        events: ["LeftStick", "RightPad", "select", "menu", "touch_rstick", "RightStick"]
 
         onInputEvent: {
             switch(event.action.actionDefinition.name) {
@@ -136,6 +136,12 @@ View3D {
                 if (pickedObject) {
                     pickedObject.animated = !event.digitalState
                 }
+                break
+            case "RightStick":
+                if (pickedObject) {
+                    pickedObject.eulerRotation.x += event.analogX
+                }
+                break;
             }
         }
     }
