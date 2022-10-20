@@ -135,5 +135,26 @@ View3D {
                 source: "#Sphere"
                 materials: [ GlassRefractiveMaterial {} ]
             }
+
+            Model {
+                position: Qt.vector3d(0, 20, 100)
+                scale: Qt.vector3d(0.2, 0.2, 0.2)
+                source: "#Sphere"
+                materials: [ PlasticStructuredRedMaterial {
+                        material_ior: 8
+                        bump_factor: 10
+                    }
+                ]
+            }
+
+            Model {
+                position: Qt.vector3d(0, 20, -100)
+                scale: Qt.vector3d(0.2, 0.2, 0.2)
+                source: "#Sphere"
+                materials: [ AluminumMaterial {
+                        bump_amount: 15.0
+                    }
+                ]
+            }
 }
 
