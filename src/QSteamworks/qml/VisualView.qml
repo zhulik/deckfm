@@ -40,54 +40,13 @@ View3D {
         visible: enableDebug
     }
 
-    PerspectiveCamera {
+    FlyingCamera {
         id: camera
-        fieldOfView: 75
         position: Qt.vector3d(0, 30, 0)
-
-        function v3dSum() { // multiple Vector3D arguments
-            let [x, y, z] = [0 , 0, 0]
-
-            for (var i = 0; i < arguments.length; i++) {
-                x += arguments[i].x
-                y += arguments[i].y
-                z += arguments[i].z
-            }
-            return Qt.vector3d(x, y, z)
-        }
-
-        function v3dMulC(vec, n) { // multiple Vetctor3D arguments
-            return Qt.vector3d(vec.x * n, vec.y * n, vec.z * n);
-        }
-
-        function move(dX, dY) {
-            const forwardVelocity = v3dMulC(camera.forward, dY * 3)
-            const strafeVelocity = v3dMulC(camera.right, dX * 3)
-            position = v3dSum(position, forwardVelocity, strafeVelocity)
-        }
-
-        onEulerRotationChanged: {
-            if (camera.eulerRotation.x > 90) {
-                camera.eulerRotation.x = 90
-            }
-
-            if (camera.eulerRotation.x < -90) {
-                camera.eulerRotation.x = -90
-            }
-        }
 
         onPositionChanged: {
             if (position.y != 30) {
                 position.y = 30
-            }
-        }
-
-        function pan(dX, dY) {
-            camera.eulerRotation.y -= dX
-            camera.eulerRotation.x -= dY
-
-            if (Math.abs(camera.eulerRotation.x) > 90) {
-                camera.eulerRotation.x += dY
             }
         }
     }
