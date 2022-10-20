@@ -10,11 +10,14 @@ import "../../../resources/qml/MDI" as MDI
 
 View3D {
     id: root
-    anchors.fill: parent
-    camera: camera
-    renderMode: View3D.Inline
 
     property bool enableDebug: false
+    property var pickedObject
+
+    anchors.fill: parent
+    renderMode: View3D.Inline
+
+    camera: camera
 
     environment: SceneEnvironment {
         backgroundMode: SceneEnvironment.SkyBox
@@ -30,7 +33,7 @@ View3D {
     Rectangle {
         anchors.centerIn: parent
 
-        width: 18
+        width: pickedObject ? 30 : 18
         height: width
         radius: width / 2
         opacity: 0.5
@@ -50,15 +53,38 @@ View3D {
         visible: enableDebug
     }
 
+    function doPick() {
+        const result = pick(root.width / 2, root.height / 2)
+
+        if (result.objectHit && result.distance < 40) {
+            if (pickedObject !== result.objectHit) {
+                pickedObject = result.objectHit
+            }
+        } else {
+            if (pickedObject != null) {
+                pickedObject = null
+            }
+        }
+    }
+
+    onPickedObjectChanged: {
+        console.log(pickedObject)
+    }
+
     FlyingCamera {
         id: camera
+
         position: Qt.vector3d(0, 30, 0)
 
         onPositionChanged: {
+            root.doPick()
+
             if (position.y != 30) {
                 position.y = 30
             }
         }
+
+        onEulerRotationChanged: root.doPick()
     }
 
     Model {
@@ -106,24 +132,18 @@ View3D {
         }
     }
 
-    Model {
+    ActionModel {
         position: Qt.vector3d(100, 20, 0)
-        source: "#Sphere"
-        scale: Qt.vector3d(0.2, 0.2, 0.2)
         materials: [ SteelMilledConcentricMaterial {} ]
     }
 
-    Model {
+    ActionModel {
         position: Qt.vector3d(-100, 20, 0)
-        scale: Qt.vector3d(0.2, 0.2, 0.2)
-        source: "#Sphere"
         materials: [ GlassRefractiveMaterial {} ]
     }
 
-    Model {
+    ActionModel {
         position: Qt.vector3d(0, 20, 100)
-        scale: Qt.vector3d(0.2, 0.2, 0.2)
-        source: "#Sphere"
         materials: [ PlasticStructuredRedMaterial {
                 material_ior: 8
                 bump_factor: 10
@@ -131,10 +151,8 @@ View3D {
         ]
     }
 
-    Model {
+    ActionModel {
         position: Qt.vector3d(0, 20, -100)
-        scale: Qt.vector3d(0.2, 0.2, 0.2)
-        source: "#Sphere"
         materials: [ AluminumMaterial {
                 bump_amount: 15.0
             }
