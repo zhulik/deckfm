@@ -61,11 +61,11 @@ View3D {
             }
         }
 
-//        onPositionChanged: {
-//            if (position.y != 30) {
-//                position.y = 30
-//            }
-//        }
+        onPositionChanged: {
+            if (position.y != 30) {
+                position.y = 30
+            }
+        }
 
         function pan(dX, dY) {
             camera.eulerRotation.y -= dX
@@ -83,7 +83,7 @@ View3D {
         position: Qt.vector3d(0, 0, 0)
         source: "#Cylinder"
         scale: Qt.vector3d(4, 0.1, 4)
-        materials: [ PlasticStructuredRedMaterial {
+        materials: [ PaperArtisticMaterial {
             }
         ]
     }
@@ -122,7 +122,7 @@ View3D {
                 position: Qt.vector3d(-100, 20, 0)
                 scale: Qt.vector3d(0.2, 0.2, 0.2)
                 source: "#Sphere"
-                materials: [ AluminumBrushedMaterial {} ]
+                materials: [ GlassRefractiveMaterial {} ]
             }
 }
 
