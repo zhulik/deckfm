@@ -55,11 +55,11 @@ View3D {
     function doPick() {
         const result = pick(root.width / 2, root.height / 2)
 
-        if (result.distance > 40 || pickedObject === result.objectHit) {
+        if (pickedObject === result.objectHit) {
             return
         }
 
-        if (result.objectHit) {
+        if (result.distance < 40 && result.objectHit) {
             if (pickedObject) {
                 pickedObject.unpick()
             }
@@ -68,7 +68,9 @@ View3D {
 
             pickedObject.pick()
         } else {
-            pickedObject.unpick()
+            if (pickedObject) {
+                pickedObject.unpick()
+            }
             pickedObject = null
         }
     }
@@ -135,17 +137,17 @@ View3D {
     }
 
     ActionModel {
-        position: Qt.vector3d(100, 20, 0)
+        position: Qt.vector3d(100, 30, 0)
         materials: [ SteelMilledConcentricMaterial {} ]
     }
 
     ActionModel {
-        position: Qt.vector3d(-100, 20, 0)
+        position: Qt.vector3d(-100, 30, 0)
         materials: [ GlassRefractiveMaterial {} ]
     }
 
     ActionModel {
-        position: Qt.vector3d(0, 20, 100)
+        position: Qt.vector3d(0, 30, 100)
         materials: [ PlasticStructuredRedMaterial {
                 material_ior: 8
                 bump_factor: 10
@@ -154,7 +156,7 @@ View3D {
     }
 
     ActionModel {
-        position: Qt.vector3d(0, 20, -100)
+        position: Qt.vector3d(0, 30, -100)
         materials: [ AluminumMaterial {
                 bump_amount: 15.0
             }
@@ -176,6 +178,25 @@ View3D {
             iconName: "axis"
             Layout.alignment: Qt.AlignRight
             onClicked: root.enableDebug = !root.enableDebug
+        }
+    }
+
+    Rectangle {
+        anchors.right: parent.right
+        anchors.verticalCenter: parent.verticalCenter
+
+        width: 10
+        height: 10
+
+        SequentialAnimation on rotation {
+            loops: Animation.Infinite
+            running: picked
+
+            NumberAnimation {
+                duration: 3000
+                to: 0
+                from: 359
+            }
         }
     }
 }
