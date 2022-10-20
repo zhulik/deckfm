@@ -7,15 +7,10 @@ Model {
 
     property bool picked: false
 
-    readonly property real scaleF: { 0.2 * (picked ? 1.2 : 1) }
+    readonly property real scaleF: 0.2
 
     scale: Qt.vector3d(scaleF, scaleF, scaleF)
     source: "#Sphere"
-
-    materials: [ AluminumMaterial {
-            bump_amount: 15.0
-        }
-    ]
 
     function pick() {
         picked = true
@@ -23,5 +18,16 @@ Model {
 
     function unpick() {
         picked = false
+    }
+
+    SequentialAnimation on eulerRotation.y {
+        loops: Animation.Infinite
+        running: picked
+
+        NumberAnimation {
+            duration: 3000
+            to: 0
+            from: 359
+        }
     }
 }
