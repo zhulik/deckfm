@@ -12,7 +12,7 @@ View3D {
     id: root
 
     property bool enableDebug: false
-    property var pickedObject
+    property var pickedObject: null
 
     anchors.fill: parent
     renderMode: View3D.Inline
@@ -37,7 +37,6 @@ View3D {
         height: width
         radius: width / 2
         opacity: 0.5
-
     }
 
     WasdController {
@@ -56,19 +55,22 @@ View3D {
     function doPick() {
         const result = pick(root.width / 2, root.height / 2)
 
-        if (result.objectHit && result.distance < 40) {
-            if (pickedObject !== result.objectHit) {
-                pickedObject = result.objectHit
-            }
-        } else {
-            if (pickedObject != null) {
-                pickedObject = null
-            }
+        if (result.distance > 40 || pickedObject === result.objectHit) {
+            return
         }
-    }
 
-    onPickedObjectChanged: {
-        console.log(pickedObject)
+        if (result.objectHit) {
+            if (pickedObject) {
+                pickedObject.unpick()
+            }
+
+            pickedObject = result.objectHit
+
+            pickedObject.pick()
+        } else {
+            pickedObject.unpick()
+            pickedObject = null
+        }
     }
 
     FlyingCamera {
