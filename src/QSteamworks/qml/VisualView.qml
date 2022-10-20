@@ -46,8 +46,8 @@ View3D {
         }
 
         function move(dX, dY) {
-            var forwardVelocity = v3dMulC(camera.forward, dY * 3)
-            var strafeVelocity = v3dMulC(camera.right, dX * 3)
+            const forwardVelocity = v3dMulC(camera.forward, dY * 3)
+            const strafeVelocity = v3dMulC(camera.right, dX * 3)
             position = v3dSum(position, forwardVelocity, strafeVelocity)
         }
 

@@ -18,7 +18,6 @@ ApplicationWindow {
     width: 1280
     height: 800
 
-
     VisualView {
         anchors.fill: parent
 
