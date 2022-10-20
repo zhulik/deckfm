@@ -6,6 +6,7 @@ Model {
     pickable: true
 
     property bool picked: false
+    property bool animated: true
 
     readonly property real scaleF: 0.2
 
@@ -22,7 +23,7 @@ Model {
 
     SequentialAnimation on eulerRotation.y {
         loops: Animation.Infinite
-        running: picked
+        running: picked && animated
 
         NumberAnimation {
             duration: 3000

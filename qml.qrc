@@ -21,8 +21,5 @@
         <file>resources/qml/GamepadsInfo/GamepadsInfo.qml</file>
         <file>resources/qml/GamepadsInfo/GamepadInfoDelegate.qml</file>
         <file>resources/js/vdf.js</file>
-        <file>src/QSteamworks/qml/CameraInfo.qml</file>
-        <file>src/QSteamworks/qml/FlyingCamera.qml</file>
-        <file>src/QSteamworks/qml/ActionModel.qml</file>
     </qresource>
 </RCC>

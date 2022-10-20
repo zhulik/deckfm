@@ -114,7 +114,7 @@ View3D {
     }
 
     SteamInputScope {
-        events: ["LeftStick", "RightPad", "select", "menu"]
+        events: ["LeftStick", "RightPad", "select", "menu", "touch_rstick"]
 
         onInputEvent: {
             switch(event.action.actionDefinition.name) {
@@ -132,6 +132,10 @@ View3D {
                     overlay.visible = !overlay.visible
                 }
                 break
+            case "touch_rstick":
+                if (pickedObject) {
+                    pickedObject.animated = event.dititalState
+                }
             }
         }
     }
