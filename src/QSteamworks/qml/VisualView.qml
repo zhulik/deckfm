@@ -19,6 +19,10 @@ View3D {
 
     camera: camera
 
+    function frameSwapped() {
+        doPick()
+    }
+
     environment: SceneEnvironment {
         backgroundMode: SceneEnvironment.SkyBox
 
@@ -81,14 +85,10 @@ View3D {
         position: Qt.vector3d(0, 30, -70)
 
         onPositionChanged: {
-            root.doPick()
-
             if (position.y != 30) {
                 position.y = 30
             }
         }
-
-        onEulerRotationChanged: root.doPick()
     }
 
     Model {

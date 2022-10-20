@@ -18,7 +18,10 @@ ApplicationWindow {
     width: 1280
     height: 800
 
+    onFrameSwapped: visualView.frameSwapped()
+
     VisualView {
+        id: visualView
         anchors.fill: parent
 
         RowLayout {
