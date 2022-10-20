@@ -139,8 +139,8 @@ View3D {
                 break
             case "RightStick":
                 if (pickedObject) {
-                    pickedObject.rotate(event.analogX/ 10, Qt.vector3d(0, 1, 0), Node.sceneRotation)
-                    pickedObject.rotate(event.analogY / 10, Qt.vector3d(0, 0, 1), Node.sceneRotation)
+                    pickedObject.rotate(event.analogX / 15, Qt.vector3d(0, 1, 0), Node.LocalSpace)
+                    pickedObject.rotate(event.analogY / 15, Qt.vector3d(0, 0, 1), Node.LocalSpace)
 
                 }
                 break;
