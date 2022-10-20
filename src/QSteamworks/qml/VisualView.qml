@@ -1,14 +1,19 @@
 import QtQuick 2.15
+import QtQuick.Layouts 1.15
 import QtQuick3D 1.15
 import QtQuick3D.Materials 1.15
 import QtQuick3D.Helpers 1.15
+
+import "../../../resources/qml/MDI" as MDI
 
 
 View3D {
     id: root
     anchors.fill: parent
     camera: camera
-    visible: root.visible
+    renderMode: View3D.Inline
+
+    property bool enableDebug: false
 
     environment: SceneEnvironment {
         backgroundMode: SceneEnvironment.SkyBox
@@ -23,6 +28,15 @@ View3D {
 
     WasdController {
         controlledObject: camera
+    }
+
+    DebugView {
+        source: root
+        visible: enableDebug
+    }
+
+    AxisHelper {
+        visible: enableDebug
     }
 
     PerspectiveCamera {
@@ -122,39 +136,50 @@ View3D {
         }
     }
 
-            Model {
-                position: Qt.vector3d(100, 20, 0)
-                source: "#Sphere"
-                scale: Qt.vector3d(0.2, 0.2, 0.2)
-                materials: [ SteelMilledConcentricMaterial {} ]
-            }
+    Model {
+        position: Qt.vector3d(100, 20, 0)
+        source: "#Sphere"
+        scale: Qt.vector3d(0.2, 0.2, 0.2)
+        materials: [ SteelMilledConcentricMaterial {} ]
+    }
 
-            Model {
-                position: Qt.vector3d(-100, 20, 0)
-                scale: Qt.vector3d(0.2, 0.2, 0.2)
-                source: "#Sphere"
-                materials: [ GlassRefractiveMaterial {} ]
-            }
+    Model {
+        position: Qt.vector3d(-100, 20, 0)
+        scale: Qt.vector3d(0.2, 0.2, 0.2)
+        source: "#Sphere"
+        materials: [ GlassRefractiveMaterial {} ]
+    }
 
-            Model {
-                position: Qt.vector3d(0, 20, 100)
-                scale: Qt.vector3d(0.2, 0.2, 0.2)
-                source: "#Sphere"
-                materials: [ PlasticStructuredRedMaterial {
-                        material_ior: 8
-                        bump_factor: 10
-                    }
-                ]
+    Model {
+        position: Qt.vector3d(0, 20, 100)
+        scale: Qt.vector3d(0.2, 0.2, 0.2)
+        source: "#Sphere"
+        materials: [ PlasticStructuredRedMaterial {
+                material_ior: 8
+                bump_factor: 10
             }
+        ]
+    }
 
-            Model {
-                position: Qt.vector3d(0, 20, -100)
-                scale: Qt.vector3d(0.2, 0.2, 0.2)
-                source: "#Sphere"
-                materials: [ AluminumMaterial {
-                        bump_amount: 15.0
-                    }
-                ]
+    Model {
+        position: Qt.vector3d(0, 20, -100)
+        scale: Qt.vector3d(0.2, 0.2, 0.2)
+        source: "#Sphere"
+        materials: [ AluminumMaterial {
+                bump_amount: 15.0
             }
+        ]
+    }
+
+    RowLayout {
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+
+        MDI.Button {
+            iconName: "axis"
+            Layout.alignment: Qt.AlignRight
+            onClicked: root.enableDebug = !root.enableDebug
+        }
+    }
 }
 

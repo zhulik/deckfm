@@ -25,11 +25,9 @@ ApplicationWindow {
             anchors.right: parent.right
 
             MDI.Button {
-                MDI.Button {
-                    iconName: "windowClose"
-                    Layout.alignment: Qt.AlignRight
-                    onClicked: Qt.quit()
-                }
+                iconName: "windowClose"
+                Layout.alignment: Qt.AlignRight
+                onClicked: Qt.quit()
             }
             MDI.Button {
                 iconName: "projectorScreen"
