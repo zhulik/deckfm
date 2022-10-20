@@ -27,7 +27,8 @@ View3D {
 
     PerspectiveCamera {
         id: camera
-        position: Qt.vector3d(0, 300, 0)
+        fieldOfView: 75
+        position: Qt.vector3d(0, 30, 0)
 
         function v3dSum() { // multiple Vetctor3D arguments
             let [x, y, z] = [0 , 0, 0]
@@ -60,11 +61,11 @@ View3D {
             }
         }
 
-        onPositionChanged: {
-            if (position.y != 300) {
-                position.y = 300
-            }
-        }
+//        onPositionChanged: {
+//            if (position.y != 30) {
+//                position.y = 30
+//            }
+//        }
 
         function pan(dX, dY) {
             camera.eulerRotation.y -= dX
@@ -82,8 +83,7 @@ View3D {
         position: Qt.vector3d(0, 0, 0)
         source: "#Cylinder"
         scale: Qt.vector3d(4, 0.1, 4)
-        materials: [ DefaultMaterial {
-                diffuseColor: "green"
+        materials: [ PlasticStructuredRedMaterial {
             }
         ]
     }
@@ -111,14 +111,18 @@ View3D {
         }
     }
 
-    //        Model {
-    //            id: rightSphere
-    //            position: Qt.vector3d(0, 0, 0)
-    //            source: "#Sphere"
-    //            materials: [ SteelMilledConcentricMaterial {
+            Model {
+                position: Qt.vector3d(100, 20, 0)
+                source: "#Sphere"
+                scale: Qt.vector3d(0.2, 0.2, 0.2)
+                materials: [ SteelMilledConcentricMaterial {} ]
+            }
 
-    //                }
-    //            ]
-    //        }
+            Model {
+                position: Qt.vector3d(-100, 20, 0)
+                scale: Qt.vector3d(0.2, 0.2, 0.2)
+                source: "#Sphere"
+                materials: [ AluminumBrushedMaterial {} ]
+            }
 }
 
