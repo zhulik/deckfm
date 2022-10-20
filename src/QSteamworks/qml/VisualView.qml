@@ -78,7 +78,7 @@ View3D {
     FlyingCamera {
         id: camera
 
-        position: Qt.vector3d(0, 30, 0)
+        position: Qt.vector3d(0, 30, -70)
 
         onPositionChanged: {
             root.doPick()
