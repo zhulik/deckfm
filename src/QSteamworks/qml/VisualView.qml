@@ -133,9 +133,9 @@ View3D {
                 }
                 break
             case "touch_rstick":
-//                if (pickedObject) {
+                if (pickedObject) {
                     pickedObject.animated = false
-//                }
+                }
             }
         }
     }
