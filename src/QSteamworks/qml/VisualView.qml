@@ -114,6 +114,8 @@ View3D {
     }
 
     SteamInputScope {
+        id: input
+
         events: ["LeftStick", "RightPad", "LeftPad", "select", "menu", "touch_rstick", "RightStick"]
 
         onInputEvent: {
@@ -170,6 +172,8 @@ View3D {
 
     ActionModel {
         position: Qt.vector3d(0, 30, -100)
+        visible: input.actionStates["touch_rstick"]
+
         materials: [ AluminumMaterial {
                 bump_amount: 15.0
             }
