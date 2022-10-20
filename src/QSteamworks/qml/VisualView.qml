@@ -30,7 +30,7 @@ View3D {
         fieldOfView: 75
         position: Qt.vector3d(0, 30, 0)
 
-        function v3dSum() { // multiple Vetctor3D arguments
+        function v3dSum() { // multiple Vector3D arguments
             let [x, y, z] = [0 , 0, 0]
 
             for (var i = 0; i < arguments.length; i++) {
@@ -74,7 +74,6 @@ View3D {
             if (Math.abs(camera.eulerRotation.x) > 90) {
                 camera.eulerRotation.x += dY
             }
-
         }
     }
 
@@ -82,8 +81,20 @@ View3D {
         id: ground
         position: Qt.vector3d(0, 0, 0)
         source: "#Cylinder"
-        scale: Qt.vector3d(4, 0.1, 4)
-        materials: [ PaperArtisticMaterial {
+        scale: Qt.vector3d(2, 0.1, 2)
+        materials: [ PrincipledMaterial {
+                metalness: 0
+
+                baseColorMap: Texture {
+                    source: "ground_diff.jpg"
+                    tilingModeHorizontal: Texture.Repeat
+                    tilingModeVertical: Texture.Repeat
+                    scaleU: 8
+                    scaleV: 8
+                }
+                roughnessMap: Texture { source: "maps/metallic/ground_rough.jpg" }
+                normalMap: Texture { source: "maps/metallic/ground_normal.jpg" }
+
             }
         ]
     }
