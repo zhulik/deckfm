@@ -36,9 +36,10 @@ Item {
     }
 
     Steamworks.SteamInputScope {
-        enabled: root.activeFocus
+        enabled: true
 
         handlers: {
+            "dpad_down": view.moveCurrentIndexDown,
             "folder_down": view.moveCurrentIndexDown,
             "folder_up": view.moveCurrentIndexUp,
             "folder_left": view.moveCurrentIndexLeft,
