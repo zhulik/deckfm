@@ -122,7 +122,7 @@ class QSteamInput : public QObject {
   Q_PROPERTY(QSteamworks::Controller currentController READ currentController WRITE setCurrentController NOTIFY
                  currentControllerChanged)
   Q_PROPERTY(QVariantList actionSets READ qmlActionSets NOTIFY actionSetsChanged)
-  Q_PROPERTY(QString actionSet READ qmlActionSet WRITE qmlSetActionSet NOTIFY actionSetChanged)
+  Q_PROPERTY(QString actionSet READ qmlActionSet WRITE setActionSet NOTIFY actionSetChanged)
 
   Q_PROPERTY(unsigned short vibrationSpeedLeft READ vibrationSpeedLeft WRITE setVibrationSpeedLeft NOTIFY
                  vibrationSpeedLeftChanged)
@@ -144,8 +144,8 @@ public:
   virtual bool showBindingPanel(unsigned long long inputHandle) const;
 
   Q_INVOKABLE
-  void triggerSimpleHapticEvent(const QString &location, unsigned char nIntensity, char nGainDB, unsigned char nOtherIntensity,
-                                char nOtherGainDB) const;
+  void triggerSimpleHapticEvent(const QString &location, unsigned char nIntensity, char nGainDB,
+                                unsigned char nOtherIntensity, char nOtherGainDB) const;
 
   const IGA &iga() const;
 
@@ -157,7 +157,7 @@ public:
   const QSteamworks::ActionSet &actionSet() const;
 
   const QString &qmlActionSet() const;
-  void qmlSetActionSet(const QString &newActionSet);
+  void setActionSet(const QString &newActionSet);
 
   unsigned short vibrationSpeedLeft() const;
   void setVibrationSpeedLeft(unsigned short newVibrationSpeedLeft);
@@ -199,6 +199,7 @@ private:
 
   QSteamworks::ActionSet m_actionSet;
   void setActionSet(const QSteamworks::ActionSet &newActionSet);
+
   unsigned short m_vibrationSpeedLeft = 0;
   unsigned short m_vibrationSpeedRight = 0;
 };

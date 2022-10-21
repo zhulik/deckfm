@@ -31,14 +31,6 @@ Item {
         root.fileOpened(fs_model.get(index).path)
     }
 
-    Connections {
-        target: steam_input
-
-        function onConfigurationLoaded() {
-            steam_input.actionSet = "folder_navigation"
-        }
-    }
-
     Steamworks.SteamInputScope {
         enabled: true
 
