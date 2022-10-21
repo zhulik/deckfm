@@ -31,11 +31,7 @@ ApplicationWindow {
         onExitClicked: mainWindow.close()
         onGamepadClicked: gamepadWindow.open()
 
-        visible: !gamepadWindow.visible
-    }
-
-    LoaderWindow {
-        id: loaderWindow
+        visible: !gamepadWindow.visible && !appLoader.visible
     }
 
     Shortcut {
@@ -80,8 +76,8 @@ ApplicationWindow {
                 focus: true
 
                 onFileOpened: {
-                    loaderWindow.load(path)
-                    //                    console.log(`Attempting to open ${path}`)
+                    console.log(mime)
+                    appLoader.source = path
                 }
             }
         }
@@ -105,5 +101,11 @@ ApplicationWindow {
 
     Settings {
         property alias path: directoryView.path
+    }
+
+    AppLoader {
+        id: appLoader
+
+        anchors.fill: parent
     }
 }
