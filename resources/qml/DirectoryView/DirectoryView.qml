@@ -17,6 +17,8 @@ Item {
 
     signal fileOpened(string path)
 
+    property alias path: fs_model.path
+
     FolderListModel {
         id: fs_model
         showHidden: showHiddenSwitch.position === 1.0
