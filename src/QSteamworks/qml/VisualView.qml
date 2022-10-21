@@ -119,8 +119,8 @@ View3D {
         events: ["LeftStick", "RightPad", "LeftPad", "select", "menu", "touch_rstick", "RightStick"]
 
         Component.onCompleted: {
-            steam_input.vibrationSpeedLeft = 50000
-            steam_input.vibrationSpeedRight = 50000
+            steam_input.vibrationSpeedLeft = 1000
+            steam_input.vibrationSpeedRight = 1000
         }
 
 //        Binding {
