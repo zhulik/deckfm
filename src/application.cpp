@@ -20,8 +20,11 @@
 Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
   setOrganizationName("zhulik");
   setApplicationName("deckfm");
+
   QFontDatabase::addApplicationFont(":/resources/fonts/materialdesignicons-webfont.ttf");
   QQuickStyle::setStyle("Material");
+
+  qmlRegisterType<FolderListModel>("DeckFM", 1, 0, "FolderListModel");
 
   m_engine = new QQmlApplicationEngine();
 
@@ -37,8 +40,6 @@ Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
   } catch (QSteamworks::InitializationFailed &e) {
     qDebug() << "\n" << e.what() << "\n";
   }
-
-  qmlRegisterType<FolderListModel>("DeckFM", 1, 0, "FolderListModel");
 
   connect(m_engine, &QQmlApplicationEngine::objectCreated, [this](auto obj) {
     if (obj == nullptr) {
