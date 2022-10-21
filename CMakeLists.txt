@@ -18,7 +18,7 @@ include_directories(${CMAKE_SOURCE_DIR}/src/QSteamworks)
 
 file(GLOB_RECURSE sources "src/*.cpp" "src/*.h")
 
-set(PROJECT_SOURCES ${sources} qml.qrc)
+set(PROJECT_SOURCES ${sources}) # qml.qrc
 
 add_subdirectory(tools/vdf)
 

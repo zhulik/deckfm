@@ -211,7 +211,7 @@ void QSteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb) {
 
   auto inputType = SteamInput()->GetInputTypeForHandle(handle);
   auto name = nameForControllerType(inputType);
-  auto image = QString("qrc:/resources/images/controllers/%1.png").arg(name);
+  auto image = QString("resources/images/controllers/%1.png").arg(name);
 
   auto controller = Controller(handle, name, image);
   m_controllers << controller;

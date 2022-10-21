@@ -6,7 +6,7 @@
 class VDFParser {
 public:
   VDFParser() {
-    auto vdfModule = m_engine.importModule(":/resources/js/vdf.js");
+    auto vdfModule = m_engine.importModule("resources/js/vdf.js");
 
     if (vdfModule.isError()) {
       throw std::runtime_error(QString("Cannot load vdf.js: %1 %2")

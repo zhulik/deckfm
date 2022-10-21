@@ -21,7 +21,7 @@ Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
   setOrganizationName("zhulik");
   setApplicationName("deckfm");
 
-  QFontDatabase::addApplicationFont(":/resources/fonts/materialdesignicons-webfont.ttf");
+  QFontDatabase::addApplicationFont("resources/fonts/materialdesignicons-webfont.ttf");
   QQuickStyle::setStyle("Material");
 
   qmlRegisterType<FolderListModel>("DeckFM", 1, 0, "FolderListModel");
@@ -69,7 +69,7 @@ Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
     }
   });
 
-  QString qmlPath = "qrc:/resources/qml/MainWindow.qml";
+  QString qmlPath = "resources/qml/MainWindow.qml";
 
   if (arguments().count() > 1) {
     qmlPath = arguments().at(1);
