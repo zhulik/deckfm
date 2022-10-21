@@ -5,7 +5,7 @@ Item {
 
     // TODO: focus tracking and actionSet switching
     property bool enabled: true
-    property var actionStates: ({})
+    property var actionStates: steam_input.actionStates
 
     property var pressHandlers: ({})
     property var releaseHandlers: ({})
@@ -21,45 +21,30 @@ Item {
         target: steam_input
         enabled: root.enabled
 
-        function onInputEvent(event) {
-            const actionName = event.action.actionDefinition.name
-
-            actionStates[actionName] = getState(event)
-
-            actionStates = actionStates // reassign property so that the changed signal is emitted
-
-            root.inputEvent(event)
-
-            let handlers = analogHandlers
-            let signalF = analogEvent
-
-            if (event.action.actionDefinition.isDigital) {
-                if (event.digitalState) {
-                    handlers = pressHandlers
-                    signalF = root.pressedEvent
-                } else {
-                    handlers = releaseHandlers
-                    signalF = root.releasedEvent
-                }
-            }
-
-            signalF(event)
-
-            const handler = handlers[actionName]
-
-            if (handler) {
-                handler(actionStates[actionName])
-            }
+        function onPressedEvent(event) {
+            root.pressedEvent(event)
+            sendInputEvent(pressHandlers, event)
         }
 
-        function getState(event) {
-            if (event.action.actionDefinition.isDigital) {
-                return event.digitalState
-            } else {
-                return {
-                    "x": event.analogX,
-                    "y": event.analogY
-                }
+        function onReleasedEvent(event) {
+            root.releasedEvent(event)
+            sendInputEvent(releaseHandlers, event)
+        }
+
+        function onAnalogEvent(event) {
+            root.analogEvent(event)
+            sendInputEvent(analogHandlers, event)
+        }
+
+        function onInputEvent(event) {
+            root.inputEvent(event)
+        }
+
+        function sendInputEvent(handlers, event) {
+            const handler = handlers[event.actionDefinition.name]
+
+            if (handler) {
+                handler()
             }
         }
     }
