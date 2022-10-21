@@ -32,7 +32,7 @@ Item {
     }
 
     Steamworks.SteamInputScope {
-        enabled: true
+        enabled: root.activeFocus
 
         pressHandlers: {
             "folder_down": view.moveCurrentIndexDown,
@@ -41,7 +41,11 @@ Item {
             "folder_right": view.moveCurrentIndexRight,
             "folder_activate": () => root.cdIndex(view.currentIndex),
             "folder_go_up": fs_model.goUp,
-            "folder_go_home": fs_model.goHome()
+            "folder_go_home": fs_model.goHome
+        }
+
+        analogHandlers: {
+            "folder_scroll": event => view.flick(event.analogX, event.analogY)
         }
     }
 
