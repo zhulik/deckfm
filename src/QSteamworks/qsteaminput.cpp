@@ -302,3 +302,31 @@ void QSteamInput::qmlSetActionSet(const QString &newActionSet) {
     }
   }
 }
+
+unsigned short QSteamInput::vibrationSpeedLeft() const
+{
+    return m_vibrationSpeedLeft;
+}
+
+void QSteamInput::setVibrationSpeedLeft(unsigned short newVibrationSpeedLeft)
+{
+    if (m_vibrationSpeedLeft == newVibrationSpeedLeft || m_currentController.handle() == 0)
+        return;
+    m_vibrationSpeedLeft = newVibrationSpeedLeft;
+    SteamInput()->TriggerVibration(m_currentController.handle(), m_vibrationSpeedLeft, m_vibrationSpeedRight);
+    emit vibrationSpeedLeftChanged();
+}
+
+unsigned short QSteamInput::vibrationSpeedRight() const
+{
+    return m_vibrationSpeedRight;
+}
+
+void QSteamInput::setVibrationSpeedRight(unsigned short newVibrationSpeedRight)
+{
+    if (m_vibrationSpeedRight == newVibrationSpeedRight || m_currentController.handle() == 0)
+        return;
+    m_vibrationSpeedRight = newVibrationSpeedRight;
+    SteamInput()->TriggerVibration(m_currentController.handle(), m_vibrationSpeedLeft, m_vibrationSpeedRight);
+    emit vibrationSpeedRightChanged();
+}

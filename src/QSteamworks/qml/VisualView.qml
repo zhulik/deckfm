@@ -125,6 +125,9 @@ View3D {
                 camera.move(event.analogX, event.analogY)
                 break
             case "RightPad":
+                steam_input.vibrationSpeedRight = event.analogX * 100
+                steam_input.vibrationSpeedLeft = event.analogY * 100
+
                 camera.pan(event.analogX / 5, event.analogY / 5)
                 break
                 //            case "select":
@@ -172,7 +175,6 @@ View3D {
 
     ActionModel {
         position: Qt.vector3d(0, 30, -100)
-        visible: input.actionStates["touch_rstick"]
 
         materials: [ AluminumMaterial {
                 bump_amount: 15.0
