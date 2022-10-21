@@ -41,7 +41,7 @@ Item {
         }
 
         function sendInputEvent(handlers, event) {
-            const handler = handlers[event.actionDefinition.name]
+            const handler = handlers[event.action.actionDefinition.name]
 
             if (handler) {
                 handler()
