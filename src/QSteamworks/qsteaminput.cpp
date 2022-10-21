@@ -199,7 +199,7 @@ void QSteamInput::onActionEvent(SteamInputActionEvent_t *event) {
 
   auto iEvent = InputEvent(type, m_currentController, a, digitalState, analogX, analogY);
 
-  emit sendInputEvents(iEvent);
+  sendInputEvents(iEvent);
 }
 
 void QSteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb) {
