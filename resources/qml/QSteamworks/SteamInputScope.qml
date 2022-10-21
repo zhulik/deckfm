@@ -44,7 +44,7 @@ Item {
             const handler = handlers[event.action.actionDefinition.name]
 
             if (handler) {
-                handler()
+                handler(event)
             }
         }
     }
