@@ -47,7 +47,7 @@ Item {
         }
 
         analogHandlers: {
-            "folder_scroll": e => view.flick(e.x * 50, e.y * 50)
+            "folder_scroll": e => view.flick(e.analogX * 50, e.analogY * 50)
         }
     }
 
