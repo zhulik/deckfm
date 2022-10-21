@@ -87,6 +87,10 @@ QSteamInput::~QSteamInput() { SteamInput()->Shutdown(); }
 void QSteamInput::runFrame() {
   SteamInput()->RunFrame();
 
+  if (m_currentController.handle() != 0) {
+    SteamInput()->TriggerVibration(m_currentController.handle(), m_vibrationSpeedLeft, m_vibrationSpeedRight);
+  }
+
   if (m_currentController.handle() != 0 && !m_actionSets.empty()) {
     auto handle = SteamInput()->GetCurrentActionSet(m_currentController.handle());
 
@@ -310,10 +314,9 @@ unsigned short QSteamInput::vibrationSpeedLeft() const
 
 void QSteamInput::setVibrationSpeedLeft(unsigned short newVibrationSpeedLeft)
 {
-    if (m_vibrationSpeedLeft == newVibrationSpeedLeft || m_currentController.handle() == 0)
+    if (m_vibrationSpeedLeft == newVibrationSpeedLeft)
         return;
     m_vibrationSpeedLeft = newVibrationSpeedLeft;
-    SteamInput()->TriggerVibration(m_currentController.handle(), m_vibrationSpeedLeft, m_vibrationSpeedRight);
     emit vibrationSpeedLeftChanged();
 }
 
@@ -324,9 +327,8 @@ unsigned short QSteamInput::vibrationSpeedRight() const
 
 void QSteamInput::setVibrationSpeedRight(unsigned short newVibrationSpeedRight)
 {
-    if (m_vibrationSpeedRight == newVibrationSpeedRight || m_currentController.handle() == 0)
+    if (m_vibrationSpeedRight == newVibrationSpeedRight)
         return;
     m_vibrationSpeedRight = newVibrationSpeedRight;
-    SteamInput()->TriggerVibration(m_currentController.handle(), m_vibrationSpeedLeft, m_vibrationSpeedRight);
     emit vibrationSpeedRightChanged();
 }
