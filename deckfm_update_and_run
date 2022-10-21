@@ -6,7 +6,7 @@ git checkout main
 
 git pull origin main
 
-branch=$(cat deckfm_update_and_run)
+branch=$(cat update_branch_dev)
 
 git checkout $branch
 
