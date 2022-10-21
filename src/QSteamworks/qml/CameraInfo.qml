@@ -26,7 +26,6 @@ Item {
 
         Label {
             id: direction
-            text: `Direction: ${camera.forward}`
         }
 
         Connections {

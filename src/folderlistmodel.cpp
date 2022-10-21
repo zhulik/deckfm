@@ -2,19 +2,37 @@
 #include <QDir>
 #include <QMimeDatabase>
 #include <QStandardPaths>
+#include <stdexcept>
 
 #include "folderlistmodel.h"
 #include "qabstractitemmodel.h"
 #include "qfileinfo.h"
 #include "qnamespace.h"
 
-QString icon(const QString &mime) {
+static QMap<QString, QString> extensionIcons{{"qml", "application"}};
+
+QString iconByExtension(const QString &extension) {
+  if (extensionIcons.contains(extension)) {
+    return extensionIcons[extension];
+  }
+  return "file";
+}
+
+QString icon(const QFileInfo &info, const QString &mime) {
   auto type = mime.split("/");
   auto category = type[0];
   auto name = type[1];
 
   if (category == "inode" && name == "directory") {
     return "folder";
+  }
+
+  if (category == "text" && name == "plain") {
+    return iconByExtension(info.completeSuffix());
+  }
+
+  if (category == "text" && name == "x-qml") {
+    return "application";
   }
 
   if (category == "image") {
@@ -135,7 +153,7 @@ void FolderListModel::updateContent() {
   foreach (auto &info, QDir(m_path).entryInfoList(flags, QDir::Name | QDir::DirsFirst)) {
     auto mime = QMimeDatabase().mimeTypeForFile(info.filePath()).name();
     m_folderContent << FileInfo{
-        info.isDir(),      info.fileName(),  info.filePath(), mime, icon(mime), sizeString(info.filePath()),
+        info.isDir(),      info.fileName(),  info.filePath(), mime, icon(info, mime), sizeString(info.filePath()),
         info.isReadable(), info.isWritable()};
   }
   endResetModel();

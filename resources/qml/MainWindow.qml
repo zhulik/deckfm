@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
@@ -14,7 +15,10 @@ ApplicationWindow {
     title: "DeckFM"
     visible: true
 
-    visibility: { steam_utils.isSteamRunningOnSteamDeck || steam_utils.isSteamInBigPictureMode ? "FullScreen" : "Windowed" }
+    visibility: {
+        steam_utils.isSteamRunningOnSteamDeck
+                || steam_utils.isSteamInBigPictureMode ? "FullScreen" : "Windowed"
+    }
 
     width: 1280
     height: 800
@@ -24,6 +28,10 @@ ApplicationWindow {
         onLogoClicked: globalMenu.popup()
         onExitClicked: mainWindow.close()
         onGamepadClicked: gamepadWindow.open()
+    }
+
+    LoaderWindow {
+        id: loaderWindow
     }
 
     Shortcut {
@@ -68,7 +76,8 @@ ApplicationWindow {
                 focus: true
 
                 onFileOpened: {
-                    console.log(`Attempting to open ${path}`)
+                    loaderWindow.load(path)
+                    //                    console.log(`Attempting to open ${path}`)
                 }
             }
         }
@@ -79,22 +88,6 @@ ApplicationWindow {
 
         onExitClicked: mainWindow.close()
         onGamepadClicked: gamepadWindow.open()
-    }
-
-    Component.onCompleted: {
-        //        gamepadWindow.open()
-        const iga = steam_input.iga
-        console.log("Action sets: ", iga.actionSets);
-        console.log("Actions: ", iga.actions);
-
-        iga.actionSets.forEach((actionSet)=>{
-                                   console.log("Action set: ", actionSet, "----------")
-                                   iga.actionsForSet(actionSet).forEach((action)=>{
-                                                                            console.log("Action:", iga.actionDefinition(action))
-                                                                        })
-                               })
-
-//        console.log(iga.actionsForSet(iga.actionSets[0]));
     }
 
     GamepadWindow {

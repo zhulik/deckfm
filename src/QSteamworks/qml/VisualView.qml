@@ -106,8 +106,8 @@ View3D {
                     scaleU: 8
                     scaleV: 8
                 }
-                roughnessMap: Texture { source: "maps/metallic/ground_rough.jpg" }
-                normalMap: Texture { source: "maps/metallic/ground_normal.jpg" }
+                roughnessMap: Texture { source: "ground_rough.jpg" }
+                normalMap: Texture { source: "ground_normal.jpg" }
 
             }
         ]
@@ -199,7 +199,7 @@ View3D {
 
         SequentialAnimation on rotation {
             loops: Animation.Infinite
-            running: picked
+            running: pickedObject
 
             NumberAnimation {
                 duration: 3000
