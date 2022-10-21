@@ -5,7 +5,6 @@
         <file>resources/qml/DirectoryView/FileDelegate.qml</file>
         <file>resources/qml/DirectoryView/FilePathView.qml</file>
         <file>resources/qml/Footer.qml</file>
-        <file>resources/qml/GamepadInput.qml</file>
         <file>resources/qml/GlobalMenu.qml</file>
         <file>resources/qml/Header.qml</file>
         <file>resources/qml/MainWindow.qml</file>

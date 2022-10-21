@@ -13,9 +13,9 @@ ToolBar {
     RowLayout {
         anchors.fill: parent
 
-        Label {
-            font.pointSize: 24
-            text: `Action set: ${steam_input.actionSet}`
-        }
+//        Label {
+//            font.pointSize: 24
+//            text: `Action set: ${steam_input.actionSet}`
+//        }
     }
 }

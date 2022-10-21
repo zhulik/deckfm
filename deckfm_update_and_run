@@ -2,7 +2,7 @@
 
 set -eu
 
-git pull origin main
+git pull origin $(git rev-parse --abbrev-ref HEAD)
 
 mkdir -p build
 
@@ -12,5 +12,7 @@ cmake ..
 
 make -j8
 
-./deckfm
+cd ..
+
+$(pwd)/deckfm.sh
 

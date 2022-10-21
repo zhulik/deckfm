@@ -14,7 +14,7 @@ ApplicationWindow {
     title: "DeckFM"
     visible: true
 
-    visibility: steam_utils.isOnDeck || steam_utils.isBigPicture ? "FullScreen" : "Windowed"
+    visibility: { steam_utils.isSteamRunningOnSteamDeck || steam_utils.isSteamInBigPictureMode ? "FullScreen" : "Windowed" }
 
     width: 1280
     height: 800
@@ -82,7 +82,19 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-//        gamepadWindow.open()
+        //        gamepadWindow.open()
+        const iga = steam_input.iga
+        console.log("Action sets: ", iga.actionSets);
+        console.log("Actions: ", iga.actions);
+
+        iga.actionSets.forEach((actionSet)=>{
+                                   console.log("Action set: ", actionSet, "----------")
+                                   iga.actionsForSet(actionSet).forEach((action)=>{
+                                                                            console.log("Action:", iga.actionDefinition(action))
+                                                                        })
+                               })
+
+//        console.log(iga.actionsForSet(iga.actionSets[0]));
     }
 
     GamepadWindow {
