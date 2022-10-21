@@ -34,8 +34,7 @@ Item {
     Steamworks.SteamInputScope {
         enabled: true
 
-        handlers: {
-            "dpad_down": view.moveCurrentIndexDown,
+        pressHandlers: {
             "folder_down": view.moveCurrentIndexDown,
             "folder_up": view.moveCurrentIndexUp,
             "folder_left": view.moveCurrentIndexLeft,
