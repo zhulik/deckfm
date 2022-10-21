@@ -25,8 +25,6 @@ Item {
 
             actionStates = states
 
-            steam_input.triggerSimpleHapticEvent("left", 10000, 256, 15000, 128)
-
             const handler = handlers[event.action.actionDefinition.name]
 
             if (handler) {
