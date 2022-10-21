@@ -187,8 +187,10 @@ View3D {
             running: true
 
             onTriggered: {
-                steam_input.triggerSimpleHapticEvent("both", hapticsIntencity.value, hapticsGaindb.value, hapticsOtherIntencity.value, hapticsOtherGainDB.value)
-                throw steam_input
+                steam_input.triggerSimpleHapticEvent("both", hapticsIntencity.value,
+                                                     hapticsGaindb.value,
+                                                     hapticsOtherIntencity.value,
+                                                     hapticsOtherGainDB.value)
             }
         }
     }
