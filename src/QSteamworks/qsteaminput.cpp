@@ -310,7 +310,7 @@ void QSteamInput::setActionSet(const QSteamworks::ActionSet &newActionSet) {
 
 const QString &QSteamInput::qmlActionSet() const { return m_actionSet.name(); }
 
-void QSteamInput::qmlSetActionSet(const QString &newActionSet) {
+void QSteamInput::setActionSet(const QString &newActionSet) {
   if (m_actionSet.name() == newActionSet)
     return;
 

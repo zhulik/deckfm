@@ -1,6 +1,7 @@
 #pragma once
 
 #include "qobjectdefs.h"
+#include "qqml.h"
 #include <QAbstractListModel>
 
 enum FileType { Directory, File };
@@ -19,6 +20,7 @@ struct FileInfo {
 
 class FolderListModel : public QAbstractListModel {
   Q_OBJECT
+
   Q_PROPERTY(QString path READ path WRITE setPath NOTIFY pathChanged);
   Q_PROPERTY(int count READ count NOTIFY countChanged);
   Q_PROPERTY(bool canGoUp READ canGoUp NOTIFY canGoUpChanged);

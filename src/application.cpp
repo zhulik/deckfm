@@ -18,8 +18,13 @@
 #include "QSteamworks/qsteamutils.h"
 
 Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
+  setOrganizationName("zhulik");
+  setApplicationName("deckfm");
+
   QFontDatabase::addApplicationFont(":/resources/fonts/materialdesignicons-webfont.ttf");
   QQuickStyle::setStyle("Material");
+
+  qmlRegisterType<FolderListModel>("DeckFM", 1, 0, "FolderListModel");
 
   m_engine = new QQmlApplicationEngine();
 
@@ -31,12 +36,15 @@ Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
 
     m_engine->rootContext()->setContextProperty("steam_utils", m_steamworks->steamUtils());
     m_engine->rootContext()->setContextProperty("steam_input", m_steamworks->steamInput());
-    m_steamworks->steamInput(); // initialize
+
+    // initialize steam input and set default action set,
+    // it's seems to be guaranteed configurationLoaded will be emitted with some delay,
+    // so it's ok to connect to it here
+    connect(m_steamworks->steamInput(), &QSteamworks::QSteamInput::configurationLoaded,
+            [this]() { m_steamworks->steamInput()->setActionSet("folder_navigation"); });
   } catch (QSteamworks::InitializationFailed &e) {
     qDebug() << "\n" << e.what() << "\n";
   }
-
-  m_engine->rootContext()->setContextProperty("fs_model", new FolderListModel(m_engine));
 
   connect(m_engine, &QQmlApplicationEngine::objectCreated, [this](auto obj) {
     if (obj == nullptr) {

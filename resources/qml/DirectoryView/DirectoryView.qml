@@ -5,26 +5,22 @@ import Qt.labs.platform 1.1
 
 import QtQuick.Controls.Material 2.12
 
+import DeckFM 1.0
+
 import "../MDI" as MDI
 import ".." as Core
+
+import "../QSteamworks" as Steamworks
 
 Item {
     id: root
 
     signal fileOpened(string path)
 
-    Binding {
-        target: fs_model
-        property: "showHidden"
-        value: showHiddenSwitch.position === 1.0
-    }
-
-    Connections {
-        target: fs_model
-
-        function onModelReset() {
-            view.currentIndex = 0
-        }
+    FolderListModel {
+        id: fs_model
+        showHidden: showHiddenSwitch.position === 1.0
+        onModelReset: view.currentIndex = 0
     }
 
     function cdIndex(index) {
@@ -35,30 +31,23 @@ Item {
         root.fileOpened(fs_model.get(index).path)
     }
 
-    function onSteamInputDigitalStatesChanged(states) {
-        if(states["folder_down"]) {
-            view.moveCurrentIndexDown();
+    Steamworks.SteamInputScope {
+        enabled: root.activeFocus
+
+        pressHandlers: {
+            "folder_down": view.moveCurrentIndexDown,
+            "folder_up": view.moveCurrentIndexUp,
+            "folder_left": view.moveCurrentIndexLeft,
+            "folder_right": view.moveCurrentIndexRight,
+            "folder_activate": () => root.cdIndex(view.currentIndex),
+            "folder_go_up": fs_model.goUp,
+            "folder_go_home": fs_model.goHome
         }
-        if(states["folder_up"]) {
-            view.moveCurrentIndexUp();
-        }
-        if(states["folder_left"]) {
-            view.moveCurrentIndexLeft();
-        }
-        if(states["folder_right"]) {
-            view.moveCurrentIndexRight();
-        }
-        if(states["folder_activate"]) {
-            root.cdIndex(view.currentIndex)
-        }
-        if(states["folder_go_up"]) {
-            fs_model.goUp()
-        }
-        if(states["folder_go_home"]) {
-            fs_model.goHome()
+
+        analogHandlers: {
+            "folder_scroll": e => view.flick(e.y * 50, e.y * 50)
         }
     }
-
 
     Keys.onPressed: {
         event.accepted = true
