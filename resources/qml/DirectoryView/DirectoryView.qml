@@ -48,6 +48,7 @@ Item {
 
         analogHandlers: {
             "folder_scroll": event => {
+                eventLabel.text = "FOO"
                 eventLabel.text = JSON.stringify(event)
 //                view.moveCurrentIndexDown()
 //                view.flick(0, -event.analogY * 50)
