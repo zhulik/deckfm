@@ -121,13 +121,13 @@ View3D {
         Binding {
             target: steam_input
             property: "vibrationSpeedLeft"
-            value: input.actionStates["button_a"] ? 10000 : 0
+            value: input.actionStates["button_a"] ? 50000 : 0
         }
 
         Binding {
             target: steam_input
             property: "vibrationSpeedRight"
-            value: input.actionStates["button_b"] ? 10000 : 0
+            value: input.actionStates["button_b"] ? 50000 : 0
         }
 
         onInputEvent: {
@@ -136,9 +136,6 @@ View3D {
                 camera.move(event.analogX, event.analogY)
                 break
             case "RightPad":
-                steam_input.vibrationSpeedRight = event.analogX * 100
-                steam_input.vibrationSpeedLeft = event.analogY * 100
-
                 camera.pan(event.analogX / 5, event.analogY / 5)
                 break
                 //            case "select":
