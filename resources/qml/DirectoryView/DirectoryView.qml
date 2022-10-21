@@ -50,8 +50,8 @@ Item {
             "folder_scroll": e => view.flick(e.y * 50, e.y * 50)
         }
 
-        onInputEvent: {
-            view.moveCurrentIndexDown
+        onAnalogEvent: {
+            view.moveCurrentIndexDown()
         }
     }
 
