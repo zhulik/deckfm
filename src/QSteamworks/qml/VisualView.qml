@@ -121,13 +121,13 @@ View3D {
         Binding {
             target: steam_input
             property: "vibrationSpeedLeft"
-            value: input.actionStates[RightPad].x * 1000
+            value: input.actionStates["button_a"] ? 10000 : 0
         }
 
         Binding {
             target: steam_input
             property: "vibrationSpeedRight"
-            value: input.actionStates[RightPad].y * 1000
+            value: input.actionStates["button_b"] ? 10000 : 0
         }
 
         onInputEvent: {
