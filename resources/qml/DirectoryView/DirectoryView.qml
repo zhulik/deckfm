@@ -47,12 +47,20 @@ Item {
         }
 
         analogHandlers: {
-            "folder_scroll": e => {
+            "folder_scroll": event => {
+                eventLabel.text = JSON.stringify(event)
 //                view.moveCurrentIndexDown()
-                view.flick(0, -e.analogY * 50)
+//                view.flick(0, -event.analogY * 50)
 //                view.flick(e.analogX * 50, e.analogY * 50)
             }
         }
+    }
+
+    Label {
+        id: eventLabel
+        anchors.centerIn: parent
+
+        text: "BLAH"
     }
 
     Keys.onPressed: {
