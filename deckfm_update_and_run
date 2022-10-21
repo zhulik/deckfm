@@ -6,6 +6,8 @@ git checkout main
 
 git pull origin main
 
+git fetch
+
 branch=$(cat update_branch_dev)
 
 git checkout $branch
