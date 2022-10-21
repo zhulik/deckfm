@@ -129,6 +129,8 @@ class QSteamInput : public QObject {
   Q_PROPERTY(unsigned short vibrationSpeedRight READ vibrationSpeedRight WRITE setVibrationSpeedRight NOTIFY
                  vibrationSpeedRightChanged)
 
+  Q_PROPERTY(QVariantMap actionStates READ actionStates NOTIFY actionStatesChanged)
+
   STEAM_CALLBACK(QSteamInput, onControllerConnected, SteamInputDeviceConnected_t);
   STEAM_CALLBACK(QSteamInput, onControllerDisconnected, SteamInputDeviceDisconnected_t);
   STEAM_CALLBACK(QSteamInput, onConfigurationLoaded, SteamInputConfigurationLoaded_t);
@@ -168,9 +170,14 @@ public:
   unsigned short vibrationSpeedRight() const;
   void setVibrationSpeedRight(unsigned short newVibrationSpeedRight);
 
+  const QVariantMap &actionStates() const;
+
 signals:
   void qmlControllersChanged();
   void inputEvent(QSteamworks::InputEvent);
+  void pressedEvent(QSteamworks::InputEvent);
+  void releasedEvent(QSteamworks::InputEvent);
+  void analogEvent(QSteamworks::InputEvent);
 
   void currentControllerChanged();
   void actionSetsChanged();
@@ -181,6 +188,8 @@ signals:
   void vibrationSpeedLeftChanged();
 
   void vibrationSpeedRightChanged();
+
+  void actionStatesChanged();
 
 private:
   QString m_vdf;
@@ -205,6 +214,9 @@ private:
 
   unsigned short m_vibrationSpeedLeft = 0;
   unsigned short m_vibrationSpeedRight = 0;
+  QVariantMap m_actionStates;
+  void updateActionStates(const Action &action, bool digitalState, float analogX, float analogY);
+  void sendInputEvents(InputEvent iEvent);
 };
 } // namespace QSteamworks
 

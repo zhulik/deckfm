@@ -34,7 +34,7 @@ Item {
     }
 
     Steamworks.SteamInputScope {
-        enabled: root.activeFocus
+        enabled: true
 
         pressHandlers: {
             "folder_down": view.moveCurrentIndexDown,

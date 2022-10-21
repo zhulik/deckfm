@@ -139,6 +139,35 @@ QVariantList QSteamInput::qmlControllers() const {
   return result;
 }
 
+void QSteamInput::updateActionStates(const Action &action, bool digitalState, float analogX, float analogY) {
+  QVariant state;
+
+  if (action.actionDefinition().isDigital()) {
+    state = digitalState;
+  } else {
+    state = QVariantMap{{"x", analogX}, {"y", analogY}};
+  }
+
+  m_actionStates[action.actionDefinition().name()] = state;
+
+  emit actionStatesChanged();
+}
+
+void QSteamworks::QSteamInput::sendInputEvents(InputEvent e) {
+  emit inputEvent(e);
+
+  if (!e.action().actionDefinition().isDigital()) {
+    emit analogEvent(e);
+    return;
+  }
+
+  if (e.digitalState()) {
+    emit pressedEvent(e);
+  } else {
+    emit releasedEvent(e);
+  }
+}
+
 void QSteamInput::onActionEvent(SteamInputActionEvent_t *event) {
   foreach (auto &controller, m_controllers) {
     if (controller.handle() == event->controllerHandle) {
@@ -170,7 +199,11 @@ void QSteamInput::onActionEvent(SteamInputActionEvent_t *event) {
 
   Q_ASSERT(a.handle() != 0);
 
-  emit inputEvent(InputEvent(type, m_currentController, a, digitalState, analogX, analogY));
+  updateActionStates(a, digitalState, analogX, analogY);
+
+  auto iEvent = InputEvent(type, m_currentController, a, digitalState, analogX, analogY);
+
+  sendInputEvents(iEvent);
 }
 
 void QSteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb) {
@@ -351,3 +384,5 @@ void QSteamInput::setVibrationSpeedRight(unsigned short newVibrationSpeedRight) 
   }
   emit vibrationSpeedRightChanged();
 }
+
+const QVariantMap &QSteamInput::actionStates() const { return m_actionStates; }
