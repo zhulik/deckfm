@@ -17,20 +17,8 @@ Item {
 
     FolderListModel {
         id: fs_model
-    }
-
-    Binding {
-        target: fs_model
-        property: "showHidden"
-        value: showHiddenSwitch.position === 1.0
-    }
-
-    Connections {
-        target: fs_model
-
-        function onModelReset() {
-            view.currentIndex = 0
-        }
+        showHidden: showHiddenSwitch.position === 1.0
+        onModelReset: view.currentIndex = 0
     }
 
     function cdIndex(index) {

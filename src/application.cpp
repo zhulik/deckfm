@@ -18,6 +18,8 @@
 #include "QSteamworks/qsteamutils.h"
 
 Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
+  setOrganizationName("zhulik");
+  setApplicationName("deckfm");
   QFontDatabase::addApplicationFont(":/resources/fonts/materialdesignicons-webfont.ttf");
   QQuickStyle::setStyle("Material");
 
