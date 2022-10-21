@@ -140,11 +140,15 @@ QVariantList QSteamInput::qmlControllers() const {
 }
 
 void QSteamInput::updateActionStates(const Action &action, bool digitalState, float analogX, float analogY) {
+  QVariant state;
+
   if (action.actionDefinition().isDigital()) {
-    m_actionStates[action.actionDefinition().name()] = digitalState;
+    state = digitalState;
   } else {
-    m_actionStates[action.actionDefinition().name()] = QVariantMap{{"x", analogX}, {"y", analogY}};
+    state = QVariantMap{{"x", analogX}, {"y", analogY}};
   }
+
+  m_actionStates[action.actionDefinition().name()] = state;
 
   emit actionStatesChanged();
 }

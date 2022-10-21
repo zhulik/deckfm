@@ -49,6 +49,10 @@ Item {
         analogHandlers: {
             "folder_scroll": e => view.flick(e.y * 50, e.y * 50)
         }
+
+        onPressedEvent: {
+            view.moveCurrentIndexDown()
+        }
     }
 
     Keys.onPressed: {
