@@ -187,8 +187,8 @@ View3D {
             running: true
 
             onTriggered: {
-//                throw "!"
-                steam_input.triggerSimpleHapticEvent("left", hapticsIntencity.value, hapticsGaindb.value, hapticsOtherIntencity.value, hapticsOtherGainDB.value)
+                steam_input.triggerSimpleHapticEvent("both", hapticsIntencity.value, hapticsGaindb.value, hapticsOtherIntencity.value, hapticsOtherGainDB.value)
+                throw steam_input
             }
         }
     }
