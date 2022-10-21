@@ -118,17 +118,24 @@ View3D {
 
         events: ["LeftStick", "RightPad", "LeftPad", "select", "menu", "touch_rstick", "RightStick"]
 
-        Binding {
-            target: steam_input
-            property: "vibrationSpeedLeft"
-            value: input.actionStates["button_a"] ? 50000 : 0
+        Component.onCompleted: {
+            steam_input.vibrationSpeedLeft = 50000
+            steam_input.vibrationSpeedRight = 50000
         }
 
-        Binding {
-            target: steam_input
-            property: "vibrationSpeedRight"
-            value: input.actionStates["button_b"] ? 50000 : 0
-        }
+//        Binding {
+//            target: steam_input
+//            property: "vibrationSpeedLeft"
+//            value: input.actionStates["button_a"] ? 50000 : 0
+//        }
+
+
+
+//        Binding {
+//            target: steam_input
+//            property: "vibrationSpeedRight"
+//            value: input.actionStates["button_b"] ? 50000 : 0
+//        }
 
         onInputEvent: {
             switch(event.action.actionDefinition.name) {
