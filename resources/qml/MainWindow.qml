@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
+import Qt.labs.settings 1.0
 
 import QtQuick.Controls.Material 2.12
 
@@ -24,10 +25,13 @@ ApplicationWindow {
     height: 800
 
     header: Header {
+        id: header
         onMenuClicked: drawer.visible = !drawer.visible
         onLogoClicked: globalMenu.popup()
         onExitClicked: mainWindow.close()
         onGamepadClicked: gamepadWindow.open()
+
+        visible: !gamepadWindow.visible
     }
 
     LoaderWindow {
@@ -97,5 +101,9 @@ ApplicationWindow {
         y: 0
         width: parent.width - x
         height: parent.height - y
+    }
+
+    Settings {
+        property alias path: directoryView.path
     }
 }
