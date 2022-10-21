@@ -144,59 +144,6 @@ View3D {
         }
     }
 
-    ColumnLayout {
-        anchors.bottom: parent.bottom
-
-        Slider {
-            id: hapticsIntencity
-            from: 0
-            value: 0
-            to: 255
-            stepSize: 10
-        }
-
-        Slider {
-            id: hapticsOtherIntencity
-            from: 0
-            value: 0
-            to: 255
-            stepSize: 10
-        }
-
-        Slider {
-            id: hapticsGaindb
-
-            from: -127
-            value: 0
-            to: 127
-            stepSize: 10
-        }
-
-        Slider {
-            id: hapticsOtherGainDB
-
-            from: -127
-            value: 0
-            to: 127
-            stepSize: 10
-        }
-
-        Timer {
-            interval: 100
-            repeat: true
-            running: true
-
-            onTriggered: {
-                steam_input.triggerSimpleHapticEvent("both", hapticsIntencity.value,
-                                                     hapticsGaindb.value,
-                                                     hapticsOtherIntencity.value,
-                                                     hapticsOtherGainDB.value)
-            }
-        }
-    }
-
-
-
     ActionModel {
         position: Qt.vector3d(100, 30, 0)
         materials: [ SteelMilledConcentricMaterial {} ]
@@ -262,4 +209,3 @@ View3D {
         }
     }
 }
-
