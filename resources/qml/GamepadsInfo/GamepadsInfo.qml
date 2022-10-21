@@ -30,7 +30,7 @@ ColumnLayout {
             //                        "type": 2
             //                    }
             //                ]
-            model: steam_input.connectedControllers
+            model: steam_input.controllers
             TabButton {
                 text: modelData.name
                 width: implicitWidth
@@ -68,4 +68,3 @@ ColumnLayout {
         visible: tabBar.count == 0
     }
 }
-

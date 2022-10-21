@@ -19,88 +19,87 @@ Item {
                 text: `Action set: ${steam_input.actionSet}`
             }
 
-            ListView {
-                Layout.fillHeight: parent
-                Layout.fillWidth: parent
+            //            ListView {
+            //                Layout.fillHeight: parent
+            //                Layout.fillWidth: parent
 
-                clip: true
+            //                clip: true
 
-                model: Models.JSONListModel {
-                    id: digitalActionsModel
-                    data: steam_input.digitalActions
-                }
+            //                model: Models.JSONListModel {
+            //                    id: digitalActionsModel
+            //                    data: steam_input.digitalActions
+            //                }
 
-                delegate: Item {
-                    width: parent.width
-                    height: 70
+            //                delegate: Item {
+            //                    width: parent.width
+            //                    height: 70
 
-                    RowLayout {
-                        anchors.fill: parent
+            //                    RowLayout {
+            //                        anchors.fill: parent
 
-                        Image {
-                            width: 40
-                            height: 40
-                            source: `file://${glyphs[0]}`
-                        }
+            //                        Image {
+            //                            width: 40
+            //                            height: 40
+            //                            source: `file://${glyphs[0]}`
+            //                        }
 
-                        Label {
-                            Layout.fillWidth: parent
-                            height: parent.height
+            //                        Label {
+            //                            Layout.fillWidth: parent
+            //                            height: parent.height
 
-                            font.pixelSize: steam_input.digitalActionStates[name] ? 36 : 24
-                            text: localizedName
-                            verticalAlignment: Qt.AlignVCenter
-                        }
-                    }
-                }
-            }
+            //                            font.pixelSize: steam_input.digitalActionStates[name] ? 36 : 24
+            //                            text: localizedName
+            //                            verticalAlignment: Qt.AlignVCenter
+            //                        }
+            //                    }
+            //                }
+            //            }
         }
 
-        ColumnLayout {
-            Layout.preferredWidth: root.width / 3
+        //        ColumnLayout {
+        //            Layout.preferredWidth: root.width / 3
 
-            ListView {
-                Layout.fillHeight: parent
-                Layout.fillWidth: parent
-                clip: true
+        //            ListView {
+        //                Layout.fillHeight: parent
+        //                Layout.fillWidth: parent
+        //                clip: true
 
-                model: Models.JSONListModel {
-                    id: analogActionsModel
-                    data: steam_input.analogActions
-                }
+        //                model: Models.JSONListModel {
+        //                    id: analogActionsModel
+        //                    data: steam_input.analogActions
+        //                }
 
-                delegate: Item {
-                    width: parent.width
-                    height: 70
+        //                delegate: Item {
+        //                    width: parent.width
+        //                    height: 70
 
-                    RowLayout {
-                        anchors.fill: parent
+        //                    RowLayout {
+        //                        anchors.fill: parent
 
-                        Image {
-                            width: 40
-                            height: 40
-                            source: `file://${glyphs[0]}`
-                        }
+        //                        Image {
+        //                            width: 40
+        //                            height: 40
+        //                            source: `file://${glyphs[0]}`
+        //                        }
 
-                        Label {
-                            Layout.fillWidth: parent
-                            height: parent.height
+        //                        Label {
+        //                            Layout.fillWidth: parent
+        //                            height: parent.height
 
-                            font.pixelSize: 24
-                            text: localizedName
-                            verticalAlignment: Qt.AlignVCenter
-                        }
+        //                            font.pixelSize: 24
+        //                            text: localizedName
+        //                            verticalAlignment: Qt.AlignVCenter
+        //                        }
 
-                        Label {
-                            verticalAlignment: Qt.AlignVCenter
-                            font.pixelSize: 24
-                            text: `${steam_input.analogActionStates[name].x}x${steam_input.analogActionStates[name].y}`
-                        }
-                    }
-                }
-            }
-        }
-
+        //                        Label {
+        //                            verticalAlignment: Qt.AlignVCenter
+        //                            font.pixelSize: 24
+        //                            text: `${steam_input.analogActionStates[name].x}x${steam_input.analogActionStates[name].y}`
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //        }
         Image {
             Layout.fillHeight: root
             Layout.preferredWidth: root.width / 3

@@ -102,6 +102,13 @@ bool QSteamInput::showBindingPanel(unsigned long long inputHandle) const {
   return SteamInput()->ShowBindingPanel(inputHandle);
 }
 
+bool QSteamInput::showBindingPanel() const {
+  if (m_currentController.handle() == 0) {
+    return false;
+  }
+  return SteamInput()->ShowBindingPanel(m_currentController.handle());
+}
+
 void QSteamInput::triggerSimpleHapticEvent(const QString &location, unsigned char nIntensity, char nGainDB,
                                            unsigned char nOtherIntensity, char nOtherGainDB) const {
   if (m_currentController.handle() == 0) {
