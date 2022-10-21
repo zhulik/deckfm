@@ -36,7 +36,7 @@ Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
     qDebug() << "\n" << e.what() << "\n";
   }
 
-  m_engine->rootContext()->setContextProperty("fs_model", new FolderListModel(m_engine));
+  qmlRegisterType<FolderListModel>("DeckFM", 1, 0, "FolderListModel");
 
   connect(m_engine, &QQmlApplicationEngine::objectCreated, [this](auto obj) {
     if (obj == nullptr) {

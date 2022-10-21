@@ -5,6 +5,8 @@ import Qt.labs.platform 1.1
 
 import QtQuick.Controls.Material 2.12
 
+import DeckFM 1.0
+
 import "../MDI" as MDI
 import ".." as Core
 
@@ -12,6 +14,10 @@ Item {
     id: root
 
     signal fileOpened(string path)
+
+    FolderListModel {
+        id: fs_model
+    }
 
     Binding {
         target: fs_model
@@ -36,29 +42,28 @@ Item {
     }
 
     function onSteamInputDigitalStatesChanged(states) {
-        if(states["folder_down"]) {
-            view.moveCurrentIndexDown();
+        if (states["folder_down"]) {
+            view.moveCurrentIndexDown()
         }
-        if(states["folder_up"]) {
-            view.moveCurrentIndexUp();
+        if (states["folder_up"]) {
+            view.moveCurrentIndexUp()
         }
-        if(states["folder_left"]) {
-            view.moveCurrentIndexLeft();
+        if (states["folder_left"]) {
+            view.moveCurrentIndexLeft()
         }
-        if(states["folder_right"]) {
-            view.moveCurrentIndexRight();
+        if (states["folder_right"]) {
+            view.moveCurrentIndexRight()
         }
-        if(states["folder_activate"]) {
+        if (states["folder_activate"]) {
             root.cdIndex(view.currentIndex)
         }
-        if(states["folder_go_up"]) {
+        if (states["folder_go_up"]) {
             fs_model.goUp()
         }
-        if(states["folder_go_home"]) {
+        if (states["folder_go_home"]) {
             fs_model.goHome()
         }
     }
-
 
     Keys.onPressed: {
         event.accepted = true
