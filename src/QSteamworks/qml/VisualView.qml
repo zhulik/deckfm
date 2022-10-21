@@ -151,16 +151,16 @@ View3D {
             id: hapticsIntencity
             from: 0
             value: 0
-            to: 65000
-            stepSize: 2000
+            to: 255
+            stepSize: 10
         }
 
         Slider {
             id: hapticsOtherIntencity
             from: 0
             value: 0
-            to: 65000
-            stepSize: 2000
+            to: 255
+            stepSize: 10
         }
 
         Slider {
