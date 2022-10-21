@@ -10,6 +10,8 @@ import DeckFM 1.0
 import "../MDI" as MDI
 import ".." as Core
 
+import "../QSteamworks" as Steamworks
+
 Item {
     id: root
 
@@ -29,27 +31,21 @@ Item {
         root.fileOpened(fs_model.get(index).path)
     }
 
-    function onSteamInputDigitalStatesChanged(states) {
-        if (states["folder_down"]) {
-            view.moveCurrentIndexDown()
-        }
-        if (states["folder_up"]) {
-            view.moveCurrentIndexUp()
-        }
-        if (states["folder_left"]) {
-            view.moveCurrentIndexLeft()
-        }
-        if (states["folder_right"]) {
-            view.moveCurrentIndexRight()
-        }
-        if (states["folder_activate"]) {
-            root.cdIndex(view.currentIndex)
-        }
-        if (states["folder_go_up"]) {
-            fs_model.goUp()
-        }
-        if (states["folder_go_home"]) {
-            fs_model.goHome()
+    Component.onCompleted: {
+        steam_input.actionSet = "folder_navigation"
+    }
+
+    Steamworks.SteamInputScope {
+        enabled: root.activeFocus
+
+        handlers: {
+            "folder_down": view.moveCurrentIndexDown,
+            "folder_up": view.moveCurrentIndexUp,
+            "folder_left": view.moveCurrentIndexLeft,
+            "folder_right": view.moveCurrentIndexRight,
+            "folder_activate": () => root.cdIndex(view.currentIndex),
+            "folder_go_up": fs_model.goUp,
+            "folder_go_home": fs_model.goHome()
         }
     }
 

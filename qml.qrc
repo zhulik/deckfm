@@ -22,5 +22,6 @@
         <file>resources/qml/GamepadsInfo/GamepadInfoDelegate.qml</file>
         <file>resources/js/vdf.js</file>
         <file>resources/qml/LoaderWindow.qml</file>
+        <file>resources/qml/QSteamworks/SteamInputScope.qml</file>
     </qresource>
 </RCC>
