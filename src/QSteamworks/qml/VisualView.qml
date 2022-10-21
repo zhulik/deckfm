@@ -118,6 +118,18 @@ View3D {
 
         events: ["LeftStick", "RightPad", "LeftPad", "select", "menu", "touch_rstick", "RightStick"]
 
+        Binding {
+            target: steam_input
+            property: "vibrationSpeedLeft"
+            value: input.actionStates[RightPad].x * 100
+        }
+
+        Binding {
+            target: steam_input
+            property: "vibrationSpeedRight"
+            value: input.actionStates[RightPad].y * 100
+        }
+
         onInputEvent: {
             switch(event.action.actionDefinition.name) {
             case "LeftPad":
