@@ -87,10 +87,6 @@ QSteamInput::~QSteamInput() { SteamInput()->Shutdown(); }
 void QSteamInput::runFrame() {
   SteamInput()->RunFrame();
 
-  if (m_currentController.handle() != 0) {
-    SteamInput()->TriggerVibration(m_currentController.handle(), m_vibrationSpeedLeft, m_vibrationSpeedRight);
-  }
-
   if (m_currentController.handle() != 0 && !m_actionSets.empty()) {
     auto handle = SteamInput()->GetCurrentActionSet(m_currentController.handle());
 
@@ -104,6 +100,24 @@ void QSteamInput::runFrame() {
 
 bool QSteamInput::showBindingPanel(unsigned long long inputHandle) const {
   return SteamInput()->ShowBindingPanel(inputHandle);
+}
+
+void QSteamInput::triggerSimpleHapticEvent(const QString &location, unsigned char nIntensity, char nGainDB,
+                                           unsigned char nOtherIntensity, char nOtherGainDB) const {
+  if (m_currentController.handle() == 0) {
+    return;
+  }
+
+  auto eLocation = k_EControllerHapticLocation_Left;
+  if (location == "left") {
+    eLocation = k_EControllerHapticLocation_Left;
+  } else if (location == "right") {
+    eLocation = k_EControllerHapticLocation_Right;
+  } else {
+    eLocation = k_EControllerHapticLocation_Both;
+  }
+  SteamInput()->TriggerSimpleHapticEvent(m_currentController.handle(), eLocation, nIntensity, nGainDB, nOtherIntensity,
+                                         nOtherGainDB);
 }
 
 const IGA &QSteamInput::iga() const { return m_iga; }
@@ -307,28 +321,26 @@ void QSteamInput::qmlSetActionSet(const QString &newActionSet) {
   }
 }
 
-unsigned short QSteamInput::vibrationSpeedLeft() const
-{
-    return m_vibrationSpeedLeft;
+unsigned short QSteamInput::vibrationSpeedLeft() const { return m_vibrationSpeedLeft; }
+
+void QSteamInput::setVibrationSpeedLeft(unsigned short newVibrationSpeedLeft) {
+  if (m_vibrationSpeedLeft == newVibrationSpeedLeft)
+    return;
+  m_vibrationSpeedLeft = newVibrationSpeedLeft;
+  if (m_currentController.handle() != 0) {
+    SteamInput()->TriggerVibration(m_currentController.handle(), m_vibrationSpeedLeft, m_vibrationSpeedRight);
+  }
+  emit vibrationSpeedLeftChanged();
 }
 
-void QSteamInput::setVibrationSpeedLeft(unsigned short newVibrationSpeedLeft)
-{
-    if (m_vibrationSpeedLeft == newVibrationSpeedLeft)
-        return;
-    m_vibrationSpeedLeft = newVibrationSpeedLeft;
-    emit vibrationSpeedLeftChanged();
-}
+unsigned short QSteamInput::vibrationSpeedRight() const { return m_vibrationSpeedRight; }
 
-unsigned short QSteamInput::vibrationSpeedRight() const
-{
-    return m_vibrationSpeedRight;
-}
-
-void QSteamInput::setVibrationSpeedRight(unsigned short newVibrationSpeedRight)
-{
-    if (m_vibrationSpeedRight == newVibrationSpeedRight)
-        return;
-    m_vibrationSpeedRight = newVibrationSpeedRight;
-    emit vibrationSpeedRightChanged();
+void QSteamInput::setVibrationSpeedRight(unsigned short newVibrationSpeedRight) {
+  if (m_vibrationSpeedRight == newVibrationSpeedRight)
+    return;
+  m_vibrationSpeedRight = newVibrationSpeedRight;
+  if (m_currentController.handle() != 0) {
+    SteamInput()->TriggerVibration(m_currentController.handle(), m_vibrationSpeedLeft, m_vibrationSpeedRight);
+  }
+  emit vibrationSpeedRightChanged();
 }

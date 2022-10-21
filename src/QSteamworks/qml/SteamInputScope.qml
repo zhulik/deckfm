@@ -4,9 +4,9 @@ Item {
     id: root
     // TODO: focus tracking and actionSet switching
 
-    property var events: []
     property bool enabled: true
     property var actionStates: ({})
+    property var handlers: ({})
 
     signal inputEvent(var event)
 
@@ -25,8 +25,12 @@ Item {
 
             actionStates = states
 
-            if (events.includes(event.action.actionDefinition.name) || events.length == 0) {
-              root.inputEvent(event)
+            steam_input.triggerSimpleHapticEvent("left", 10000, 256, 15000, 128)
+
+            const handler = handlers[event.action.actionDefinition.name]
+
+            if (handler) {
+                handler(event)
             }
         }
     }

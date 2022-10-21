@@ -190,14 +190,6 @@ Item {
                                 id: logLabel
                                 Layout.preferredWidth: stack.width / 2 - 10
                                 Layout.fillHeight: parent
-
-                                SteamInputScope {
-//                                    events: ["button_a", "button_b"]
-
-                                    onInputEvent: {
-                                        logLabel.text = JSON.stringify(event, null, 2)
-                                    }
-                                }
                             }
                         }
                     }

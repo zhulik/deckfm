@@ -116,55 +116,30 @@ View3D {
     SteamInputScope {
         id: input
 
-        events: ["LeftStick", "RightPad", "LeftPad", "select", "menu", "touch_rstick", "RightStick"]
-
-        Component.onCompleted: {
-            steam_input.vibrationSpeedLeft = 1000
-            steam_input.vibrationSpeedRight = 1000
-        }
-
-//        Binding {
-//            target: steam_input
-//            property: "vibrationSpeedLeft"
-//            value: input.actionStates["button_a"] ? 50000 : 0
-//        }
-
-
-
-//        Binding {
-//            target: steam_input
-//            property: "vibrationSpeedRight"
-//            value: input.actionStates["button_b"] ? 50000 : 0
-//        }
-
-        onInputEvent: {
-            switch(event.action.actionDefinition.name) {
-            case "LeftStick":
-                camera.move(event.analogX, event.analogY)
-                break
-            case "RightPad":
-                camera.pan(event.analogX / 5, event.analogY / 5)
-                break
-                //            case "select":
-                //                Qt.quit()
-                //                break
-            case "menu":
-                if (event.digitalState) {
+        handlers: {
+            "LeftStick": (e) => camera.move(e.analogX, e.analogY),
+            "RightPad": (e) => camera.pan(e.analogX / 5, e.analogY / 5),
+            "touch_rstick": (e) => {
+                if (pickedObject) {
+                    pickedObject.animated = !e.digitalState
+                }
+            },
+            "menu": (e) => {
+                if (e.digitalState) {
                     overlay.visible = !overlay.visible
                 }
-                break
-            case "touch_rstick":
-                if (pickedObject) {
-                    pickedObject.animated = !event.digitalState
+            },
+            "select": (e) => {
+                if (e.digitalState) {
+                    Qt.quit()
                 }
-                break
-            case "RightStick":
+            },
+            "RightStick": (e) => {
                 if (pickedObject) {
-                    pickedObject.rotate(event.analogX / 15, Qt.vector3d(0, 1, 0), Node.SceneSpace)
-                    pickedObject.rotate(event.analogY / 15, Qt.vector3d(1, 0, 0), Node.SceneSpace)
+                    pickedObject.rotate(e.analogX / 15, Qt.vector3d(0, 1, 0), Node.SceneSpace)
+                    pickedObject.rotate(e.analogY / 15, Qt.vector3d(1, 0, 0), Node.SceneSpace)
 
                 }
-                break;
             }
         }
     }

@@ -124,8 +124,10 @@ class QSteamInput : public QObject {
   Q_PROPERTY(QVariantList actionSets READ qmlActionSets NOTIFY actionSetsChanged)
   Q_PROPERTY(QString actionSet READ qmlActionSet WRITE qmlSetActionSet NOTIFY actionSetChanged)
 
-  Q_PROPERTY(unsigned short vibrationSpeedLeft READ vibrationSpeedLeft WRITE setVibrationSpeedLeft NOTIFY vibrationSpeedLeftChanged)
-  Q_PROPERTY(unsigned short vibrationSpeedRight READ vibrationSpeedRight WRITE setVibrationSpeedRight NOTIFY vibrationSpeedRightChanged)
+  Q_PROPERTY(unsigned short vibrationSpeedLeft READ vibrationSpeedLeft WRITE setVibrationSpeedLeft NOTIFY
+                 vibrationSpeedLeftChanged)
+  Q_PROPERTY(unsigned short vibrationSpeedRight READ vibrationSpeedRight WRITE setVibrationSpeedRight NOTIFY
+                 vibrationSpeedRightChanged)
 
   STEAM_CALLBACK(QSteamInput, onControllerConnected, SteamInputDeviceConnected_t);
   STEAM_CALLBACK(QSteamInput, onControllerDisconnected, SteamInputDeviceDisconnected_t);
@@ -140,6 +142,10 @@ public:
 
   Q_INVOKABLE
   virtual bool showBindingPanel(unsigned long long inputHandle) const;
+
+  Q_INVOKABLE
+  void triggerSimpleHapticEvent(const QString &location, unsigned char nIntensity, char nGainDB, unsigned char nOtherIntensity,
+                                char nOtherGainDB) const;
 
   const IGA &iga() const;
 
