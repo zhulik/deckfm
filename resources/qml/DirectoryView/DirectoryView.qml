@@ -31,7 +31,7 @@ Item {
         root.fileOpened(fs_model.get(index).path)
     }
 
-    Component.onCompleted: {
+    onFocusChanged: {
         steam_input.actionSet = "folder_navigation"
     }
 
