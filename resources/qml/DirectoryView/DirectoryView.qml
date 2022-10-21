@@ -26,6 +26,7 @@ Item {
     function cdIndex(index) {
         if (fs_model.get(index).isDir) {
             fs_model.path = fs_model.get(index).path
+            steam_input.actionSet = "folder_navigation"
             return
         }
         root.fileOpened(fs_model.get(index).path)
