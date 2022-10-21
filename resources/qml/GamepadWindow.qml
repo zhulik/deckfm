@@ -2,7 +2,6 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
-
 import "./MDI" as MDI
 import "./models" as Models
 import "./GamepadsInfo" as GI
@@ -27,6 +26,7 @@ Dialog {
 
             MDI.Button {
                 iconName: "applicationSettings"
+
                 onClicked: {
                     steam_input.showBindingPanel()
                 }
@@ -41,9 +41,5 @@ Dialog {
         }
     }
 
-    GI.GamepadsInfo {
-
-    }
-
-
+    GI.GamepadsInfo {}
 }

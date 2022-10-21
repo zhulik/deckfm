@@ -144,6 +144,9 @@ public:
   virtual bool showBindingPanel(unsigned long long inputHandle) const;
 
   Q_INVOKABLE
+  virtual bool showBindingPanel() const;
+
+  Q_INVOKABLE
   void triggerSimpleHapticEvent(const QString &location, unsigned char nIntensity, char nGainDB,
                                 unsigned char nOtherIntensity, char nOtherGainDB) const;
 
