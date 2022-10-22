@@ -56,7 +56,7 @@ ApplicationWindow {
     }
 
     footer: Footer {
-//        visible: !appLoader.visible
+        //        visible: !appLoader.visible
     }
 
     StackView {
@@ -67,24 +67,22 @@ ApplicationWindow {
 
         initialItem: directoryView
 
-        DirView.DirectoryView {
-            id: directoryView
+        FocusScope {
 
-            onFileOpened: {
-                console.log(mime)
-                appLoader.source = path
-            }
-        }
+            DirView.DirectoryView {
+                id: directoryView
 
-        AppLoader {
-            id: appLoader
-
-            onClosed: {
-                stackView.pop()
+                onFileOpened: {
+                    console.log(mime)
+                    appLoader.source = path
+                }
             }
 
-            onLoaded: {
-                stackView.push(appLoader)
+            AppLoader {
+                id: appLoader
+
+                onLoaded: stackView.push(appLoader)
+                onClosed: stackView.pop()
             }
         }
     }

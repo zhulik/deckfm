@@ -232,6 +232,7 @@ void QSteamInput::onControllerDisconnected(SteamInputDeviceDisconnected_t *cb) {
   emit qmlControllersChanged();
 
   if (!m_controllers.empty()) {
+    m_currentController = Controller();
     updateActionSets();
   }
 }
@@ -351,14 +352,16 @@ void QSteamInput::setActionSet(const QSteamworks::ActionSet &newActionSet) {
 const QString &QSteamInput::qmlActionSet() const { return m_actionSet.name(); }
 
 void QSteamInput::setActionSet(const QString &newActionSet) {
-  if (m_actionSet.name() == newActionSet)
+  if (m_actionSet.name() == newActionSet || m_currentController.handle() == 0)
     return;
 
   foreach (auto &actionSet, m_actionSets) {
     if (actionSet.name() == newActionSet) {
       SteamInput()->ActivateActionSet(m_currentController.handle(), actionSet.handle());
+      return;
     }
   }
+  throw std::runtime_error(QString("Cannot find action set %1").arg(newActionSet).toLocal8Bit());
 }
 
 unsigned short QSteamInput::vibrationSpeedLeft() const { return m_vibrationSpeedLeft; }
