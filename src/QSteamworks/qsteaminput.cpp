@@ -219,7 +219,6 @@ void QSteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb) {
   emit qmlControllersChanged();
 
   runFrame();
-  updateActionSets();
 }
 
 void QSteamInput::onControllerDisconnected(SteamInputDeviceDisconnected_t *cb) {
@@ -233,7 +232,6 @@ void QSteamInput::onControllerDisconnected(SteamInputDeviceDisconnected_t *cb) {
 
   if (!m_controllers.empty()) {
     m_currentController = Controller();
-    updateActionSets();
   }
 }
 
@@ -328,7 +326,6 @@ void QSteamInput::updateActionSets() {
     auto handle = SteamInput()->GetActionSetHandle(actionSet.first.toLocal8Bit());
     m_actionSets << ActionSet(handle, actionSet.first, getActions(handle, actionSet.second));
   }
-  SteamInput()->ActivateActionSet(m_currentController.handle(), m_actionSets.first().handle());
   emit actionSetsChanged();
 }
 
@@ -345,23 +342,32 @@ void QSteamInput::setActionSet(const QSteamworks::ActionSet &newActionSet) {
 
   if (m_actionSet == newActionSet)
     return;
+
   m_actionSet = newActionSet;
+
+  if (m_currentController.handle() != 0) {
+    SteamInput()->ActivateActionSet(m_currentController.handle(), m_actionSet.handle());
+  }
+
   emit actionSetChanged();
 }
 
 const QString &QSteamInput::qmlActionSet() const { return m_actionSet.name(); }
 
 void QSteamInput::setActionSet(const QString &newActionSet) {
-  if (m_actionSet.name() == newActionSet || m_currentController.handle() == 0)
+  if (m_actionSet.name() == newActionSet)
     return;
+
+  if (!m_iga.actionSets().contains(newActionSet)) {
+    throw std::runtime_error(QString("Cannot find action set %1").arg(newActionSet).toLocal8Bit());
+  }
 
   foreach (auto &actionSet, m_actionSets) {
     if (actionSet.name() == newActionSet) {
-      SteamInput()->ActivateActionSet(m_currentController.handle(), actionSet.handle());
+      setActionSet(actionSet);
       return;
     }
   }
-  throw std::runtime_error(QString("Cannot find action set %1").arg(newActionSet).toLocal8Bit());
 }
 
 unsigned short QSteamInput::vibrationSpeedLeft() const { return m_vibrationSpeedLeft; }

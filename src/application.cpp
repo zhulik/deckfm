@@ -36,12 +36,6 @@ Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
 
     m_engine->rootContext()->setContextProperty("steam_utils", m_steamworks->steamUtils());
     m_engine->rootContext()->setContextProperty("steam_input", m_steamworks->steamInput());
-
-    // initialize steam input and set default action set,
-    // it's seems to be guaranteed configurationLoaded will be emitted with some delay,
-    // so it's ok to connect to it here
-    connect(m_steamworks->steamInput(), &QSteamworks::QSteamInput::configurationLoaded,
-            [this]() { m_steamworks->steamInput()->setActionSet("folder_navigation"); });
   } catch (QSteamworks::InitializationFailed &e) {
     qDebug() << "\n" << e.what() << "\n";
   }
