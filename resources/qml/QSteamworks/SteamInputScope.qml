@@ -26,7 +26,7 @@ Item {
         property: "actionSet"
         value: actionSet
 
-        restoreMode: Binding.RestoreBindingOrValue
+        restoreMode: Binding.RestoreNone
     }
 
     Connections {
