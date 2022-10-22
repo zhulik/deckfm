@@ -355,11 +355,10 @@ void QSteamInput::setActionSet(const QSteamworks::ActionSet &newActionSet) {
 const QString &QSteamInput::qmlActionSet() const { return m_actionSet.name(); }
 
 void QSteamInput::setActionSet(const QString &newActionSet) {
-  if (m_actionSet.name() == newActionSet)
+  if (m_actionSet.name() == newActionSet || newActionSet == "")
     return;
 
-  //  if (!m_iga.actionSets().contains(newActionSet)) {
-  if (m_iga.actionSets().empty()) {
+  if (!m_iga.actionSets().contains(newActionSet)) {
     throw std::runtime_error(QString("Cannot find action set %1").arg(newActionSet).toLocal8Bit());
   }
 
