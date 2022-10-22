@@ -6,6 +6,8 @@ import Qt.labs.settings 1.0
 
 import QtQuick.Controls.Material 2.12
 
+import Steamworks 1.0
+
 import "./DirectoryView" as DirView
 
 ApplicationWindow {
@@ -17,12 +19,16 @@ ApplicationWindow {
     visible: true
 
     visibility: {
-        steam_utils.isSteamRunningOnSteamDeck
-                || steam_utils.isSteamInBigPictureMode ? "FullScreen" : "Windowed"
+        steamUtils.isSteamRunningOnSteamDeck
+                || steamUtils.isSteamInBigPictureMode ? "FullScreen" : "Windowed"
     }
 
     width: 1280
     height: 800
+
+    SteamUtils {
+        id: steamUtils
+    }
 
     header: Header {
         id: header

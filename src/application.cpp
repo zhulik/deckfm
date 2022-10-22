@@ -26,15 +26,13 @@ Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
 
   qmlRegisterType<FolderListModel>("DeckFM", 1, 0, "FolderListModel");
 
+  qmlRegisterType<QSteamworks::QSteamUtils>("Steamworks", 1, 0, "SteamUtils");
+
   m_engine = new QQmlApplicationEngine();
 
   try {
     m_steamworks = new QSteamworks::QSteamAPI(m_engine);
-    if (m_steamworks->steamUtils()->isSteamRunningOnSteamDeck()) {
-      setOverrideCursor(QCursor(Qt::BlankCursor));
-    }
 
-    m_engine->rootContext()->setContextProperty("steam_utils", m_steamworks->steamUtils());
     m_engine->rootContext()->setContextProperty("steam_input", m_steamworks->steamInput());
   } catch (QSteamworks::InitializationFailed &e) {
     qDebug() << "\n" << e.what() << "\n";

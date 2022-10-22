@@ -3,8 +3,6 @@
 #include "errors.h"
 #include "qsteamapi.h"
 #include "qsteaminput.h"
-#include "qsteamutils.h"
-
 #include "steam/steam_api.h"
 #include "steam/steam_api_common.h"
 #include <stdexcept>
@@ -14,12 +12,10 @@ using namespace QSteamworks;
 QSteamAPI::QSteamAPI(QObject *parent) : QObject{parent} {
   if (!SteamAPI_Init()) {
     throw InitializationFailed("Cannot initialize SteamAPI.");
-  }
-  m_steamUtils = new QSteamUtils(this);
+  };
 }
 
 QSteamAPI::~QSteamAPI() {
-  delete m_steamUtils;
   if (m_steamInput != nullptr) {
     delete m_steamInput;
   }
@@ -28,8 +24,6 @@ QSteamAPI::~QSteamAPI() {
 }
 
 void QSteamAPI::runCallbacks() const { SteamAPI_RunCallbacks(); }
-
-QSteamUtils *QSteamAPI::steamUtils() const { return m_steamUtils; }
 
 QSteamInput *QSteamAPI::steamInput() {
   if (m_steamInput == nullptr) {
