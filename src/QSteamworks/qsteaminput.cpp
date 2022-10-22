@@ -61,6 +61,9 @@ QSteamInput::QSteamInput(const QString &vdf, QSteamAPI *parent) : QObject{parent
   qRegisterMetaType<QSteamworks::ActionSet>();
   qRegisterMetaType<QSteamworks::InputEvent>();
 
+  auto vdfContent = readFile(vdf);
+  m_iga = IGA(VDFParser().parse(vdfContent));
+
   if (!SteamInput()->Init(true)) {
     throw InitializationFailed("Cannot initialize SteamInput");
   }
@@ -68,9 +71,6 @@ QSteamInput::QSteamInput(const QString &vdf, QSteamAPI *parent) : QObject{parent
   if (!SteamInput()->SetInputActionManifestFilePath(m_vdf.toLocal8Bit())) {
     throw InitializationFailed(QString("Cannot read IGA file: %1").arg(vdf));
   }
-
-  auto vdfContent = readFile(vdf);
-  m_iga = IGA(VDFParser().parse(vdfContent));
   SteamInput()->EnableDeviceCallbacks();
 
   m_instance = this;
