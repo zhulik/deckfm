@@ -55,7 +55,9 @@ ApplicationWindow {
         height: parent.height - header.height - footer.height
     }
 
-    footer: Footer {}
+    footer: Footer {
+        visible: !appLoader.visible
+    }
 
     ColumnLayout {
         anchors.fill: parent

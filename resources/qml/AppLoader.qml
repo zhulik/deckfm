@@ -5,12 +5,16 @@ import "./MDI" as MDI
 Item {
     property alias source: loader.source
 
-    visible: source != ""
+    visible: loader.status == Loader.Ready
 
     Loader {
         id: loader
         asynchronous: true
         anchors.fill: parent
+
+        onLoaded: {
+            item.forceActiveFocus()
+        }
     }
 
     MDI.Button {
