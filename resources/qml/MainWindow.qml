@@ -56,31 +56,37 @@ ApplicationWindow {
     }
 
     footer: Footer {
-        visible: !appLoader.visible
+//        visible: !appLoader.visible
     }
 
-    ColumnLayout {
+    StackView {
+        id: stackView
+        focus: true
+
         anchors.fill: parent
 
-        RowLayout {
-            Layout.margins: {
-                left: 10
-                right: 10
+        initialItem: directoryView
+
+        DirView.DirectoryView {
+            id: directoryView
+
+            onFileOpened: {
+                console.log(mime)
+                appLoader.source = path
+            }
+        }
+
+        AppLoader {
+            id: appLoader
+
+            anchors.fill: parent
+
+            onClosed: {
+                stackView.pop()
             }
 
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-
-            DirView.DirectoryView {
-                id: directoryView
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                focus: true
-
-                onFileOpened: {
-                    console.log(mime)
-                    appLoader.source = path
-                }
+            onLoaded: {
+                stackView.push(appLoader)
             }
         }
     }
@@ -103,11 +109,5 @@ ApplicationWindow {
 
     Settings {
         property alias path: directoryView.path
-    }
-
-    AppLoader {
-        id: appLoader
-
-        anchors.fill: parent
     }
 }

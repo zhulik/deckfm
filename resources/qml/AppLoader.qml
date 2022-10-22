@@ -3,9 +3,13 @@ import QtQuick.Window 2.15
 import "./MDI" as MDI
 
 Item {
+    id: root
     property alias source: loader.source
 
     visible: loader.status == Loader.Ready
+
+    signal closed()
+    signal loaded()
 
     Loader {
         id: loader
@@ -14,6 +18,7 @@ Item {
 
         onLoaded: {
             item.forceActiveFocus()
+            root.loaded()
         }
     }
 
@@ -24,6 +29,7 @@ Item {
 
         onClicked: {
             loader.source = ""
+            root.closed()
         }
     }
 }
