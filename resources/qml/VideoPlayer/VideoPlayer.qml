@@ -5,7 +5,7 @@ import "../QSteamworks" as Steamworks
 
 Item {
     id: root
-    property string source: "/home/zhulik/BigBuckBunny.mp4"
+    property string source: "/home/deck/BigBuckBunny.mp4"
 
     Rectangle {
         anchors.fill: parent
