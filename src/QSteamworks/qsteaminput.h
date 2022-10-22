@@ -117,7 +117,8 @@ private:
 
 class QSteamInput : public QObject {
   Q_OBJECT
-  Q_PROPERTY(QSteamworks::IGA iga READ iga CONSTANT)
+
+  Q_PROPERTY(QSteamworks::IGA iga READ iga NOTIFY igaChanged)
   Q_PROPERTY(QVariantList controllers READ qmlControllers NOTIFY qmlControllersChanged)
   Q_PROPERTY(QSteamworks::Controller currentController READ currentController WRITE setCurrentController NOTIFY
                  currentControllerChanged)
@@ -130,13 +131,14 @@ class QSteamInput : public QObject {
                  vibrationSpeedRightChanged)
 
   Q_PROPERTY(QVariantMap actionStates READ actionStates NOTIFY actionStatesChanged)
+  Q_PROPERTY(QString igaPath READ igaPath WRITE setIgaPath NOTIFY igaPathChanged)
 
   STEAM_CALLBACK(QSteamInput, onControllerConnected, SteamInputDeviceConnected_t);
   STEAM_CALLBACK(QSteamInput, onControllerDisconnected, SteamInputDeviceDisconnected_t);
   STEAM_CALLBACK(QSteamInput, onConfigurationLoaded, SteamInputConfigurationLoaded_t);
 
 public:
-  explicit QSteamInput(const QString &vdf, QSteamAPI *parent = nullptr);
+  explicit QSteamInput(QObject *parent = nullptr);
   virtual ~QSteamInput();
 
   Q_INVOKABLE
@@ -172,6 +174,9 @@ public:
 
   const QVariantMap &actionStates() const;
 
+  const QString &igaPath() const;
+  void setIgaPath(const QString &newIgaPath);
+
 signals:
   void qmlControllersChanged();
   void inputEvent(QSteamworks::InputEvent);
@@ -191,8 +196,11 @@ signals:
 
   void actionStatesChanged();
 
+  void igaChanged();
+
+  void igaPathChanged();
+
 private:
-  QString m_vdf;
   IGA m_iga;
   QSet<Controller> m_controllers;
   Controller m_currentController;
@@ -217,6 +225,7 @@ private:
   QVariantMap m_actionStates;
   void updateActionStates(const Action &action, bool digitalState, float analogX, float analogY);
   void sendInputEvents(InputEvent iEvent);
+  QString m_igaPath;
 };
 } // namespace QSteamworks
 

@@ -30,6 +30,16 @@ ApplicationWindow {
         id: steamUtils
     }
 
+    SteamInput {
+        id: steam_input // FIXME
+
+        igaPath: {
+            const url = Qt.resolvedUrl("../../input.vdf")
+
+            url.slice(6, url.length)
+        }
+    }
+
     header: Header {
         id: header
         onMenuClicked: drawer.visible = !drawer.visible

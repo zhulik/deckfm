@@ -27,13 +27,12 @@ Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
   qmlRegisterType<FolderListModel>("DeckFM", 1, 0, "FolderListModel");
 
   qmlRegisterType<QSteamworks::QSteamUtils>("Steamworks", 1, 0, "SteamUtils");
+  qmlRegisterType<QSteamworks::QSteamInput>("Steamworks", 1, 0, "SteamInput");
 
   m_engine = new QQmlApplicationEngine();
 
   try {
     m_steamworks = new QSteamworks::QSteamAPI(m_engine);
-
-    m_engine->rootContext()->setContextProperty("steam_input", m_steamworks->steamInput());
   } catch (QSteamworks::InitializationFailed &e) {
     qDebug() << "\n" << e.what() << "\n";
   }
@@ -48,10 +47,7 @@ Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
                      [mainWindow, this]() { m_activeFocusItem = mainWindow->activeFocusItem(); });
 
     if (m_steamworks != nullptr) {
-      auto runCallbacks = [this]() {
-        m_steamworks->runCallbacks();
-        m_steamworks->steamInput()->runFrame();
-      };
+      auto runCallbacks = [this]() { m_steamworks->runCallbacks(); };
 
       auto callbackTimer = new QTimer(m_engine);
       QObject::connect(callbackTimer, &QTimer::timeout, runCallbacks);
