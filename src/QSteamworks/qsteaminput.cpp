@@ -359,7 +359,7 @@ void QSteamInput::setActionSet(const QString &newActionSet) {
     return;
 
   if (!m_iga.actionSets().contains(newActionSet)) {
-    //    throw std::runtime_error(QString("Cannot find action set %1").arg(newActionSet).toLocal8Bit());
+    throw std::runtime_error(QString("Cannot find action set %1").arg(newActionSet).toLocal8Bit());
   }
 
   foreach (auto &actionSet, m_actionSets) {
