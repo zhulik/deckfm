@@ -79,8 +79,6 @@ ApplicationWindow {
         AppLoader {
             id: appLoader
 
-            anchors.fill: parent
-
             onClosed: {
                 stackView.pop()
             }

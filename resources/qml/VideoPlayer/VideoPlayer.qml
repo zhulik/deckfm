@@ -42,9 +42,13 @@ Item {
     }
 
     Steamworks.SteamInputScope {
+        enabled: root.activeFocus
+
         analogHandlers: {
-            "folder_scroll": (e) => video.seek(video.position + e.analogX * 100)
+            "media_seek": (e) => video.seek(video.position + e.analogX * 100)
         }
+
+        actionSet: "media_navigation"
     }
 
     Controls {

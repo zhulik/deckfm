@@ -6,7 +6,7 @@ Item {
     id: root
     property alias source: loader.source
 
-    visible: loader.status == Loader.Ready
+//    visible: loader.status == Loader.Ready
 
     signal closed()
     signal loaded()

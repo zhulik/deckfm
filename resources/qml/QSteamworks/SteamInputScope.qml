@@ -1,10 +1,12 @@
 import QtQuick 2.15
+import QtQml 2.15
 
 Item {
     id: root
 
-    // TODO: focus tracking and actionSet switching
     property bool enabled: true
+    property string actionSet
+
     property var actionStates: steam_input.actionStates
 
     property var pressHandlers: ({})
@@ -16,6 +18,16 @@ Item {
     signal pressedEvent(var event)
     signal releasedEvent(var event)
     signal analogEvent(var event)
+
+    Binding {
+        when: enabled && actionSet != ""
+
+        target: steam_input
+        property: "actionSet"
+        value: actionSet
+
+        restoreMode: Binding.RestoreValue
+    }
 
     Connections {
         target: steam_input
