@@ -1,11 +1,12 @@
 import QtQuick 2.15
 import QtMultimedia 5.15
+import Qt.labs.platform 1.1
 
 import "../QSteamworks" as Steamworks
 
 Item {
     id: root
-    property string source: "/home/deck/BigBuckBunny.mp4"
+    property string source: `${StandardPaths.writableLocation(StandardPaths.HomeLocation)}/BigBuckBunny.mp4`
 
     Rectangle {
         anchors.fill: parent
