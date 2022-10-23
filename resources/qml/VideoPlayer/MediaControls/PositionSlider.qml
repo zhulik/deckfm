@@ -12,7 +12,7 @@ Rectangle {
 
     property bool deckControlsEnabled: false
 
-    property bool pressed: slider.pressed || input.actionStates["media_seek_control"]
+    property bool pressed: slider.pressed || input.actionStates["media_seek_control"] || false
 
     signal seek(int position, bool debounce)
 
@@ -22,9 +22,14 @@ Rectangle {
 
         analogHandlers: {
             "media_seek": (e) => {
-                if (e.analogX > 5) {
-                    const dx = e.analogX
-                    video.seek(video.position + dx * 100)
+                const dx = e.analogX
+
+                if (input.actionStates["media_seek_control"]) {
+                    if (e.analogX > 5) {
+                        slider.value = slider.value + x
+                    }
+                } else {
+                    slider.value = slider.value + x
                 }
             }
         }
@@ -73,7 +78,7 @@ Rectangle {
                 }
             }
 
-            onMoved: root.seek(value * 1000, true)
+            onValueChanged: root.seek(value * 1000, true)
         }
     }
 
