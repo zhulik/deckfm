@@ -5,8 +5,8 @@ Item {
     id: root
 
     property bool enabled: true
-    property string actionSet
 
+    property string actionSet: steam_input.actionSet
     property var actionStates: steam_input.actionStates
 
     property var pressHandlers: ({})
