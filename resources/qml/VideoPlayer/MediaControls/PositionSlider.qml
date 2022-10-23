@@ -12,11 +12,12 @@ Rectangle {
 
     property bool deckControlsEnabled: false
 
-    property bool pressed: slider.pressed
+    property bool pressed: slider.pressed || input.actionStates["media_seek_control"]
 
     signal seek(int position, bool debounce)
 
     Steamworks.SteamInputScope {
+        id: input
         enabled: deckControlsEnabled
 
         analogHandlers: {
