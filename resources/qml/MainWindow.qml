@@ -10,6 +10,8 @@ import Steamworks 1.0
 
 import "./DirectoryView" as DirView
 
+import "MainWindow.js" as JS
+
 ApplicationWindow {
     id: mainWindow
 
@@ -49,7 +51,7 @@ ApplicationWindow {
         onExitClicked: mainWindow.close()
         onGamepadClicked: gamepadWindow.open()
 
-        visible: !gamepadWindow.visible && !appLoader.visible
+        visible: stackView.depth == 1
     }
 
     Shortcut {
@@ -89,16 +91,8 @@ ApplicationWindow {
             id: directoryView
 
             onFileOpened: {
-                console.log(mime)
-                appLoader.source = path
+                JS.openFile(path, mime)
             }
-        }
-
-        AppLoader {
-            id: appLoader
-
-            onLoaded: stackView.push(appLoader)
-            onClosed: stackView.pop()
         }
     }
 

@@ -5,6 +5,7 @@ import "./MDI" as MDI
 Item {
     id: root
     property alias source: loader.source
+    property alias item: loader.item
 
     visible: loader.status == Loader.Ready
 

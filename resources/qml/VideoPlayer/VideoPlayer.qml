@@ -6,7 +6,7 @@ import "../QSteamworks" as Steamworks
 
 Item {
     id: root
-    property string source: `${StandardPaths.writableLocation(StandardPaths.HomeLocation)}/BigBuckBunny.mp4`
+    property alias source: video.source //`${StandardPaths.writableLocation(StandardPaths.HomeLocation)}/BigBuckBunny.mp4`
 
     Rectangle {
         anchors.fill: parent
@@ -17,7 +17,6 @@ Item {
         id: video
         anchors.fill: parent
         autoPlay: true
-        source: root.source
     }
 
     MouseArea {
