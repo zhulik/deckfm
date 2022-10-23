@@ -23,7 +23,7 @@ Item {
         analogHandlers: {
             "media_seek": (e) => {
                 if (e.analogX / 5) {
-                    const dx = e.analogX * e.analogX
+                    const dx = e.analogX
                     video.seek(video.position + dx * 100)
                 }
             }
