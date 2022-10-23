@@ -22,15 +22,17 @@ Rectangle {
 
         analogHandlers: {
             "media_seek": (e) => {
-                const dx = e.analogX * 100
+                const abs = Math.abs(e.analogX)
 
-                if (actionStates["media_seek_control"]) {
-                    if (Math.abs(e.analogX) > 1) {
-                        slider.value = slider.value + dx
-                    }
-                } else {
-                    slider.value = slider.value + dx
+                if (abs < 1) {
+                    return
                 }
+
+                const s = e.analogX / abs
+
+                let acceleration = abs / 20 + 1
+
+                slider.value =+ Math.pow(abs, acceleration) * s * 100
             }
         }
     }
@@ -65,11 +67,15 @@ Rectangle {
             function timeToHuman(mils) {
                 let secs = Math.round(mils / 1000);
                 let mins = Math.floor(secs / 60)
-                secs = secs % 60
+                secs = String(secs % 60).padStart(2, '0')
                 const hours = Math.floor(mins / 60)
-                mins = mins % 60
+                mins = String(mins % 60).padStart(2, '0')
 
-                return `${hours}:${mins}:${secs}`
+                if (hours == 0) {
+                    return `${mins}:${secs}`
+                }
+
+                return `${String(hours).padStart(2, '0')}:${mins}:${secs}`
             }
 
             onValueChanged: root.seek(value, true)
