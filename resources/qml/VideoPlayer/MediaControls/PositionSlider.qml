@@ -32,7 +32,7 @@ Rectangle {
 
                 const acceleration = abs / 50 + 1
 
-                slider.value =+ Math.pow(abs, acceleration) * s * 100
+                slider.value = slider.value + Math.pow(abs, acceleration) * s * 100
             }
         }
     }
