@@ -8,6 +8,7 @@ Item {
     id: root
 
     property Video video
+    property bool deckControlsEnabled: false
 
     Rectangle {
         anchors.fill: parent
@@ -25,6 +26,7 @@ Item {
         MC.PositionSlider {
             id: slider
             Layout.fillWidth: parent
+            deckControlsEnabled: deckControlsEnabled
 
             position: video.position
             duration: video.duration

@@ -17,33 +17,12 @@ Item {
         anchors.fill: parent
     }
 
-    Steamworks.SteamInputScope {
-        enabled: root.activeFocus
-
-        analogHandlers: {
-            "media_seek": (e) => {
-                if (e.analogX > 5) {
-                    const dx = e.analogX
-                    video.seek(video.position + dx * 100)
-                }
-            }
-        }
-
-        pressHandlers: {
-            "media_seek_control": video.pause
-        }
-
-        releaseHandlers: {
-            "media_seek_control": video.play
-        }
-
-        actionSet: "media_navigation"
-    }
-
     Controls {
         id: controls
         width: parent.width
         height: 100
+
+        deckControlsEnabled: root.activeFocus
 
         video: video
 

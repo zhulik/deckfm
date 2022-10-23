@@ -2,15 +2,42 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
+import "../../QSteamworks" as Steamworks
+
 Rectangle {
     id: root
 
     property int duration
     property int position
 
-    property alias pressed: slider.pressed
+    property bool deckControlsEnabled: false
+
+    property bool pressed: slider.pressed
 
     signal seek(int position, bool debounce)
+
+    Steamworks.SteamInputScope {
+        enabled: deckControlsEnabled
+
+        analogHandlers: {
+            "media_seek": (e) => {
+                if (e.analogX > 5) {
+                    const dx = e.analogX
+                    video.seek(video.position + dx * 100)
+                }
+            }
+        }
+
+        pressHandlers: {
+            "media_seek_control": video.pause
+        }
+
+        releaseHandlers: {
+            "media_seek_control": video.play
+        }
+
+        actionSet: "media_navigation"
+    }
 
     ColumnLayout {
         anchors.fill: parent
