@@ -76,10 +76,10 @@ ApplicationWindow {
     }
 
     Steamworks.SteamInputScope {
-            pressHandlers: {
-                "folder_go_home": debugOverlay.toggle()
-            }
+        pressHandlers: {
+            "folder_go_home": debugOverlay.toggle
         }
+    }
 
     Drawer {
         id: drawer
