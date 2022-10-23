@@ -85,23 +85,20 @@ ApplicationWindow {
 
         initialItem: directoryView
 
-        FocusScope {
+        DirView.DirectoryView {
+            id: directoryView
 
-            DirView.DirectoryView {
-                id: directoryView
-
-                onFileOpened: {
-                    console.log(mime)
-                    appLoader.source = path
-                }
+            onFileOpened: {
+                console.log(mime)
+                appLoader.source = path
             }
+        }
 
-            AppLoader {
-                id: appLoader
+        AppLoader {
+            id: appLoader
 
-                onLoaded: stackView.push(appLoader)
-                onClosed: stackView.pop()
-            }
+            onLoaded: stackView.push(appLoader)
+            onClosed: stackView.pop()
         }
     }
 

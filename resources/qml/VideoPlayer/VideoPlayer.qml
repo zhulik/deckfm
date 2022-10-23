@@ -42,7 +42,7 @@ Item {
     }
 
     Steamworks.SteamInputScope {
-//        enabled: root.activeFocus
+        enabled: root.activeFocus
 
         analogHandlers: {
             "media_seek": (e) => video.seek(video.position + e.analogX * 100)

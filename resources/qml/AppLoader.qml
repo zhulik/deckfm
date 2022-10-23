@@ -11,6 +11,8 @@ Item {
     signal closed()
     signal loaded()
 
+    onActiveFocusChanged: loader.item.forceActiveFocus()
+
     Loader {
         id: loader
         asynchronous: true
