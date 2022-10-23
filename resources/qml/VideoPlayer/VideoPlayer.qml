@@ -17,6 +17,12 @@ Item {
         anchors.fill: parent
     }
 
+    Steamworks.SteamInputScope {
+        enabled: root.activeFocus
+
+        actionSet: "media_navigation"
+    }
+
     Controls {
         id: controls
         width: parent.width
