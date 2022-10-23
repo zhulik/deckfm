@@ -35,6 +35,7 @@
 			"Button"
 			{
 				"media_playpause"		"#MediaPlayPause"
+				"media_seek_control"		"#MediaSeekControl"
 			}
 			"StickPadGyro"
 			{

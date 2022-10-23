@@ -29,6 +29,14 @@ Item {
             }
         }
 
+        pressHandlers: {
+            "media_seek_control": video.pause
+        }
+
+        releaseHandlers: {
+            "media_seek_control": video.play
+        }
+
         actionSet: "media_navigation"
     }
 
