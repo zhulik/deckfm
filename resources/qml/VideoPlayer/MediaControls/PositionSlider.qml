@@ -25,7 +25,7 @@ Rectangle {
                 const dx = e.analogX * 100
 
                 if (actionStates["media_seek_control"]) {
-                    if (e.analogX > 2) {
+                    if (Math.abs(e.analogX) > 1) {
                         slider.value = slider.value + dx
                     }
                 } else {
