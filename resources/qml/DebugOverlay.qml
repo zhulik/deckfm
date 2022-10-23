@@ -25,6 +25,6 @@ Item {
 
     Label {
         id: lastEventLabel
-        font.pointSize: 32
+        font.pointSize: 24
     }
 }
