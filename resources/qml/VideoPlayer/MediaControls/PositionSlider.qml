@@ -30,7 +30,7 @@ Rectangle {
 
                 const s = e.analogX / abs
 
-                const acceleration = abs / 50 + 1
+                const acceleration = abs / 100 + 1
 
                 slider.value = slider.value + Math.pow(abs, acceleration) * s * 100
             }
