@@ -52,6 +52,10 @@ Item {
             root.inputEvent(event)
         }
 
+//        function onActionSetChanged() {
+//            root.actionSet = steam_input.actionSet
+//        }
+
         function sendInputEvent(handlers, event) {
             const handler = handlers[event.action.actionDefinition.name]
 
