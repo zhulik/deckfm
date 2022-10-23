@@ -3,7 +3,6 @@ import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import Qt.labs.settings 1.0
-
 import QtQuick.Controls.Material 2.12
 
 import Steamworks 1.0
@@ -11,6 +10,8 @@ import Steamworks 1.0
 import "./DirectoryView" as DirView
 
 import "MainWindow.js" as JS
+
+import "QSteamworks" as Steamworks
 
 ApplicationWindow {
     id: mainWindow
@@ -67,6 +68,19 @@ ApplicationWindow {
         onActivated: drawer.visible = !drawer.visible
     }
 
+    Shortcut {
+        sequence: "F3"
+        context: Qt.ApplicationShortcut
+
+        onActivated: debugOverlay.toggle()
+    }
+
+    Steamworks.SteamInputScope {
+            pressHandlers: {
+                "folder_go_home": debugOverlay.toggle()
+            }
+        }
+
     Drawer {
         id: drawer
         y: header.height
@@ -99,6 +113,15 @@ ApplicationWindow {
         id: globalMenu
 
         onExitClicked: mainWindow.close()
+    }
+
+    DebugOverlay {
+        id: debugOverlay
+
+        x: 0
+        y: 0
+        width: parent.width - x
+        height: parent.height - y
     }
 
     Settings {
