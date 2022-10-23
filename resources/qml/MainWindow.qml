@@ -49,7 +49,6 @@ ApplicationWindow {
         onMenuClicked: drawer.visible = !drawer.visible
         onLogoClicked: globalMenu.popup()
         onExitClicked: mainWindow.close()
-        onGamepadClicked: gamepadWindow.open()
 
         visible: stackView.depth == 1
     }
@@ -100,16 +99,6 @@ ApplicationWindow {
         id: globalMenu
 
         onExitClicked: mainWindow.close()
-        onGamepadClicked: gamepadWindow.open()
-    }
-
-    GamepadWindow {
-        id: gamepadWindow
-
-        x: 0
-        y: 0
-        width: parent.width - x
-        height: parent.height - y
     }
 
     Settings {
