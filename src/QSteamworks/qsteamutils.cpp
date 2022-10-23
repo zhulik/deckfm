@@ -6,7 +6,7 @@
 
 using namespace QSteamworks;
 
-QSteamUtils::QSteamUtils(QSteamAPI *parent) : QObject{parent} {}
+QSteamUtils::QSteamUtils(QObject *parent) : QObject{parent} {}
 
 bool QSteamUtils::isSteamRunningOnSteamDeck() const { return SteamUtils()->IsSteamRunningOnSteamDeck(); }
 

@@ -6,7 +6,11 @@ import Qt.labs.settings 1.0
 
 import QtQuick.Controls.Material 2.12
 
+import Steamworks 1.0
+
 import "./DirectoryView" as DirView
+
+import "MainWindow.js" as JS
 
 ApplicationWindow {
     id: mainWindow
@@ -17,12 +21,28 @@ ApplicationWindow {
     visible: true
 
     visibility: {
-        steam_utils.isSteamRunningOnSteamDeck
-                || steam_utils.isSteamInBigPictureMode ? "FullScreen" : "Windowed"
+        steamUtils.isSteamRunningOnSteamDeck
+                || steamUtils.isSteamInBigPictureMode ? "FullScreen" : "Windowed"
     }
 
     width: 1280
     height: 800
+
+    SteamUtils {
+        id: steamUtils
+    }
+
+    SteamInput {
+        id: steam_input // FIXME
+
+        igaPath: {
+            const url = Qt.resolvedUrl("../../input.vdf")
+
+            url.slice(6, url.length)
+        }
+
+        defaultActionSet: "folder_navigation"
+    }
 
     header: Header {
         id: header
@@ -31,11 +51,7 @@ ApplicationWindow {
         onExitClicked: mainWindow.close()
         onGamepadClicked: gamepadWindow.open()
 
-        visible: !gamepadWindow.visible
-    }
-
-    LoaderWindow {
-        id: loaderWindow
+        visible: stackView.depth == 1
     }
 
     Shortcut {
@@ -59,30 +75,23 @@ ApplicationWindow {
         height: parent.height - header.height - footer.height
     }
 
-    footer: Footer {}
+    footer: Footer {
+        //        visible: !appLoader.visible
+    }
 
-    ColumnLayout {
+    StackView {
+        id: stackView
+        focus: true
+
         anchors.fill: parent
 
-        RowLayout {
-            Layout.margins: {
-                left: 10
-                right: 10
-            }
+        initialItem: directoryView
 
-            Layout.fillWidth: true
-            Layout.fillHeight: true
+        DirView.DirectoryView {
+            id: directoryView
 
-            DirView.DirectoryView {
-                id: directoryView
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                focus: true
-
-                onFileOpened: {
-                    loaderWindow.load(path)
-                    //                    console.log(`Attempting to open ${path}`)
-                }
+            onFileOpened: {
+                JS.openFile(path, mime)
             }
         }
     }

@@ -28,6 +28,23 @@
 				}
 			}
 		}
+		"media_navigation"
+		{
+			"title"		"#MediaNavigation"
+			"legacy_set"		"0"
+			"Button"
+			{
+				"media_playpause"		"#MediaPlayPause"
+			}
+			"StickPadGyro"
+			{
+				"media_seek"
+				{
+					"title"		"#MediaSeek"
+					"input_mode"		"absolute_mouse"
+				}
+			}
+		}
 		"deck_controller_raw"
 		{
 			"title"		"#DeckControllerRaw"
@@ -75,27 +92,27 @@
 			}
 			"StickPadGyro"
       {
-				"LeftStick" 
+				"LeftStick"
 				{
 					"title"	"#LeftStick"
 					"input_mode"	"joystick_move"
 				}
-				"RightStick" 
+				"RightStick"
 				{
 					"title"	"#RightStick"
 					"input_mode"	"absolute_mouse"
 				}
-				"LeftPad" 
+				"LeftPad"
 				{
 					"title"	"#LeftPad"
 					"input_mode"	"joystick_move"
 				}
-				"RightPad" 
+				"RightPad"
 				{
 					"title"	"#RightPad"
 					"input_mode"	"absolute_mouse"
 				}
-				"Gyro" 
+				"Gyro"
 				{
 					"title"	"#Gyro"
 					"input_mode"	"absolute_mouse"

@@ -50,7 +50,7 @@ QString readFile(QString const &path) {
 
 QSteamInput *QSteamInput::instance() { return m_instance; }
 
-QSteamInput::QSteamInput(const QString &vdf, QSteamAPI *parent) : QObject{parent}, m_vdf(vdf) {
+QSteamInput::QSteamInput(QObject *parent) : QObject{parent} {
   if (m_instance != nullptr) {
     throw InitializationFailed("Steam input is already initialized");
   }
@@ -61,25 +61,7 @@ QSteamInput::QSteamInput(const QString &vdf, QSteamAPI *parent) : QObject{parent
   qRegisterMetaType<QSteamworks::ActionSet>();
   qRegisterMetaType<QSteamworks::InputEvent>();
 
-  if (!SteamInput()->Init(true)) {
-    throw InitializationFailed("Cannot initialize SteamInput");
-  }
-
-  if (!SteamInput()->SetInputActionManifestFilePath(m_vdf.toLocal8Bit())) {
-    throw InitializationFailed(QString("Cannot read IGA file: %1").arg(vdf));
-  }
-
-  auto vdfContent = readFile(vdf);
-  m_iga = IGA(VDFParser().parse(vdfContent));
-  SteamInput()->EnableDeviceCallbacks();
-
   m_instance = this;
-
-  auto cb = [](SteamInputActionEvent_t *event) {
-    QSteamInput::instance()->onActionEvent(event); // Dirty hack, but I didn't find a better way
-  };
-
-  SteamInput()->EnableActionEventCallbacks(cb);
 }
 
 QSteamInput::~QSteamInput() { SteamInput()->Shutdown(); }
@@ -219,7 +201,6 @@ void QSteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb) {
   emit qmlControllersChanged();
 
   runFrame();
-  updateActionSets();
 }
 
 void QSteamInput::onControllerDisconnected(SteamInputDeviceDisconnected_t *cb) {
@@ -232,7 +213,7 @@ void QSteamInput::onControllerDisconnected(SteamInputDeviceDisconnected_t *cb) {
   emit qmlControllersChanged();
 
   if (!m_controllers.empty()) {
-    updateActionSets();
+    m_currentController = Controller();
   }
 }
 
@@ -327,13 +308,13 @@ void QSteamInput::updateActionSets() {
     auto handle = SteamInput()->GetActionSetHandle(actionSet.first.toLocal8Bit());
     m_actionSets << ActionSet(handle, actionSet.first, getActions(handle, actionSet.second));
   }
-  SteamInput()->ActivateActionSet(m_currentController.handle(), m_actionSets.first().handle());
   emit actionSetsChanged();
 }
 
 void QSteamInput::onConfigurationLoaded(SteamInputConfigurationLoaded_t *) {
   runFrame();
   updateActionSets();
+  setActionSet(m_defaultActionSet);
   emit configurationLoaded();
 }
 
@@ -344,19 +325,30 @@ void QSteamInput::setActionSet(const QSteamworks::ActionSet &newActionSet) {
 
   if (m_actionSet == newActionSet)
     return;
+
   m_actionSet = newActionSet;
+
+  if (m_currentController.handle() != 0) {
+    SteamInput()->ActivateActionSet(m_currentController.handle(), m_actionSet.handle());
+  }
+
   emit actionSetChanged();
 }
 
 const QString &QSteamInput::qmlActionSet() const { return m_actionSet.name(); }
 
 void QSteamInput::setActionSet(const QString &newActionSet) {
-  if (m_actionSet.name() == newActionSet)
+  if (m_actionSet.name() == newActionSet || newActionSet == "")
     return;
+
+  if (!m_iga.actionSets().contains(newActionSet)) {
+    throw std::runtime_error(QString("Cannot find action set %1").arg(newActionSet).toLocal8Bit());
+  }
 
   foreach (auto &actionSet, m_actionSets) {
     if (actionSet.name() == newActionSet) {
-      SteamInput()->ActivateActionSet(m_currentController.handle(), actionSet.handle());
+      setActionSet(actionSet);
+      return;
     }
   }
 }
@@ -386,3 +378,42 @@ void QSteamInput::setVibrationSpeedRight(unsigned short newVibrationSpeedRight) 
 }
 
 const QVariantMap &QSteamInput::actionStates() const { return m_actionStates; }
+
+const QString &QSteamInput::igaPath() const { return m_igaPath; }
+
+void QSteamInput::setIgaPath(const QString &newIgaPath) {
+  if (m_igaPath == newIgaPath)
+    return;
+
+  m_igaPath = newIgaPath;
+  emit igaPathChanged();
+
+  if (!SteamInput()->Init(true)) {
+    throw InitializationFailed("Cannot initialize SteamInput");
+  }
+
+  if (!SteamInput()->SetInputActionManifestFilePath(m_igaPath.toLocal8Bit())) {
+    throw InitializationFailed(QString("Cannot read IGA file: %1").arg(m_igaPath));
+  }
+
+  auto vdfContent = readFile(newIgaPath);
+  m_iga = IGA(VDFParser().parse(vdfContent));
+  emit igaChanged();
+
+  SteamInput()->EnableDeviceCallbacks();
+
+  auto cb = [](SteamInputActionEvent_t *event) {
+    QSteamInput::instance()->onActionEvent(event); // Dirty hack, but I didn't find a better way
+  };
+
+  SteamInput()->EnableActionEventCallbacks(cb);
+}
+
+const QString &QSteamInput::defaultActionSet() const { return m_defaultActionSet; }
+
+void QSteamInput::setDefaultActionSet(const QString &newDefaultActionSet) {
+  if (m_defaultActionSet == newDefaultActionSet)
+    return;
+  m_defaultActionSet = newDefaultActionSet;
+  emit defaultActionSetChanged();
+}

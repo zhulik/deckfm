@@ -26,22 +26,13 @@ Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
 
   qmlRegisterType<FolderListModel>("DeckFM", 1, 0, "FolderListModel");
 
+  qmlRegisterType<QSteamworks::QSteamUtils>("Steamworks", 1, 0, "SteamUtils");
+  qmlRegisterType<QSteamworks::QSteamInput>("Steamworks", 1, 0, "SteamInput");
+
   m_engine = new QQmlApplicationEngine();
 
   try {
     m_steamworks = new QSteamworks::QSteamAPI(m_engine);
-    if (m_steamworks->steamUtils()->isSteamRunningOnSteamDeck()) {
-      setOverrideCursor(QCursor(Qt::BlankCursor));
-    }
-
-    m_engine->rootContext()->setContextProperty("steam_utils", m_steamworks->steamUtils());
-    m_engine->rootContext()->setContextProperty("steam_input", m_steamworks->steamInput());
-
-    // initialize steam input and set default action set,
-    // it's seems to be guaranteed configurationLoaded will be emitted with some delay,
-    // so it's ok to connect to it here
-    connect(m_steamworks->steamInput(), &QSteamworks::QSteamInput::configurationLoaded,
-            [this]() { m_steamworks->steamInput()->setActionSet("folder_navigation"); });
   } catch (QSteamworks::InitializationFailed &e) {
     qDebug() << "\n" << e.what() << "\n";
   }
@@ -56,10 +47,7 @@ Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
                      [mainWindow, this]() { m_activeFocusItem = mainWindow->activeFocusItem(); });
 
     if (m_steamworks != nullptr) {
-      auto runCallbacks = [this]() {
-        m_steamworks->runCallbacks();
-        m_steamworks->steamInput()->runFrame();
-      };
+      auto runCallbacks = [this]() { m_steamworks->runCallbacks(); };
 
       auto callbackTimer = new QTimer(m_engine);
       QObject::connect(callbackTimer, &QTimer::timeout, runCallbacks);

@@ -15,7 +15,7 @@ import "../QSteamworks" as Steamworks
 Item {
     id: root
 
-    signal fileOpened(string path)
+    signal fileOpened(string path, string mime)
 
     property alias path: fs_model.path
 
@@ -26,15 +26,18 @@ Item {
     }
 
     function cdIndex(index) {
-        if (fs_model.get(index).isDir) {
-            fs_model.path = fs_model.get(index).path
+        const item = fs_model.get(index)
+
+        if (item.isDir) {
+            fs_model.path = item.path
             return
         }
-        root.fileOpened(fs_model.get(index).path)
+        root.fileOpened(item.path, item.mime)
     }
 
     Steamworks.SteamInputScope {
-        enabled: true
+        enabled: parent.activeFocus
+        actionSet: "folder_navigation"
 
         pressHandlers: {
             "folder_down": view.moveCurrentIndexDown,
