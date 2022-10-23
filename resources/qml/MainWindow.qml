@@ -38,6 +38,8 @@ ApplicationWindow {
 
             url.slice(6, url.length)
         }
+
+        defaultActionSet: "folder_navigation"
     }
 
     header: Header {

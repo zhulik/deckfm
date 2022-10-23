@@ -132,6 +132,7 @@ class QSteamInput : public QObject {
 
   Q_PROPERTY(QVariantMap actionStates READ actionStates NOTIFY actionStatesChanged)
   Q_PROPERTY(QString igaPath READ igaPath WRITE setIgaPath NOTIFY igaPathChanged)
+  Q_PROPERTY(QString defaultActionSet READ defaultActionSet WRITE setDefaultActionSet NOTIFY defaultActionSetChanged)
 
   STEAM_CALLBACK(QSteamInput, onControllerConnected, SteamInputDeviceConnected_t);
   STEAM_CALLBACK(QSteamInput, onControllerDisconnected, SteamInputDeviceDisconnected_t);
@@ -177,6 +178,9 @@ public:
   const QString &igaPath() const;
   void setIgaPath(const QString &newIgaPath);
 
+  const QString &defaultActionSet() const;
+  void setDefaultActionSet(const QString &newDefaultActionSet);
+
 signals:
   void qmlControllersChanged();
   void inputEvent(QSteamworks::InputEvent);
@@ -199,6 +203,8 @@ signals:
   void igaChanged();
 
   void igaPathChanged();
+
+  void defaultActionSetChanged();
 
 private:
   IGA m_iga;
@@ -226,6 +232,7 @@ private:
   void updateActionStates(const Action &action, bool digitalState, float analogX, float analogY);
   void sendInputEvents(InputEvent iEvent);
   QString m_igaPath;
+  QString m_defaultActionSet;
 };
 } // namespace QSteamworks
 

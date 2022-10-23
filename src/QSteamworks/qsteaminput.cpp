@@ -314,6 +314,7 @@ void QSteamInput::updateActionSets() {
 void QSteamInput::onConfigurationLoaded(SteamInputConfigurationLoaded_t *) {
   runFrame();
   updateActionSets();
+  setActionSet(m_defaultActionSet);
   emit configurationLoaded();
 }
 
@@ -406,4 +407,13 @@ void QSteamInput::setIgaPath(const QString &newIgaPath) {
   };
 
   SteamInput()->EnableActionEventCallbacks(cb);
+}
+
+const QString &QSteamInput::defaultActionSet() const { return m_defaultActionSet; }
+
+void QSteamInput::setDefaultActionSet(const QString &newDefaultActionSet) {
+  if (m_defaultActionSet == newDefaultActionSet)
+    return;
+  m_defaultActionSet = newDefaultActionSet;
+  emit defaultActionSetChanged();
 }
