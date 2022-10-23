@@ -23,14 +23,15 @@ Rectangle {
         analogHandlers: {
             "media_seek": (e) => {
                 const dx = e.analogX * 100
+                slider.value = slider.value + dx
 
-                if (actionStates["media_seek_control"]) {
-                    if (e.analogX > 5) {
-                        slider.value = slider.value + dx
-                    }
-                } else {
-                    slider.value = slider.value + dx
-                }
+//                if (actionStates["media_seek_control"]) {
+//                    if (e.analogX > 5) {
+//                        slider.value = slider.value + dx
+//                    }
+//                } else {
+//                    slider.value = slider.value + dx
+//                }
             }
         }
     }
