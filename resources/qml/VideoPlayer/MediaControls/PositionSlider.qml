@@ -22,7 +22,7 @@ Rectangle {
 
         analogHandlers: {
             "media_seek": (e) => {
-                const dx = e.analogX
+                const dx = e.analogX * 100
 
                 if (actionStates["media_seek_control"]) {
                     if (e.analogX > 5) {
@@ -90,7 +90,7 @@ Rectangle {
     }
 
     onPositionChanged: {
-        if (!slider.pressed) {
+        if (!root.pressed) {
             slider.value = position / 1000
             return
         }
