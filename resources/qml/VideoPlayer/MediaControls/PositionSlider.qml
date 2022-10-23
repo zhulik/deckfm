@@ -24,13 +24,13 @@ Rectangle {
             "media_seek": (e) => {
                 const abs = Math.abs(e.analogX)
 
-                if (abs < 1) {
+                if (abs <= 1) {
                     return
                 }
 
                 const s = e.analogX / abs
 
-                let acceleration = abs / 20 + 1
+                const acceleration = abs / 50 + 1
 
                 slider.value =+ Math.pow(abs, acceleration) * s * 100
             }
