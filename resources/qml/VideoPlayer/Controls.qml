@@ -2,31 +2,12 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
+import "MediaControls" as MC
+
 Item {
     id: root
 
-    property var video
-
-    opacity: 0
-
-    function show() {
-        opacity = 1
-        hideTimer.restart()
-    }
-
-    function hide() {
-        opacity = 0
-    }
-
-    Timer {
-        id: hideTimer
-        interval: 2000
-
-        running: opacity > 0
-
-
-        onTriggered: hide()
-    }
+    property Video video
 
     Rectangle {
         anchors.fill: parent
@@ -41,5 +22,28 @@ Item {
             text: `Error: ${video.errorString}`
         }
 
+        MC.PositionSlider {
+            id: slider
+            Layout.fillWidth: parent
+
+            position: video.position
+            duration: video.duration
+
+            onPressedChanged: {
+                if (pressed) {
+                    video.pause()
+                } else {
+                    video.play()
+                }
+            }
+
+            onSeek: {
+                video.seek(position, debounce)
+            }
+        }
+
+        Item {
+            Layout.fillHeight: parent
+        }
     }
 }
