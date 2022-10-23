@@ -23,16 +23,30 @@ Item {
             opacity: 0.4
         }
 
+        Steamworks.SteamInputScope {
+            id: input
+            enabled: deckControlsEnabled
+
+            pressHandlers: {
+                "media_playpause": () => { video.playPause() },
+            }
+        }
+
+        Keys.onPressed: {
+            event.accepted = true
+
+            switch (event.key) {
+            case Qt.Key_Space:
+                video.playPause()
+                break
+            }
+        }
+
         ColumnLayout {
             anchors.fill: parent
 
             Label {
                 text: `Error: ${video.errorString}`
-            }
-
-            Steamworks.SteamInputScope {
-                id: input
-                enabled: deckControlsEnabled
             }
 
             MC.PositionSlider {

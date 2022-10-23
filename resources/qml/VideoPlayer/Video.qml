@@ -6,6 +6,7 @@ Item {
     property alias source: video.source
     property alias position: video.position
     property alias duration: video.duration
+    property alias playbackState: video.playbackState
 
     property alias errorString: video.errorString
 
@@ -15,6 +16,14 @@ Item {
 
     function pause() {
         video.pause()
+    }
+
+    function playPause()  {
+        if (playbackState == M.MediaPlayer.PlayingState) {
+           pause()
+        } else {
+            play()
+        }
     }
 
     function seek(position, debounce = true) {
