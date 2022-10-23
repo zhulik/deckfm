@@ -10,11 +10,35 @@ Rectangle {
     property int duration
     property int position
 
+    property int moveStartPosition: 0
+    readonly property alias selectedPosition: slider.value
+
     property bool deckControlsEnabled: false
 
     property bool pressed: slider.pressed || input.actionStates["media_seek_control"] || false
 
     signal seek(int position, bool debounce)
+
+    function timeToHuman(mils, includeSign = false) {
+        const abs = Math.abs(mils)
+
+        let sign = mils / abs >= 0 ? "+" : "-"
+        sign = includeSign ? sign : ""
+
+        mils = abs
+
+        let secs = Math.round(mils / 1000);
+        let mins = Math.floor(secs / 60)
+        secs = String(secs % 60).padStart(2, '0')
+        const hours = Math.floor(mins / 60)
+        mins = String(mins % 60).padStart(2, '0')
+
+        if (hours == 0) {
+            return `${sign}${mins}:${secs}`
+        }
+
+        return `${sign}${String(hours).padStart(2, '0')}:${mins}:${secs}`
+    }
 
     Steamworks.SteamInputScope {
         id: input
@@ -44,7 +68,7 @@ Rectangle {
             Layout.fillWidth: parent
 
             Label {
-                text: slider.timeToHuman(0)
+                text: root.timeToHuman(0)
             }
 
             Item {
@@ -52,7 +76,7 @@ Rectangle {
             }
 
             Label {
-                text: slider.timeToHuman(duration)
+                text: root.timeToHuman(duration)
             }
         }
 
@@ -64,26 +88,12 @@ Rectangle {
             to: duration
             stepSize: 100
 
-            function timeToHuman(mils) {
-                let secs = Math.round(mils / 1000);
-                let mins = Math.floor(secs / 60)
-                secs = String(secs % 60).padStart(2, '0')
-                const hours = Math.floor(mins / 60)
-                mins = String(mins % 60).padStart(2, '0')
-
-                if (hours == 0) {
-                    return `${mins}:${secs}`
-                }
-
-                return `${String(hours).padStart(2, '0')}:${mins}:${secs}`
-            }
-
             onValueChanged: root.seek(value, true)
         }
     }
 
     Label {
-        text: slider.timeToHuman(position)
+        text: root.timeToHuman(position)
 
         y: 0
         x: slider.visualPosition * slider.width - width / 2
@@ -99,6 +109,9 @@ Rectangle {
     onPressedChanged: {
         if (!pressed) {
             root.seek(slider.value, false)
+            moveStartPosition = 0
+        } else {
+            moveStartPosition = position
         }
     }
 

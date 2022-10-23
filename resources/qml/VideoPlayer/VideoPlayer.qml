@@ -25,13 +25,10 @@ Item {
 
     Controls {
         id: controls
-        width: parent.width
-        height: 100
+        anchors.fill: parent
 
         deckControlsEnabled: root.activeFocus
 
         video: video
-
-        anchors.bottom: parent.bottom
     }
 }

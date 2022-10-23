@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
+import "../QSteamworks" as Steamworks
 import "MediaControls" as MC
 
 Item {
@@ -10,43 +11,62 @@ Item {
     property Video video
     property alias deckControlsEnabled: slider.deckControlsEnabled
 
-    Rectangle {
-        anchors.fill: parent
-        color: "green"
-        opacity: 0.4
-    }
+    Item {
+        width: parent.width
+        height: 100
+        anchors.bottom: parent.bottom
 
-    ColumnLayout {
-        anchors.fill: parent
 
-        Label {
-            text: `Error: ${video.errorString}`
+        Rectangle {
+            anchors.fill: parent
+            color: "green"
+            opacity: 0.4
         }
 
-        MC.PositionSlider {
-            id: slider
-            Layout.fillWidth: parent
+        ColumnLayout {
+            anchors.fill: parent
 
-            deckControlsEnabled: deckControlsEnabled
+            Label {
+                text: `Error: ${video.errorString}`
+            }
 
-            position: video.position
-            duration: video.duration
+            Steamworks.SteamInputScope {
+                id: input
+                enabled: deckControlsEnabled
+            }
 
-            onPressedChanged: {
-                if (pressed) {
-                    video.pause()
-                } else {
-                    video.play()
+            MC.PositionSlider {
+                id: slider
+                Layout.fillWidth: parent
+
+                deckControlsEnabled: deckControlsEnabled
+
+                position: video.position
+                duration: video.duration
+
+                onPressedChanged: {
+                    if (pressed) {
+                        video.pause()
+                    } else {
+                        video.play()
+                    }
+                }
+
+                onSeek: {
+                    video.seek(position, debounce)
                 }
             }
 
-            onSeek: {
-                video.seek(position, debounce)
+            Item {
+                Layout.fillHeight: parent
             }
         }
+    }
 
-        Item {
-            Layout.fillHeight: parent
-        }
+    Label {
+        visible: slider.pressed
+        text: slider.timeToHuman(slider.selectedPosition - slider.moveStartPosition, true)
+        font.pointSize: 128
+        anchors.centerIn: parent
     }
 }
