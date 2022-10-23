@@ -24,12 +24,12 @@ Rectangle {
             "media_seek": (e) => {
                 const dx = e.analogX
 
-                if (input.actionStates["media_seek_control"]) {
+                if (actionStates["media_seek_control"]) {
                     if (e.analogX > 5) {
-                        slider.value = slider.value + x
+                        slider.value = slider.value + dx
                     }
                 } else {
-                    slider.value = slider.value + x
+                    slider.value = slider.value + dx
                 }
             }
         }
