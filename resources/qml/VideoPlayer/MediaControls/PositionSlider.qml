@@ -63,7 +63,7 @@ Rectangle {
             stepSize: 100
 
             function timeToHuman(mils) {
-                let secs = Math.round(mils);
+                let secs = Math.round(mils / 1000);
                 let mins = Math.floor(secs / 60)
                 secs = secs % 60
                 const hours = Math.floor(mins / 60)
