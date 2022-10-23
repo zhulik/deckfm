@@ -13,8 +13,12 @@ import "MainWindow.js" as JS
 
 import "QSteamworks" as Steamworks
 
+import DeckFM 1.0
+
 ApplicationWindow {
     id: mainWindow
+
+    property string openFile
 
     Material.theme: Material.Dark
 
@@ -104,7 +108,7 @@ ApplicationWindow {
             id: directoryView
 
             onFileOpened: {
-                JS.openFile(path, mime)
+                JS.openFile(path)
             }
         }
     }
@@ -126,5 +130,9 @@ ApplicationWindow {
 
     Settings {
         property alias path: directoryView.path
+    }
+
+    onOpenFileChanged: {
+        JS.openFile(openFile)
     }
 }

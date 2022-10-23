@@ -11,6 +11,7 @@
 
 #include "application.h"
 #include "folderlistmodel.h"
+#include "fshelpers.h"
 
 #include "QSteamworks/errors.h"
 #include "QSteamworks/qsteamapi.h"
@@ -28,6 +29,7 @@ Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
 
   qmlRegisterType<QSteamworks::QSteamUtils>("Steamworks", 1, 0, "SteamUtils");
   qmlRegisterType<QSteamworks::QSteamInput>("Steamworks", 1, 0, "SteamInput");
+  qmlRegisterSingletonInstance("DeckFM", 1, 0, "FSHelpers", new FSHelpers());
 
   m_engine = new QQmlApplicationEngine();
 
@@ -55,15 +57,13 @@ Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
 
       QObject::connect(mainWindow, &QQuickWindow::frameSwapped, runCallbacks);
     }
+
+    if (arguments().count() > 1) {
+      mainWindow->setProperty("openFile", arguments()[1]);
+    }
   });
 
-  QString qmlPath = "resources/qml/MainWindow.qml";
-
-  if (arguments().count() > 1) {
-    qmlPath = arguments().at(1);
-  }
-
-  m_engine->load(qmlPath);
+  m_engine->load("resources/qml/MainWindow.qml");
 }
 
 Application::~Application() { delete m_engine; }

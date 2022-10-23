@@ -1,4 +1,6 @@
-function openFile(path, mime) {
+function openFile(path) {
+    const mime = FSHelpers.mime(path)
+
     if (mime.split("/")[0] === "video")  {
         loadQMLApp("VideoPlayer/VideoPlayer.qml", p => p.source = path)
     }

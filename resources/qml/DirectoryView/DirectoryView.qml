@@ -15,7 +15,7 @@ import "../QSteamworks" as Steamworks
 Item {
     id: root
 
-    signal fileOpened(string path, string mime)
+    signal fileOpened(string path)
 
     property alias path: fs_model.path
 
@@ -32,7 +32,7 @@ Item {
             fs_model.path = item.path
             return
         }
-        root.fileOpened(item.path, item.mime)
+        root.fileOpened(item.path)
     }
 
     Steamworks.SteamInputScope {
