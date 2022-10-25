@@ -18,17 +18,21 @@ Item {
 
         property point prevScroll
 
-        analogHandlers: {
-            "browser_scroll": (e) => {
-                const dx = Math.abs(e.analogX)
-                const dy = Math.abs(e.analogY)
-
-                if (prevScroll.x !== dx || prevScroll.y !== dy) {
-                    webView.runJavaScript(`window.scrollBy(${dx}, ${dy})`)
-                    prevScroll = Qt.point(dx, dy)
-                }
-            }
+        pressHandlers: {
+            'browser_refresh': () => webView.runJavaScript(`window.scrollBy(0, 100)`)
         }
+
+//        analogHandlers: {
+//            "browser_scroll": (e) => {
+//                const dx = Math.abs(e.analogX)
+//                const dy = Math.abs(e.analogY)
+
+//                if (prevScroll.x !== dx || prevScroll.y !== dy) {
+//                    webView.runJavaScript(`window.scrollBy(${dx}, ${dy})`)
+//                    prevScroll = Qt.point(dx, dy)
+//                }
+//            }
+//        }
         actionSet: "browser_navigation"
     }
 }
