@@ -8,18 +8,18 @@ Item {
 
     WebEngineView {
         id: webView
-
         anchors.fill: parent
+
         url: "https://stackoverflow.com/"
     }
 
-    Steamworks.SteamInputScope {
-        enabled: root.activeFocus
+//    Steamworks.SteamInputScope {
+//        enabled: root.activeFocus
 
-        analogHandlers: {
-            "browser_scroll": (e) => webView.runJavaScript(`window.scrollBy(${e.analogX}, ${e.analogY})`)
-        }
+//        analogHandlers: {
+//            "browser_scroll": (e) => webView.runJavaScript(`window.scrollBy(${e.analogX}, ${e.analogY})`)
+//        }
 
-        actionSet: "browser_navigation"
-    }
+//        actionSet: "browser_navigation"
+//    }
 }
