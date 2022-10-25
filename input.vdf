@@ -18,6 +18,7 @@
 				"folder_activate"		"#FolderActivate"
 				"folder_go_up"		"#FolderGoUp"
 				"folder_go_home"		"#FolderGoHome"
+				"folder_debug"		"#FolderDebug"
 			}
 			"StickPadGyro"
 			{
@@ -35,6 +36,8 @@
 			"Button"
 			{
 				"media_playpause"		"#MediaPlayPause"
+				"media_seek_control"		"#MediaSeekControl"
+				"media_debug"		"#MediaDebug"
 			}
 			"StickPadGyro"
 			{
