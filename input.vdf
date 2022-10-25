@@ -45,6 +45,24 @@
 				}
 			}
 		}
+		"browser_navigation"
+		{
+			"title"		"#BroserNavigation"
+			"legacy_set"		"0"
+			"StickPadGyro"
+			{
+				"browser_scroll"
+				{
+					"title"		"#BrowserScroll"
+					"input_mode"		"absolute_mouse"
+				}
+				"browser_cursor"
+				{
+					"title"		"#BrowserCursor"
+					"input_mode"		"absolute_mouse"
+				}
+			}
+		}
 		"deck_controller_raw"
 		{
 			"title"		"#DeckControllerRaw"

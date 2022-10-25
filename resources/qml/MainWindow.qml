@@ -79,12 +79,6 @@ ApplicationWindow {
         onActivated: debugOverlay.toggle()
     }
 
-    Steamworks.SteamInputScope {
-        pressHandlers: {
-            "folder_go_home": debugOverlay.toggle
-        }
-    }
-
     Drawer {
         id: drawer
         y: header.height
