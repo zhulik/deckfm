@@ -13,13 +13,23 @@ Item {
         url: "https://stackoverflow.com/"
     }
 
-//    Steamworks.SteamInputScope {
-//        enabled: root.activeFocus
+    Steamworks.SteamInputScope {
+        enabled: root.activeFocus
 
-//        analogHandlers: {
-//            "browser_scroll": (e) => webView.runJavaScript(`window.scrollBy(${e.analogX}, ${e.analogY})`)
-//        }
+        property point prevScroll
 
-//        actionSet: "browser_navigation"
-//    }
+        analogHandlers: {
+            "browser_scroll": (e) => {
+                const dx = Math.abs(e.analogX)
+                const dy = Math.abs(e.analogY)
+
+                if (prevScroll.x !== dx || prevScroll.y !== dy) {
+                    webView.runJavaScript(`window.scrollBy(${dx}, ${dy})`)
+                    prevScroll = Qt.point(dx, dy)
+                }
+            }
+        }
+
+        actionSet: "browser_navigation"
+    }
 }
