@@ -6,6 +6,8 @@ Item {
 
     property bool enabled: true
 
+
+    // TODO empty actionStates if disabled, and rebind if enabled
     property string actionSet: steam_input.actionSet
     property var actionStates: steam_input.actionStates
 

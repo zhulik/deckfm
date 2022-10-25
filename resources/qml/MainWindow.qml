@@ -79,6 +79,13 @@ ApplicationWindow {
         onActivated: debugOverlay.toggle()
     }
 
+    Steamworks.SteamInputScope {
+        pressHandlers: {
+            "folder_debug": debugOverlay.toggle,
+            "media_debug": debugOverlay.toggle
+        }
+    }
+
     Drawer {
         id: drawer
         y: header.height
