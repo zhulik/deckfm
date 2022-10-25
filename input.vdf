@@ -64,10 +64,10 @@
 					"title"		"#BrowserCursor"
 					"input_mode"		"absolute_mouse"
 				}
-				"Button"
-				{
-					"browser_refresh"		"#BrowserRefresh"
-				}
+			}
+			"Button"
+			{
+				"browser_refresh"		"#BrowserRefresh"
 			}
 		}
 		"deck_controller_raw"
