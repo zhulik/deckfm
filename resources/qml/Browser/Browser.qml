@@ -29,7 +29,6 @@ Item {
                 }
             }
         }
-
         actionSet: "browser_navigation"
     }
 }

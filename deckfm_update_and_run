@@ -24,4 +24,4 @@ make -j8
 
 cd ..
 
-$(pwd)/deckfm.sh
+exec $(pwd)/deckfm.sh
