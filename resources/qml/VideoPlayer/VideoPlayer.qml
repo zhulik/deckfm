@@ -1,11 +1,18 @@
 import QtQuick 2.15
-import Qt.labs.platform 1.1
+import QtQuick.Controls 2.15
 
 import "../QSteamworks" as Steamworks
 
 Item {
     id: root
+
     property alias source: video.source
+
+    MouseArea {
+        anchors.fill: parent
+        hoverEnabled: true
+        onPositionChanged: controls.show()
+    }
 
     Rectangle {
         anchors.fill: parent
@@ -15,6 +22,18 @@ Item {
     Video {
         id: video
         anchors.fill: parent
+    }
+
+    Dialog {
+        id: errorDialog
+        anchors.centerIn: parent
+
+        modal: true
+        visible: video.errorString != ""
+        title: `Can't play video: ${video.errorString}`
+        standardButtons: Dialog.Ok
+
+        onClosed: root.visible = false
     }
 
     Steamworks.SteamInputScope {

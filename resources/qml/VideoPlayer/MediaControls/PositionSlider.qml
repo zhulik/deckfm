@@ -4,18 +4,20 @@ import QtQuick.Layouts 1.15
 
 import "../../QSteamworks" as Steamworks
 
-Rectangle {
+Item {
     id: root
 
-    property int duration
+    height: layout.height
+
+    property alias duration: slider.to
     property int position
 
     property int moveStartPosition: 0
     readonly property alias selectedPosition: slider.value
 
-    property bool deckControlsEnabled: false
+    property alias deckControlsEnabled: input.enabled
 
-    property bool pressed: slider.pressed || input.actionStates["media_seek_control"] || false
+    readonly property bool pressed: slider.pressed || input.actionStates["media_seek_control"] || false
 
     signal seek(int position, bool debounce)
 
@@ -62,22 +64,15 @@ Rectangle {
     }
 
     ColumnLayout {
-        anchors.fill: parent
+        id: layout
+        spacing: -10
+        width: parent.width
+//        anchors.fill: parent
 
-        RowLayout {
-            Layout.fillWidth: parent
 
-            Label {
-                text: root.timeToHuman(0)
-            }
-
-            Item {
-                Layout.fillWidth: parent
-            }
-
-            Label {
-                text: root.timeToHuman(duration)
-            }
+        Label {
+            font.pointSize: 14
+            text: `${root.timeToHuman(position)} / ${root.timeToHuman(duration)}`
         }
 
         Slider {
@@ -90,13 +85,6 @@ Rectangle {
 
             onValueChanged: root.seek(value, true)
         }
-    }
-
-    Label {
-        text: root.timeToHuman(position)
-
-        y: 0
-        x: slider.visualPosition * slider.width - width / 2
     }
 
     onPositionChanged: {

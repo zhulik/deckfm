@@ -3,6 +3,7 @@ function openFile(path) {
 
     if (mime.split("/")[0] === "video")  {
         loadQMLApp("VideoPlayer/VideoPlayer.qml", p => p.source = path)
+        return
     }
 
     if (mime === "text/x-qml") {
