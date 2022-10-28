@@ -5,6 +5,7 @@ import "../QSteamworks" as Steamworks
 
 Item {
     id: root
+
     property alias source: video.source
 
     Rectangle {

@@ -64,20 +64,12 @@ Rectangle {
     ColumnLayout {
         anchors.fill: parent
 
-        RowLayout {
-            Layout.fillWidth: parent
+        spacing: -10
 
-            Label {
-                text: root.timeToHuman(0)
-            }
 
-            Item {
-                Layout.fillWidth: parent
-            }
-
-            Label {
-                text: root.timeToHuman(duration)
-            }
+        Label {
+            font.pointSize: 14
+            text: `${root.timeToHuman(position)} / ${root.timeToHuman(duration)}`
         }
 
         Slider {
@@ -90,13 +82,6 @@ Rectangle {
 
             onValueChanged: root.seek(value, true)
         }
-    }
-
-    Label {
-        text: root.timeToHuman(position)
-
-        y: 0
-        x: slider.visualPosition * slider.width - width / 2
     }
 
     onPositionChanged: {

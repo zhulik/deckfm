@@ -13,9 +13,8 @@ Item {
 
     Item {
         width: parent.width
-        height: 100
+        height: 45
         anchors.bottom: parent.bottom
-
 
         Rectangle {
             anchors.fill: parent
@@ -42,33 +41,26 @@ Item {
             }
         }
 
-        ColumnLayout {
-            anchors.fill: parent
 
-            MC.PositionSlider {
-                id: slider
-                Layout.fillWidth: parent
+        MC.PositionSlider {
+            id: slider
+            width: parent.width
 
-                deckControlsEnabled: deckControlsEnabled
+            deckControlsEnabled: deckControlsEnabled
 
-                position: video.position
-                duration: video.duration
+            position: video.position
+            duration: video.duration
 
-                onPressedChanged: {
-                    if (pressed) {
-                        video.pause()
-                    } else {
-                        video.play()
-                    }
-                }
-
-                onSeek: {
-                    video.seek(position, debounce)
+            onPressedChanged: {
+                if (pressed) {
+                    video.pause()
+                } else {
+                    video.play()
                 }
             }
 
-            Item {
-                Layout.fillHeight: parent
+            onSeek: {
+                video.seek(position, debounce)
             }
         }
     }
