@@ -9,15 +9,15 @@ Item {
 
     height: layout.height
 
-    property int duration
+    property alias duration: slider.to
     property int position
 
     property int moveStartPosition: 0
     readonly property alias selectedPosition: slider.value
 
-    property bool deckControlsEnabled: false
+    property alias deckControlsEnabled: input.enabled
 
-    property bool pressed: slider.pressed || input.actionStates["media_seek_control"] || false
+    readonly property bool pressed: slider.pressed || input.actionStates["media_seek_control"] || false
 
     signal seek(int position, bool debounce)
 

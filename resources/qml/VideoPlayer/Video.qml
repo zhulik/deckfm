@@ -2,7 +2,11 @@ import QtQuick 2.15
 
 import QtMultimedia 5.15 as M
 
+import DeckFM 1.0
+
 Item {
+    property string name: FSHelpers.fileName(source)
+
     property alias source: video.source
     property alias position: video.position
     property alias duration: video.duration

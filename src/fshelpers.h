@@ -11,5 +11,8 @@ public:
   Q_INVOKABLE
   QString mime(const QString &path) const;
 
+  Q_INVOKABLE
+  QString fileName(const QUrl &url) const;
+
 signals:
 };

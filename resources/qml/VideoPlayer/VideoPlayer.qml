@@ -8,6 +8,12 @@ Item {
 
     property alias source: video.source
 
+    MouseArea {
+        anchors.fill: parent
+        hoverEnabled: true
+        onPositionChanged: controls.show()
+    }
+
     Rectangle {
         anchors.fill: parent
         color: "black"
