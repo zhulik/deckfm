@@ -28,7 +28,7 @@ Item {
             item.forceActiveFocus()
 
             item.onVisibleChanged.connect(() => {
-                                      if (!item.visible) {
+                                      if (!loader.item.visible) {
                                           root.close()
                                       }
                                   })

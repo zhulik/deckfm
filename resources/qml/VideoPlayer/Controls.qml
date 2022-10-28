@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import QtMultimedia 5.15 as M
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
@@ -12,13 +13,11 @@ Item {
     property alias deckControlsEnabled: slider.deckControlsEnabled
 
     Item {
-        width: parent.width
-        height: 45
-        anchors.bottom: parent.bottom
+        anchors.fill: parent
 
         Rectangle {
             anchors.fill: parent
-            color: "green"
+            color: "black"
             opacity: 0.4
         }
 
@@ -27,15 +26,25 @@ Item {
             enabled: deckControlsEnabled
 
             pressHandlers: {
-                "media_playpause": () => { video.playPause() },
+                "media_playpause": video.playPause
+            }
+        }
+
+        MC.Buttons {
+            height: 80
+            spacing: 60
+            playing: video.playbackState === M.MediaPlayer.PlayingState
+
+            anchors.centerIn: parent
+            onPlayPausePressed: {
+                video.playPause()
             }
         }
 
         Keys.onPressed: {
-            event.accepted = true
-
             switch (event.key) {
             case Qt.Key_Space:
+                event.accepted = true
                 video.playPause()
                 break
             }
@@ -44,7 +53,9 @@ Item {
 
         MC.PositionSlider {
             id: slider
+
             width: parent.width
+            anchors.bottom: parent.bottom
 
             deckControlsEnabled: deckControlsEnabled
 

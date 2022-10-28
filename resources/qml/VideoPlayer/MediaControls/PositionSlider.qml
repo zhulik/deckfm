@@ -4,8 +4,10 @@ import QtQuick.Layouts 1.15
 
 import "../../QSteamworks" as Steamworks
 
-Rectangle {
+Item {
     id: root
+
+    height: layout.height
 
     property int duration
     property int position
@@ -62,9 +64,10 @@ Rectangle {
     }
 
     ColumnLayout {
-        anchors.fill: parent
-
+        id: layout
         spacing: -10
+        width: parent.width
+//        anchors.fill: parent
 
 
         Label {

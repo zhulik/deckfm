@@ -30,7 +30,6 @@ Item {
         onClosed: root.visible = false
     }
 
-
     Steamworks.SteamInputScope {
         enabled: root.activeFocus
 
