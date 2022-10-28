@@ -388,8 +388,12 @@ void QSteamInput::setIgaPath(const QString &newIgaPath) {
   m_igaPath = newIgaPath;
   emit igaPathChanged();
 
+  if (SteamInput() == nullptr) {
+    throw InitializationFailed("Cannot initialize SteamInput: SteamAPI is not initialized.");
+  }
+
   if (!SteamInput()->Init(true)) {
-    throw InitializationFailed("Cannot initialize SteamInput");
+    throw InitializationFailed("Cannot initialize SteamInput: Init returned false.");
   }
 
   if (!SteamInput()->SetInputActionManifestFilePath(m_igaPath.toLocal8Bit())) {
