@@ -45,10 +45,6 @@ Item {
         ColumnLayout {
             anchors.fill: parent
 
-            Label {
-                text: `Error: ${video.errorString}`
-            }
-
             MC.PositionSlider {
                 id: slider
                 Layout.fillWidth: parent

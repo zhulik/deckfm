@@ -12,6 +12,11 @@ Item {
     signal closed()
     signal loaded()
 
+    function close() {
+        loader.source = ""
+        root.closed()
+    }
+
     onActiveFocusChanged: loader.item.forceActiveFocus()
 
     Loader {
@@ -21,6 +26,13 @@ Item {
 
         onLoaded: {
             item.forceActiveFocus()
+
+            item.onVisibleChanged.connect(() => {
+                                      if (!item.visible) {
+                                          root.close()
+                                      }
+                                  })
+
             root.loaded()
         }
     }
@@ -31,8 +43,7 @@ Item {
         iconName: "windowClose"
 
         onClicked: {
-            loader.source = ""
-            root.closed()
+            root.close()
         }
     }
 }

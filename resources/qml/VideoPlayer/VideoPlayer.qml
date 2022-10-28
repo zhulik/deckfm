@@ -1,5 +1,5 @@
 import QtQuick 2.15
-import Qt.labs.platform 1.1
+import QtQuick.Controls 2.15
 
 import "../QSteamworks" as Steamworks
 
@@ -16,6 +16,19 @@ Item {
         id: video
         anchors.fill: parent
     }
+
+    Dialog {
+        id: errorDialog
+        anchors.centerIn: parent
+
+        modal: true
+        visible: video.errorString != ""
+        title: `Can't play video: ${video.errorString}`
+        standardButtons: Dialog.Ok
+
+        onClosed: root.visible = false
+    }
+
 
     Steamworks.SteamInputScope {
         enabled: root.activeFocus
