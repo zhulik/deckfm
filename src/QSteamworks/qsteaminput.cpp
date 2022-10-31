@@ -451,5 +451,7 @@ void QSteamInput::setActionSetLayer(const QString &newActionSetLayer) {
       return;
     }
   }
+  m_currentActionSetLayer = ActionSetLayer(-1, "ERROR", QList<Action>());
+  emit actionSetLayerChanged();
   //  throw std::runtime_error(QString("Cannot find action set layer %1").arg(newActionSetLayer).toLocal8Bit());
 }
