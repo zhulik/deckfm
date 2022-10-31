@@ -23,6 +23,14 @@
 				"cancel"		"#Cancel"
 				"debug"		"#Debug"
 			}
+			"StickPadGyro"
+			{
+				"scroll"
+				{
+					"title"		"#Scroll"
+					"input_mode"		"absolute_mouse"
+				}
+			}
 			"Layers"
 			{
 				"media_controls"		"#MediaControlsLayer"
