@@ -95,6 +95,7 @@ ApplicationWindow {
 
     footer: Footer {
         visible: stackView.currentItem.showFooter
+        hintActions: stackView.currentItem.hintActions
     }
 
     StackView {

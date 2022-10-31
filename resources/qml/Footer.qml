@@ -4,7 +4,11 @@ import QtQuick.Layouts 1.15
 import "QSteamworks" as Steamworks
 
 ToolBar {
-    height: 40
+
+    property alias hintActions: repeater.model
+
+    height: 60
+
     Rectangle {
         anchors.fill: parent
 
@@ -12,15 +16,21 @@ ToolBar {
     }
 
     RowLayout {
+        spacing: 10
         anchors.fill: parent
+        anchors.leftMargin: 10
+        anchors.rightMargin: 11
 
-        Label {
-            font.pointSize: 24
-            text: `Action set: ${inputScope.actionSet}`
+        Item {
+            Layout.fillWidth: parent
         }
-    }
 
-    Steamworks.SteamInputScope {
-        id: inputScope
+        Repeater {
+            id: repeater
+
+            ActionLabel {
+                name: modelData
+            }
+        }
     }
 }
