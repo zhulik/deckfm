@@ -8,11 +8,11 @@ Label {
 
     text: name
 
-//    Connections {
-//        target: steam_input
+    Connections {
+        target: steam_input
 
-//        function onActionSetsChanged() {
+        function onActionSetsChanged() {
 //            root.text = steam_input.action(root.name).localizedName
-//        }
-//    }
+        }
+    }
 }
