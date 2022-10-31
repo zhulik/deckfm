@@ -8,6 +8,13 @@ Item {
 
     property alias source: video.source
 
+    signal closed()
+
+    property var deckfmSettings: ({
+                                      showCloseButton: controls.opacity === 1,
+                                      showFooter: false
+                                  })
+
     MouseArea {
         anchors.fill: parent
         hoverEnabled: true

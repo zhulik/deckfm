@@ -136,6 +136,7 @@ Item {
             cellWidth: Math.max(parent.width / 4, 300)
             cellHeight: 70
             clip: true
+            keyNavigationWraps: false
 
             boundsBehavior: Flickable.StopAtBounds
 
