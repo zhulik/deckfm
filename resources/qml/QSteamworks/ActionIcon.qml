@@ -8,6 +8,18 @@ Item {
 
     property string name
 
+    Timer {
+        running: true
+        repeat: true
+        interval: 1000
+
+        onTriggered: {
+            const name = root.name
+            root.name = ""
+            root.name = name
+        }
+    }
+
     Label {
         id: label
 
