@@ -9,17 +9,17 @@ static const QMap<QString, bool> actionTypes{{"Button", true}, {"StickPadGyro", 
 IGA::IGA() {}
 
 IGA::IGA(const QJsonObject &definition) {
-  auto actions = definition["Action Manifest"].toObject()["actions"].toObject();
+  auto manifest = definition["Action Manifest"].toObject();
+  auto actions = manifest["actions"].toObject();
 
   foreach (auto &actionSet, actions.toVariantMap().toStdMap()) {
-
     foreach (auto &type, actionTypes.toStdMap()) {
       foreach (auto &name, actionSet.second.toMap()[type.first].toMap().keys()) {
         m_actionSets[actionSet.first].append(ActionDefinition(name, type.first, actionSet.first, type.second));
       }
     }
   }
-  //    auto actionLayers = definition["Action Manifest"].toObject()["action_layers"].toObject();
+  auto actionLayers = manifest["action_layers"].toObject();
 }
 
 const QMap<QString, QList<ActionDefinition>> &IGA::actionSets() const { return m_actionSets; }
