@@ -21,6 +21,6 @@ Item {
     Label {
         id: label
 
-        text: `Action name: ${root.name}, action: ${JSON.stringify(steam_input.action(root.name))}`
+        text: `Action name: ${root.name}, glyphs: ${JSON.stringify(steam_input.action(root.name).glyphs)}`
     }
 }
