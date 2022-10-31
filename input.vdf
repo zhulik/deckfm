@@ -24,6 +24,11 @@
 				"debug"		"#Debug"
 			}
 		}
+		"folder_navigation"
+		{
+			"title"		"#FolderNavigation"
+			"legacy_set"		"1"
+		}
 	}
 	"action_layers"
 	{
