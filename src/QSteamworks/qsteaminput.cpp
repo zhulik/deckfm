@@ -446,7 +446,9 @@ const QSteamworks::ActionSetLayer &QSteamInput::currentActionSetLayer() const { 
 const QString &QSteamInput::qmlActionSetLayer() const { return m_currentActionSetLayer.name(); }
 
 void QSteamInput::setActionSetLayer(const QString &newActionSetLayer) {
-  m_currentActionSetLayer = ActionSetLayer(-1, newActionSetLayer, QList<Action>());
+  m_currentActionSetLayer = ActionSetLayer(
+      -1, QString("%1 %2").arg(m_currentActionSetLayer.name() == newActionSetLayer).arg(newActionSetLayer == ""),
+      QList<Action>());
   emit actionSetLayerChanged();
   return;
 
