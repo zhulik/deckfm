@@ -3,12 +3,23 @@ import QtQuick.Controls 2.15
 
 Item {
     id: root
-    width: height
+    width: label.width
+    height: label.height
 
     property string name
 
-    Label {
+    MouseArea {
         anchors.fill: parent
+
+        onClicked: {
+            const name = root.name
+            root.name = ""
+            root.name = name
+        }
+    }
+
+    Label {
+        id: label
 
         text: `Action name: ${root.name}, action: ${JSON.stringify(steam_input.action(root.name))}`
     }
