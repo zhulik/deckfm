@@ -35,7 +35,10 @@ class QSteamInput : public QObject {
 
   Q_PROPERTY(QVariantMap actionStates READ actionStates NOTIFY actionStatesChanged)
   Q_PROPERTY(QString igaPath READ igaPath WRITE setIgaPath NOTIFY igaPathChanged)
+
   Q_PROPERTY(QString defaultActionSet READ defaultActionSet WRITE setDefaultActionSet NOTIFY defaultActionSetChanged)
+  Q_PROPERTY(QString defaultActionSetLayer READ defaultActionSetLayer WRITE setDefaultActionSetLayer NOTIFY
+                 defaultActionSetLayerChanged)
 
   Q_PROPERTY(QSteamworks::ActionSet currentActionSet READ currentActionSet NOTIFY actionSetChanged)
 
@@ -96,6 +99,9 @@ public:
   const QString &qmlActionSetLayer() const;
   void setActionSetLayer(const QString &newActionSetLayer);
 
+  const QString &defaultActionSetLayer() const;
+  void setDefaultActionSetLayer(const QString &newDefaultActionSetLayer);
+
 signals:
   void qmlControllersChanged();
   void inputEvent(QSteamworks::InputEvent);
@@ -122,6 +128,8 @@ signals:
   void defaultActionSetChanged();
 
   void actionSetLayerChanged();
+
+  void defaultActionSetLayerChanged();
 
 private:
   IGA m_iga;
@@ -152,5 +160,6 @@ private:
 
   QList<ActionSetLayer> getActionSetLayers(const QList<ActionSetLayerDefinition> &) const;
   QSteamworks::ActionSetLayer m_currentActionSetLayer;
+  QString m_defaultActionSetLayer;
 };
 } // namespace QSteamworks

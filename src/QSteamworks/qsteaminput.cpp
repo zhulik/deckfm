@@ -328,6 +328,7 @@ void QSteamInput::onConfigurationLoaded(SteamInputConfigurationLoaded_t *) {
   runFrame();
   updateActionSets();
   setActionSet(m_defaultActionSet);
+  setActionSetLayer(m_defaultActionSetLayer);
 
   emit configurationLoaded();
 }
@@ -462,4 +463,13 @@ void QSteamInput::setActionSetLayer(const QString &newActionSetLayer) {
     }
   }
   throw std::runtime_error(QString("Cannot find action set layer %1").arg(newActionSetLayer).toLocal8Bit());
+}
+
+const QString &QSteamInput::defaultActionSetLayer() const { return m_defaultActionSetLayer; }
+
+void QSteamInput::setDefaultActionSetLayer(const QString &newDefaultActionSetLayer) {
+  if (m_defaultActionSetLayer == newDefaultActionSetLayer)
+    return;
+  m_defaultActionSetLayer = newDefaultActionSetLayer;
+  emit defaultActionSetLayerChanged();
 }

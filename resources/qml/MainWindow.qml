@@ -47,6 +47,7 @@ ApplicationWindow {
         }
 
         defaultActionSet: "deckfm"
+        defaultActionSetLayer: "file_manager"
     }
 
     header: Header {
