@@ -5,15 +5,6 @@
 	}
 	"actions"
 	{
-		"folder_navigation"
-		{
-			"title"		"#FolderNavigation"
-			"legacy_set"		"0"
-			"Button"
-			{
-				"folder_up"		"#FolderUp"
-			}
-		}
 		"deckfm"
 		{
 			"title"		"#DeckFM"
@@ -21,6 +12,9 @@
 			"Button"
 			{
 				"up"		"#Up"
+				"down"		"#Down"
+				"left"		"#Left"
+				"right"		"#Right"
 			}
 		}
 	}
