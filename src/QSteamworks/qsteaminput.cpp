@@ -328,9 +328,7 @@ void QSteamInput::onConfigurationLoaded(SteamInputConfigurationLoaded_t *) {
   runFrame();
   updateActionSets();
   setActionSet(m_defaultActionSet);
-  auto layer = m_currentActionSetLayer;
 
-  m_currentActionSetLayer = ActionSetLayer();
   setActionSetLayer(layer.name());
   emit configurationLoaded();
 }
@@ -446,7 +444,7 @@ const QSteamworks::ActionSetLayer &QSteamInput::currentActionSetLayer() const { 
 const QString &QSteamInput::qmlActionSetLayer() const { return m_currentActionSetLayer.name(); }
 
 void QSteamInput::setActionSetLayer(const QString &newActionSetLayer) {
-  if (m_actionSet.name() == "" || newActionSetLayer == "" || m_currentActionSetLayer.name() == newActionSetLayer)
+  if (m_actionSet.name() == "" || newActionSetLayer == "")
     return;
 
   m_currentActionSetLayer =
