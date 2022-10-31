@@ -36,3 +36,4 @@ private:
   QStringList m_glyphs;
 };
 } // namespace QSteamworks
+Q_DECLARE_METATYPE(QSteamworks::Action)

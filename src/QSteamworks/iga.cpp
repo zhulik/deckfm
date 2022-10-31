@@ -2,6 +2,7 @@
 
 #include "actiondefinition.h"
 #include "actionsetdefinition.h"
+#include "actionsetlayerdefinition.h"
 #include "iga.h"
 
 using namespace QSteamworks;
@@ -14,16 +15,35 @@ IGA::IGA(const QJsonObject &definition) {
   auto manifest = definition["Action Manifest"].toObject();
   auto actions = manifest["actions"].toObject();
 
-  foreach (auto &actionSet, actions.toVariantMap().toStdMap()) {
+  foreach (auto &layer, manifest["action_layers"].toObject().toVariantMap().toStdMap()) {
+    QList<ActionDefinition> actions;
     foreach (auto &type, actionTypes.toStdMap()) {
-      QList<ActionDefinition> actions;
+      foreach (auto &name, layer.second.toMap()[type.first].toMap().keys()) {
+        actions.append(ActionDefinition(name, type.first, layer.first, type.second));
+      }
+    }
+    m_actionSetLayers[layer.first] = ActionSetLayerDefinition(layer.first, actions);
+  }
+
+  foreach (auto &actionSet, actions.toVariantMap().toStdMap()) {
+    QList<ActionDefinition> actions;
+    foreach (auto &type, actionTypes.toStdMap()) {
       foreach (auto &name, actionSet.second.toMap()[type.first].toMap().keys()) {
         actions.append(ActionDefinition(name, type.first, actionSet.first, type.second));
       }
-      m_actionSets[actionSet.first] = ActionSetDefinition(actionSet.first, actions);
     }
+    QList<ActionSetLayerDefinition> layers;
+
+    auto layerNames = actionSet.second.toMap()["Layers"];
+
+    if (layerNames.isValid()) {
+      foreach (auto &name, layerNames.toMap().keys()) {
+        layers << m_actionSetLayers[name];
+      }
+    }
+
+    m_actionSets[actionSet.first] = ActionSetDefinition(actionSet.first, actions, layers);
   }
-  auto actionLayers = manifest["action_layers"].toObject();
 }
 
 const QMap<QString, ActionSetDefinition> &IGA::actionSets() const { return m_actionSets; }
@@ -66,4 +86,12 @@ QSteamworks::ActionDefinition IGA::actionDefinition(const QString &name) const {
     }
   }
   return ActionDefinition();
+}
+
+QStringList IGA::qmlActionSetLayers() const {
+  QStringList result;
+  foreach (auto &layer, m_actionSetLayers.toStdMap()) {
+    result << layer.first;
+  }
+  return result;
 }

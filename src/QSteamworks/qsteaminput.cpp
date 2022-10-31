@@ -2,6 +2,9 @@
 #include <QFile>
 #include <QMap>
 
+#include "actionsetdefinition.h"
+#include "actionsetlayer.h"
+#include "actionsetlayerdefinition.h"
 #include "steam/isteaminput.h"
 #include "steam/steam_api.h"
 
@@ -56,9 +59,12 @@ QSteamInput::QSteamInput(QObject *parent) : QObject{parent} {
   }
   qRegisterMetaType<QSteamworks::IGA>();
   qRegisterMetaType<QSteamworks::ActionDefinition>();
+  qRegisterMetaType<QSteamworks::ActionSetDefinition>();
+  qRegisterMetaType<QSteamworks::ActionSetLayerDefinition>();
   qRegisterMetaType<QSteamworks::Controller>();
   qRegisterMetaType<QSteamworks::Action>();
   qRegisterMetaType<QSteamworks::ActionSet>();
+  qRegisterMetaType<QSteamworks::ActionSetLayer>();
   qRegisterMetaType<QSteamworks::InputEvent>();
 
   m_instance = this;
@@ -148,6 +154,16 @@ void QSteamworks::QSteamInput::sendInputEvents(InputEvent e) {
   } else {
     emit releasedEvent(e);
   }
+}
+
+QList<ActionSetLayer> QSteamInput::getActionSetLayers(const QList<ActionSetLayerDefinition> &definitions) const {
+  QList<ActionSetLayer> result;
+  foreach (auto &definition, definitions) {
+
+    auto handle = SteamInput()->GetActionSetHandle(definition.name().toLocal8Bit());
+    result << ActionSetLayer(handle, definition.name(), getActions(handle, definition.actions()));
+  }
+  return result;
 }
 
 void QSteamInput::onActionEvent(SteamInputActionEvent_t *event) {
@@ -306,7 +322,8 @@ void QSteamInput::updateActionSets() {
 
   foreach (auto &actionSet, m_iga.actionSets().toStdMap()) {
     auto handle = SteamInput()->GetActionSetHandle(actionSet.first.toLocal8Bit());
-    m_actionSets << ActionSet(handle, actionSet.first, getActions(handle, actionSet.second.actions()));
+    m_actionSets << ActionSet(handle, actionSet.first, getActions(handle, actionSet.second.actions()),
+                              getActionSetLayers(actionSet.second.layers()));
   }
   emit actionSetsChanged();
 }

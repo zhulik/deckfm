@@ -34,6 +34,10 @@ Item {
         }
 
         Label {
+            text: `Available layers: ${JSON.stringify(steam_input.currentActionSet.layers)}`
+        }
+
+        Label {
             Layout.fillHeight: parent
             id: lastEventLabel
         }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "actiondefinition.h"
+#include "actionsetlayerdefinition.h"
 #include "controller.h"
 
 #include <QObject>
@@ -141,9 +142,7 @@ private:
   void sendInputEvents(InputEvent iEvent);
   QString m_igaPath;
   QString m_defaultActionSet;
+
+  QList<ActionSetLayer> getActionSetLayers(const QList<ActionSetLayerDefinition> &) const;
 };
 } // namespace QSteamworks
-
-Q_DECLARE_METATYPE(QSteamworks::ActionSet)
-Q_DECLARE_METATYPE(QSteamworks::Action)
-Q_DECLARE_METATYPE(QSteamworks::InputEvent)
