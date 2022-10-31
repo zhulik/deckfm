@@ -302,6 +302,13 @@ Action QSteamInput::action(unsigned long long handle, bool digital) const {
         return action;
       }
     }
+    foreach (auto &layer, actionSet.layers()) {
+      foreach (auto &action, layer.actions()) {
+        if (action.handle() == handle && action.actionDefinition().isDigital() == digital) {
+          return action;
+        }
+      }
+    }
   }
   return Action();
 }
@@ -452,7 +459,5 @@ void QSteamInput::setActionSetLayer(const QString &newActionSetLayer) {
       return;
     }
   }
-  //  m_currentActionSetLayer = ActionSetLayer(-1, m_actionSet.name(), QList<Action>());
-  //  //  emit actionSetLayerChanged();
   throw std::runtime_error(QString("Cannot find action set layer %1").arg(newActionSetLayer).toLocal8Bit());
 }
