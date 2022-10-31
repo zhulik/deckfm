@@ -5,6 +5,16 @@
 	}
 	"actions"
 	{
+		"folder_navigation"
+		{
+			"title"		"#FolderNavigation"
+			"legacy_set"		"0"
+			"Button"
+			{
+				"test"		"#Test"
+			}
+		}
+		
 		"deckfm"
 		{
 			"title"		"#DeckFM"
