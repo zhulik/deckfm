@@ -451,13 +451,14 @@ void QSteamInput::setActionSetLayer(const QString &newActionSetLayer) {
   foreach (auto &layer, m_actionSet.layers()) {
     if (layer.name() == newActionSetLayer) {
       //      if (m_currentActionSetLayer != layer) {
-      m_currentActionSetLayer = layer;
+      //      m_currentActionSetLayer = layer;
       emit actionSetLayerChanged();
+      m_currentActionSetLayer = ActionSetLayer(-1, m_actionSet.name(), QList<Action>());
       //      }
       return;
     }
   }
-  //  m_currentActionSetLayer = ActionSetLayer(-1, m_actionSet.name(), QList<Action>());
+  m_currentActionSetLayer = ActionSetLayer(-1, m_actionSet.name(), QList<Action>());
   //  emit actionSetLayerChanged();
   throw std::runtime_error(QString("Cannot find action set layer %1").arg(newActionSetLayer).toLocal8Bit());
 }
