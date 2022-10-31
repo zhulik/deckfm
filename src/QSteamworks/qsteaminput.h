@@ -134,6 +134,8 @@ class QSteamInput : public QObject {
   Q_PROPERTY(QString igaPath READ igaPath WRITE setIgaPath NOTIFY igaPathChanged)
   Q_PROPERTY(QString defaultActionSet READ defaultActionSet WRITE setDefaultActionSet NOTIFY defaultActionSetChanged)
 
+  Q_PROPERTY(QSteamworks::ActionSet currentActionSet READ currentActionSet NOTIFY actionSetChanged)
+
   STEAM_CALLBACK(QSteamInput, onControllerConnected, SteamInputDeviceConnected_t);
   STEAM_CALLBACK(QSteamInput, onControllerDisconnected, SteamInputDeviceDisconnected_t);
   STEAM_CALLBACK(QSteamInput, onConfigurationLoaded, SteamInputConfigurationLoaded_t);
@@ -184,6 +186,8 @@ public:
   Q_INVOKABLE
   QSteamworks::Action action(const QString &) const;
 
+  const QSteamworks::ActionSet &currentActionSet() const;
+
 signals:
   void qmlControllersChanged();
   void inputEvent(QSteamworks::InputEvent);
@@ -225,7 +229,7 @@ private:
 
   Action action(unsigned long long, bool = true) const;
 
-  QSteamworks::ActionSet m_actionSet;
+  ActionSet m_actionSet;
   void setActionSet(const QSteamworks::ActionSet &newActionSet);
 
   unsigned short m_vibrationSpeedLeft = 0;

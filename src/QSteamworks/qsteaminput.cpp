@@ -422,3 +422,5 @@ void QSteamInput::setDefaultActionSet(const QString &newDefaultActionSet) {
   m_defaultActionSet = newDefaultActionSet;
   emit defaultActionSetChanged();
 }
+
+const QSteamworks::ActionSet &QSteamInput::currentActionSet() const { return m_actionSet; }
