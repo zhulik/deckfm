@@ -26,6 +26,7 @@
 			"Layers"
 			{
 				"media_controls"		"#MediaControlsLayer"
+				"file_manager"		"#FileManagerLayer"
 			}
 		}
 		"folder_navigation"
@@ -49,6 +50,19 @@
 			"Button"
 			{
 				"media_playpause"		"#Media_Playpause"
+			}
+		}
+		"file_manager"
+		{
+			"title"		"#Layer_FileManager"
+			"legacy_set"		"0"
+			"set_layer"		"1"
+			"parent_set_name"		"deckfm"
+			"Button"
+			{
+				"file_manager_open"		"#FM_Open"
+				"file_manager_go_back"		"#FM_GoBack"
+				"file_manager_go_home"		"#FM_GoHome"
 			}
 		}
 	}

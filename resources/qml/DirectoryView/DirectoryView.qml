@@ -20,7 +20,7 @@ Item {
     property alias path: fs_model.path
 
     property bool showFooter: true
-    property var hintActions: ["folder_scroll", "folder_activate", "folder_go_home", "folder_go_up"]
+    property var hintActions: ["file_manager_open", "file_manager_go_back", "file_manager_go_home"]
 
     FolderListModel {
         id: fs_model
