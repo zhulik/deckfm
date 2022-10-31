@@ -18,6 +18,8 @@ ToolBar {
     RowLayout {
         spacing: 10
         anchors.fill: parent
+        anchors.leftMargin: 10
+        anchors.rightMargin: 11
 
         Item {
             Layout.fillWidth: parent
