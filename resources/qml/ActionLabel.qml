@@ -5,7 +5,7 @@ import "QSteamworks" as Steamworks
 
 RowLayout {
     id: root
-    spacing: 20
+    spacing: 10
 
     property string name
 
@@ -17,7 +17,7 @@ RowLayout {
 
     Steamworks.ActionText {
         Layout.fillHeight: parent
-        Layout.alignment: Qt.AlignVCenter
+        verticalAlignment: Text.AlignVCenter
 
         font.pointSize: 18
 
