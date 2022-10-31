@@ -452,8 +452,8 @@ void QSteamInput::setActionSetLayer(const QString &newActionSetLayer) {
     if (layer.name() == newActionSetLayer) {
       //      if (m_currentActionSetLayer != layer) {
       //      m_currentActionSetLayer = layer;
-      emit actionSetLayerChanged();
       m_currentActionSetLayer = ActionSetLayer(-1, m_actionSet.name(), QList<Action>());
+      emit actionSetLayerChanged();
       //      }
       return;
     }
