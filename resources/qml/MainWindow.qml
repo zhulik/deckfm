@@ -127,8 +127,6 @@ ApplicationWindow {
         y: 0
         width: parent.width - x
         height: parent.height - y
-
-        visible: true
     }
 
     Settings {

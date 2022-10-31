@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
 
 import "QSteamworks" as Steamworks
 
@@ -18,13 +19,23 @@ Item {
     }
 
     Steamworks.SteamInputScope {
+        id: input
         onInputEvent: {
             lastEventLabel.text = JSON.stringify(event, null, 2)
         }
     }
 
-    Label {
-        id: lastEventLabel
-        font.pointSize: 14
+    ColumnLayout {
+
+        anchors.fill: parent
+
+        Label {
+            text: `Action set: ${input.actionSet}`
+        }
+
+        Label {
+            Layout.fillHeight: parent
+            id: lastEventLabel
+        }
     }
 }
