@@ -38,6 +38,7 @@ class QSteamInput : public QObject {
   Q_PROPERTY(QString defaultActionSet READ defaultActionSet WRITE setDefaultActionSet NOTIFY defaultActionSetChanged)
 
   Q_PROPERTY(QSteamworks::ActionSet currentActionSet READ currentActionSet NOTIFY actionSetChanged)
+
   Q_PROPERTY(QSteamworks::ActionSetLayer currentActionSetLayer READ currentActionSetLayer NOTIFY actionSetLayerChanged)
   Q_PROPERTY(QString actionSetLayer READ qmlActionSetLayer WRITE setActionSetLayer NOTIFY actionSetLayerChanged)
 
