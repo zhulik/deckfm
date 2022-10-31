@@ -34,7 +34,7 @@ Item {
         }
 
         Label {
-            text: `Current layer: ${JSON.stringify(steam_input.actionSetLayer)} (available: ${JSON.stringify(steam_input.currentActionSet.layers)})`
+            text: `Current layer: ${JSON.stringify(input.actionSetLayer)} (available: ${JSON.stringify(steam_input.currentActionSet.layers)})`
         }
 
         Label {

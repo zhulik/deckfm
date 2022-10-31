@@ -32,6 +32,16 @@ Item {
         restoreMode: Binding.RestoreNone
     }
 
+    Binding {
+        when: enabled && actionSetLayer != ""
+
+        target: steam_input
+        property: "actionSetLayer"
+        value: actionSetLayer
+
+        restoreMode: Binding.RestoreNone
+    }
+
     Connections {
         target: steam_input
         enabled: root.enabled
