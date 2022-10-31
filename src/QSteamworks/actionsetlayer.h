@@ -31,6 +31,8 @@ public:
 private:
   InputActionSetHandle_t m_handle;
   QString m_name;
+
+protected:
   QList<Action> m_actions;
 };
 } // namespace QSteamworks

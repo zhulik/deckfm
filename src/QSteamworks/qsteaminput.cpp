@@ -329,7 +329,6 @@ void QSteamInput::onConfigurationLoaded(SteamInputConfigurationLoaded_t *) {
   updateActionSets();
   setActionSet(m_defaultActionSet);
   setActionSetLayer(m_defaultActionSetLayer);
-
   emit configurationLoaded();
 }
 
