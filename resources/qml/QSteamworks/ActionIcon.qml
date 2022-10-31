@@ -11,7 +11,6 @@ Item {
         id: image
 
         anchors.fill: parent
-        source: steam_input.action(root.name).glyphs[0];
     }
 
     Connections {
