@@ -6,11 +6,13 @@ Label {
 
     property string name
 
-    Connections {
-        target: steam_input
+    text: name
 
-        function onActionSetsChanged() {
-            root.text = steam_input.action(root.name).localizedName
-        }
-    }
+//    Connections {
+//        target: steam_input
+
+//        function onActionSetsChanged() {
+//            root.text = steam_input.action(root.name).localizedName
+//        }
+//    }
 }
