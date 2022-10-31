@@ -81,8 +81,7 @@ ApplicationWindow {
 
     Steamworks.SteamInputScope {
         pressHandlers: {
-            "folder_debug": debugOverlay.toggle,
-            "media_debug": debugOverlay.toggle
+            "debug": debugOverlay.toggle,
         }
     }
 
