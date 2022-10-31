@@ -64,6 +64,14 @@
 				"file_manager_go_back"		"#FM_GoBack"
 				"file_manager_go_home"		"#FM_GoHome"
 			}
+			"StickPadGyro"
+			{
+				"file_manager_scroll"
+				{
+					"title"		"#FM_Scroll"
+					"input_mode"		"absolute_mouse"
+				}
+			}
 		}
 	}
 	"localization"
