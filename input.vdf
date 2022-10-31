@@ -5,44 +5,129 @@
 	}
 	"actions"
 	{
-		"deckfm"
+		"folder_navigation"
 		{
-			"title"		"#DeckFM"
+			"title"		"#FolderNavigation"
 			"legacy_set"		"0"
 			"Button"
 			{
-				"up"		"#Up"
-				"down"		"#Down"
-				"left"		"#Left"
-				"right"		"#Right"
-
-				"select"		"#Select"
-				"menu"		"#Menu"
-				"debug"		"#Debug"
+				"folder_up"		"#FolderUp"
+				"folder_down"		"#FolderDown"
+				"folder_left"		"#FolderLeft"
+				"folder_right"		"#FolderRight"
+				"folder_activate"		"#FolderActivate"
+				"folder_go_up"		"#FolderGoUp"
+				"folder_go_home"		"#FolderGoHome"
+				"folder_debug"		"#FolderDebug"
+			}
+			"StickPadGyro"
+			{
+				"folder_scroll"
+				{
+					"title"		"#FolderScroll"
+					"input_mode"		"absolute_mouse"
+				}
 			}
 		}
-		"Layers"
+		"media_navigation"
 		{
-			"media_controls_action_layer"		"#MediaControlsLayer"
+			"title"		"#MediaNavigation"
+			"legacy_set"		"0"
+			"Button"
+			{
+				"media_playpause"		"#MediaPlayPause"
+				"media_seek_control"		"#MediaSeekControl"
+				"media_debug"		"#MediaDebug"
+			}
+			"StickPadGyro"
+			{
+				"media_seek"
+				{
+					"title"		"#MediaSeek"
+					"input_mode"		"absolute_mouse"
+				}
+			}
+		}
+		"deck_controller_raw"
+		{
+			"title"		"#DeckControllerRaw"
+			"legacy_set"		"0"
+			"Button"
+			{
+				"button_a"		"#ButtonA"
+				"button_b"		"#ButtonB"
+				"button_x"		"#ButtonX"
+				"button_y"		"#ButtonY"
+
+				"dpad_up"		"#DPadUp"
+				"dpad_down"		"#DPadDown"
+				"dpad_left"		"#DPadLeft"
+				"dpad_right"		"#DPadUpRight"
+
+				"button_l1"		"#ButtonL1"
+				"button_l2"		"#ButtonL2"
+				"button_l3"		"#ButtonL3"
+				"button_l4"		"#ButtonL4"
+				"button_l5"		"#ButtonL5"
+
+				"button_r1"		"#ButtonR1"
+				"button_r2"		"#ButtonR2"
+				"button_r3"		"#ButtonR3"
+				"button_r4"		"#ButtonR4"
+				"button_r5"		"#ButtonR5"
+
+				"touch_lstick"	"#TouchLStick"
+				"touch_rstick"	"#TouchRStick"
+
+				"touch_lpad"	"#TouchLPad"
+				"touch_rpad"	"#TouchRPad"
+
+				"trackpad_l"	"#TrackpadL"
+				"trackpad_r"	"#TrackpadR"
+
+				"select"	"#Select"
+				"menu"	"#Menu"
+			}
+			"AnalogTrigger"
+			{
+				"trigger_l2"	"#TriggerL2"
+				"trigger_R2"	"#TriggerR2"
+			}
+			"StickPadGyro"
+      {
+				"LeftStick"
+				{
+					"title"	"#LeftStick"
+					"input_mode"	"joystick_move"
+				}
+				"RightStick"
+				{
+					"title"	"#RightStick"
+					"input_mode"	"absolute_mouse"
+				}
+				"LeftPad"
+				{
+					"title"	"#LeftPad"
+					"input_mode"	"joystick_move"
+				}
+				"RightPad"
+				{
+					"title"	"#RightPad"
+					"input_mode"	"absolute_mouse"
+				}
+				"Gyro"
+				{
+					"title"	"#Gyro"
+					"input_mode"	"absolute_mouse"
+				}
+			}
 		}
 	}
-
 	"action_layers"
 	{
-		"media_controls"
-		{
-			"title"		"#Layer_MediaControls"
-			"legacy_set"		"0"
-			"set_layer"		"1"
-			"parent_set_name"		"deckfm"
-			"Button"
-			{
-				"media_playpause"		"#Media_Playpause"
-			}
-		}
 	}
-
 	"localization"
 	{
 	}
 }
+

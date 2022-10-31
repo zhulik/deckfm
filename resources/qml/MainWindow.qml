@@ -46,7 +46,7 @@ ApplicationWindow {
             url.slice(6, url.length)
         }
 
-        defaultActionSet: "deckfm"
+        defaultActionSet: "folder_navigation"
     }
 
     header: Header {
