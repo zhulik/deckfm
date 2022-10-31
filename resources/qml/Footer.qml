@@ -7,7 +7,7 @@ ToolBar {
 
     property alias hintActions: repeater.model
 
-    height: 40
+    height: 50
 
     Rectangle {
         anchors.fill: parent
@@ -16,6 +16,7 @@ ToolBar {
     }
 
     RowLayout {
+        spacing: 20
         anchors.fill: parent
 
         Item {
