@@ -17,9 +17,9 @@ RowLayout {
 
     Steamworks.ActionText {
         Layout.fillHeight: parent
-//        Layout.alignment: Qt.AlignVCenter
+        Layout.alignment: Qt.AlignVCenter
 
-//        font.pointSize: root.height - 5
+        font.pointSize: 18
 
         name: root.name
     }
