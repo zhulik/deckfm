@@ -94,7 +94,7 @@ ApplicationWindow {
     }
 
     footer: Footer {
-//                visible: !appLoader.visible
+        visible: stackView.currentItem.showFooter
     }
 
     StackView {

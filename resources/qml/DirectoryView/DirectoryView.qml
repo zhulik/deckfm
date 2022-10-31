@@ -19,6 +19,8 @@ Item {
 
     property alias path: fs_model.path
 
+    property bool showFooter: true
+
     FolderListModel {
         id: fs_model
         showHidden: showHiddenSwitch.position === 1.0
@@ -134,6 +136,7 @@ Item {
             cellWidth: Math.max(parent.width / 4, 300)
             cellHeight: 70
             clip: true
+            keyNavigationWraps: false
 
             boundsBehavior: Flickable.StopAtBounds
 

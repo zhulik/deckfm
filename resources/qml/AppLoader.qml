@@ -7,6 +7,8 @@ Item {
     property alias source: loader.source
     property alias item: loader.item
 
+    property bool showFooter: item && item.deckfmSettings ? item.deckfmSettings['showFooter'] : true
+
     visible: loader.status == Loader.Ready
 
     signal closed()
@@ -27,11 +29,9 @@ Item {
         onLoaded: {
             item.forceActiveFocus()
 
-            item.onVisibleChanged.connect(() => {
-                                      if (!loader.item.visible) {
-                                          root.close()
-                                      }
-                                  })
+            if(item.closed) {
+                item.closed.connect(root.close)
+            }
 
             root.loaded()
         }
@@ -41,6 +41,9 @@ Item {
         anchors.right: parent.right
 
         iconName: "windowClose"
+
+        visible: item && item.deckfmSettings ? item.deckfmSettings['showCloseButton'] : true
+
 
         onClicked: {
             root.close()
