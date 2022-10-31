@@ -8,16 +8,6 @@ Item {
 
     property string name
 
-    MouseArea {
-        anchors.fill: parent
-
-        onClicked: {
-            const name = root.name
-            root.name = ""
-            root.name = name
-        }
-    }
-
     Label {
         id: label
 
