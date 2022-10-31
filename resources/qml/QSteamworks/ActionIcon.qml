@@ -3,6 +3,7 @@ import QtQuick.Controls 2.15
 
 Image {
     property string name
+    width: height
 
 
     fillMode: Image.PreserveAspectFit

@@ -8,6 +8,7 @@ ToolBar {
     property alias hintActions: repeater.model
 
     height: 40
+
     Rectangle {
         anchors.fill: parent
 
@@ -26,9 +27,5 @@ ToolBar {
                 name: modelData
             }
         }
-    }
-
-    Steamworks.SteamInputScope {
-        id: inputScope
     }
 }
