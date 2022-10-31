@@ -14,17 +14,9 @@ ToolBar {
     RowLayout {
         anchors.fill: parent
 
-//       Steamworks.ActionIcon {
-//           Layout.fillHeight: parent
-
-//           name: "folder_activate"
-//       }
-
-       Steamworks.ActionLabel {
-           Layout.fillHeight: parent
-
-           name: "folder_activate"
-       }
+        ActionLabel {
+            name: "folder_activate"
+        }
     }
 
     Steamworks.SteamInputScope {
