@@ -444,7 +444,6 @@ void QSteamInput::setActionSetLayer(const QString &newActionSetLayer) {
 
   SteamInput()->DeactivateAllActionSetLayers(m_currentController.handle());
 
-  QString names;
   foreach (auto &layer, m_actionSet.layers()) {
     if (layer.name() == newActionSetLayer) {
       m_currentActionSetLayer = layer;
@@ -452,7 +451,7 @@ void QSteamInput::setActionSetLayer(const QString &newActionSetLayer) {
       return;
     }
   }
-  m_currentActionSetLayer = ActionSetLayer(-1, QString("%1").arg(m_actionSet.layers().count()), QList<Action>());
+  m_currentActionSetLayer = ActionSetLayer(-1, m_actionSet.name(), QList<Action>());
   emit actionSetLayerChanged();
   //  throw std::runtime_error(QString("Cannot find action set layer %1").arg(newActionSetLayer).toLocal8Bit());
 }
