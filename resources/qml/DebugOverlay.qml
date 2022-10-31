@@ -18,6 +18,12 @@ Item {
         opacity: 0.6
     }
 
+    MouseArea {
+        anchors.fill: parent
+
+        onClicked: steam_input.actionSetLayer = "file_manager"
+    }
+
     Steamworks.SteamInputScope {
         id: input
         onInputEvent: {
