@@ -19,6 +19,12 @@ ToolBar {
 
            name: "folder_activate"
        }
+
+       Steamworks.ActionLabel {
+           Layout.fillHeight: parent
+
+           name: "folder_activate"
+       }
     }
 
     Steamworks.SteamInputScope {
