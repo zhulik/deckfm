@@ -446,18 +446,12 @@ const QSteamworks::ActionSetLayer &QSteamInput::currentActionSetLayer() const { 
 const QString &QSteamInput::qmlActionSetLayer() const { return m_currentActionSetLayer.name(); }
 
 void QSteamInput::setActionSetLayer(const QString &newActionSetLayer) {
-  if (m_actionSet.name() == "")
+  if (newActionSetLayer == "" || m_currentActionSetLayer.name() == newActionSetLayer) {
+    throw "!";
+  }
+  if (m_actionSet.name() == "" || newActionSetLayer == "" || m_currentActionSetLayer.name() == newActionSetLayer) {
     return;
-
-  m_currentActionSetLayer = ActionSetLayer(-1, newActionSetLayer, QList<Action>());
-  emit actionSetLayerChanged();
-  return;
-
-  if (newActionSetLayer == "")
-    return;
-
-  if (m_currentActionSetLayer.name() == newActionSetLayer)
-    return;
+  }
 
   if (!m_iga.qmlActionSetLayers().contains(newActionSetLayer)) {
     throw std::runtime_error(QString("Cannot find action set layer %1").arg(newActionSetLayer).toLocal8Bit());
