@@ -16,7 +16,7 @@ ToolBar {
     }
 
     RowLayout {
-        spacing: 20
+        spacing: 10
         anchors.fill: parent
 
         Item {

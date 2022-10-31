@@ -5,7 +5,6 @@ import "QSteamworks" as Steamworks
 
 RowLayout {
     id: root
-    spacing: 10
 
     property string name
 
