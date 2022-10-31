@@ -313,9 +313,6 @@ void QSteamInput::updateActionSets() {
 
 void QSteamInput::onConfigurationLoaded(SteamInputConfigurationLoaded_t *) {
   runFrame();
-  runFrame();
-  runFrame();
-  runFrame();
   updateActionSets();
   setActionSet(m_defaultActionSet);
   emit configurationLoaded();
