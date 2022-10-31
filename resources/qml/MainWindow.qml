@@ -95,6 +95,7 @@ ApplicationWindow {
 
     footer: Footer {
         visible: stackView.currentItem.showFooter
+        hintActions: ["folder_activate", "folder_go_home"]
     }
 
     StackView {
