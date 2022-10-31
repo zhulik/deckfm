@@ -15,6 +15,7 @@ Item {
     }
 
     Label {
+        id: label
         text: JSON.stringify(steam_input.action(root.name).glyphs)
     }
 
@@ -23,6 +24,7 @@ Item {
 
         function onActionSetsChanged() {
             image.source = steam_input.action(root.name).glyphs[0];
+            label.text = JSON.stringify(steam_input.action(root.name).glyphs)
         }
     }
 }
