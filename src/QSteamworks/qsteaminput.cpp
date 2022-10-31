@@ -442,6 +442,10 @@ void QSteamInput::setActionSetLayer(const QString &newActionSetLayer) {
   if (m_actionSet.name() == "" || newActionSetLayer == "")
     return;
 
+  m_currentActionSetLayer = ActionSetLayer(-1, m_actionSet.name(), QList<Action>());
+  emit actionSetLayerChanged();
+  return;
+
   if (!m_iga.qmlActionSetLayers().contains(newActionSetLayer)) {
     throw std::runtime_error(QString("Cannot find action set layer %1").arg(newActionSetLayer).toLocal8Bit());
   }
