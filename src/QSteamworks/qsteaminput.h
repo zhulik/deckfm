@@ -38,6 +38,8 @@ class QSteamInput : public QObject {
   Q_PROPERTY(QString defaultActionSet READ defaultActionSet WRITE setDefaultActionSet NOTIFY defaultActionSetChanged)
 
   Q_PROPERTY(QSteamworks::ActionSet currentActionSet READ currentActionSet NOTIFY actionSetChanged)
+  Q_PROPERTY(QSteamworks::ActionSetLayer currentActionSetLayer READ currentActionSetLayer NOTIFY actionSetLayerChanged)
+  Q_PROPERTY(QString actionSetLayer READ qmlActionSetLayer WRITE setActionSetLayer NOTIFY actionSetLayerChanged)
 
   STEAM_CALLBACK(QSteamInput, onControllerConnected, SteamInputDeviceConnected_t);
   STEAM_CALLBACK(QSteamInput, onControllerDisconnected, SteamInputDeviceDisconnected_t);
@@ -86,10 +88,12 @@ public:
   const QString &defaultActionSet() const;
   void setDefaultActionSet(const QString &newDefaultActionSet);
 
-  Q_INVOKABLE
-  QSteamworks::Action action(const QString &) const;
-
   const QSteamworks::ActionSet &currentActionSet() const;
+
+  const QSteamworks::ActionSetLayer &currentActionSetLayer() const;
+
+  const QString &qmlActionSetLayer() const;
+  void setActionSetLayer(const QString &newActionSetLayer);
 
 signals:
   void qmlControllersChanged();
@@ -115,6 +119,8 @@ signals:
   void igaPathChanged();
 
   void defaultActionSetChanged();
+
+  void actionSetLayerChanged();
 
 private:
   IGA m_iga;
@@ -144,5 +150,6 @@ private:
   QString m_defaultActionSet;
 
   QList<ActionSetLayer> getActionSetLayers(const QList<ActionSetLayerDefinition> &) const;
+  QSteamworks::ActionSetLayer m_currentActionSetLayer;
 };
 } // namespace QSteamworks

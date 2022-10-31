@@ -9,7 +9,8 @@ Item {
 
     // TODO empty actionStates if disabled, and rebind if enabled
     property string actionSet: steam_input.actionSet
-    property var actionStates: steam_input.actionStates
+    property string actionSetLayer: steam_input.actionSetLayer
+    readonly property var actionStates: steam_input.actionStates
 
     property var pressHandlers: ({})
     property var releaseHandlers: ({})
