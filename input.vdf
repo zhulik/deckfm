@@ -12,21 +12,15 @@
 			"Button"
 			{
 				"folder_up"		"#FolderUp"
-				"folder_down"		"#FolderDown"
-				"folder_left"		"#FolderLeft"
-				"folder_right"		"#FolderRight"
-				"folder_activate"		"#FolderActivate"
-				"folder_go_up"		"#FolderGoUp"
-				"folder_go_home"		"#FolderGoHome"
-				"folder_debug"		"#FolderDebug"
 			}
-			"StickPadGyro"
+		}
+		"deckfm"
+		{
+			"title"		"#DeckFM"
+			"legacy_set"		"0"
+			"Button"
 			{
-				"folder_scroll"
-				{
-					"title"		"#FolderScroll"
-					"input_mode"		"absolute_mouse"
-				}
+				"up"		"#Up"
 			}
 		}
 	}
