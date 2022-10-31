@@ -40,6 +40,7 @@ Item {
 
     Steamworks.SteamInputScope {
         enabled: parent.activeFocus
+        actionSet: "deckfm"
         actionSetLayer: "file_manager"
 
         pressHandlers: {
