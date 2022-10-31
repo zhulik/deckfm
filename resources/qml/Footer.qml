@@ -20,11 +20,11 @@ ToolBar {
            name: "folder_activate"
        }
 
-       Steamworks.ActionLabel {
-           Layout.fillHeight: parent
+//       Steamworks.ActionLabel {
+//           Layout.fillHeight: parent
 
-           name: "folder_activate"
-       }
+//           name: "folder_activate"
+//       }
     }
 
     Steamworks.SteamInputScope {

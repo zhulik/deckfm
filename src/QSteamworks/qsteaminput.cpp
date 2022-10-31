@@ -78,7 +78,7 @@ void QSteamInput::runFrame() {
       }
     }
   }
-  updateActionSets();
+  //  updateActionSets();
 }
 
 bool QSteamInput::showBindingPanel(unsigned long long inputHandle) const {
