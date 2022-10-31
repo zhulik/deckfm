@@ -279,10 +279,10 @@ QList<Action> QSteamInput::getActions(InputActionSetHandle_t actionSetHandle,
   return result;
 }
 
-Action QSteamInput::action(const QString &name, bool digital) const {
+Action QSteamInput::action(const QString &name) const {
   foreach (auto &actionSet, m_actionSets) {
     foreach (auto &action, actionSet.actions()) {
-      if (action.actionDefinition().name() == name && action.actionDefinition().isDigital() == digital) {
+      if (action.actionDefinition().name() == name) {
         return action;
       }
     }

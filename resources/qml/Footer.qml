@@ -14,10 +14,11 @@ ToolBar {
     RowLayout {
         anchors.fill: parent
 
-        Label {
-            font.pointSize: 24
-            text: `Action set: ${inputScope.actionSet}`
-        }
+       Steamworks.ActionIcon {
+           Layout.fillHeight: parent
+
+           name: "folder_activate"
+       }
     }
 
     Steamworks.SteamInputScope {

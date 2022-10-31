@@ -181,6 +181,9 @@ public:
   const QString &defaultActionSet() const;
   void setDefaultActionSet(const QString &newDefaultActionSet);
 
+  Q_INVOKABLE
+  QSteamworks::Action action(const QString &) const;
+
 signals:
   void qmlControllersChanged();
   void inputEvent(QSteamworks::InputEvent);
@@ -220,7 +223,6 @@ private:
   void updateActionSets();
   QList<Action> getActions(InputActionSetHandle_t actionSetHandle, const QList<ActionDefinition> &actions) const;
 
-  Action action(const QString &, bool = true) const;
   Action action(unsigned long long, bool = true) const;
 
   QSteamworks::ActionSet m_actionSet;
