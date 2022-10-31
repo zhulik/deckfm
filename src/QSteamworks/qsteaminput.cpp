@@ -328,6 +328,10 @@ void QSteamInput::onConfigurationLoaded(SteamInputConfigurationLoaded_t *) {
   runFrame();
   updateActionSets();
   setActionSet(m_defaultActionSet);
+  auto layer = m_currentActionSetLayer;
+
+  m_currentActionSetLayer = ActionSetLayer();
+  setActionSetLayer(layer.name());
   emit configurationLoaded();
 }
 
@@ -344,11 +348,6 @@ void QSteamInput::setActionSet(const QSteamworks::ActionSet &newActionSet) {
   if (m_currentController.handle() != 0) {
     SteamInput()->ActivateActionSet(m_currentController.handle(), m_actionSet.handle());
   }
-
-  auto layer = m_currentActionSetLayer;
-
-  m_currentActionSetLayer = ActionSetLayer();
-  setActionSetLayer(layer.name());
 
   emit actionSetChanged();
 }
