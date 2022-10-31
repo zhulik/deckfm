@@ -345,6 +345,11 @@ void QSteamInput::setActionSet(const QSteamworks::ActionSet &newActionSet) {
     SteamInput()->ActivateActionSet(m_currentController.handle(), m_actionSet.handle());
   }
 
+  auto layer = m_currentActionSetLayer;
+
+  m_currentActionSetLayer = ActionSetLayer();
+  setActionSetLayer(layer.name());
+
   emit actionSetChanged();
 }
 
