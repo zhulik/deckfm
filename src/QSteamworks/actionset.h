@@ -13,7 +13,7 @@ class ActionSet {
   Q_GADGET
   Q_PROPERTY(unsigned long long handle READ handle CONSTANT)
   Q_PROPERTY(QString name READ name CONSTANT)
-  Q_PROPERTY(QVariantList actions READ qmlActions CONSTANT)
+  Q_PROPERTY(QVariantMap actions READ qmlActions CONSTANT)
 
 public:
   ActionSet(){};
@@ -24,7 +24,7 @@ public:
 
   const QList<Action> actions() const;
 
-  QVariantList qmlActions() const;
+  QVariantMap qmlActions() const;
 
   bool operator==(const ActionSet &other) const;
 

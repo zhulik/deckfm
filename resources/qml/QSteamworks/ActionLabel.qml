@@ -6,13 +6,5 @@ Label {
 
     property string name
 
-    text: name
-
-    Connections {
-        target: steam_input
-
-        function onActionSetsChanged() {
-            root.text = steam_input.action(root.name).localizedName
-        }
-    }
+    text: JSON.stringify(steam_input.currentActionSet.actions[root.name])
 }

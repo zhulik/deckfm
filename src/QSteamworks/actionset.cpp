@@ -9,11 +9,11 @@ const QString &QSteamworks::ActionSet::name() const { return m_name; }
 
 const QList<QSteamworks::Action> QSteamworks::ActionSet::actions() const { return m_actions; }
 
-QVariantList QSteamworks::ActionSet::qmlActions() const {
+QVariantMap QSteamworks::ActionSet::qmlActions() const {
 
-  QVariantList result;
+  QVariantMap result;
   foreach (auto &action, m_actions) {
-    result << QVariant::fromValue(action);
+    result[action.actionDefinition().name()] = QVariant::fromValue(action);
   }
   return result;
 }
