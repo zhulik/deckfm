@@ -18,10 +18,12 @@ ToolBar {
     RowLayout {
         anchors.fill: parent
 
+        Item {
+            Layout.fillWidth: parent
+        }
+
         Repeater {
             id: repeater
-
-            model: []
 
             ActionLabel {
                 name: modelData
