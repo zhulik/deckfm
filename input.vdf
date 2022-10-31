@@ -23,6 +23,10 @@
 				"cancel"		"#Cancel"
 				"debug"		"#Debug"
 			}
+			"Layers"
+			{
+				"media_controls"		"#MediaControlsLayer"
+			}
 		}
 		"folder_navigation"
 		{
@@ -36,6 +40,17 @@
 	}
 	"action_layers"
 	{
+		"media_controls"
+		{
+			"title"		"#Layer_MediaControls"
+			"legacy_set"		"0"
+			"set_layer"		"1"
+			"parent_set_name"		"deckfm"
+			"Button"
+			{
+				"media_playpause"		"#Media_Playpause"
+			}
+		}
 	}
 	"localization"
 	{
