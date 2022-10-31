@@ -12,7 +12,7 @@ Label {
         target: steam_input
 
         function onActionSetsChanged() {
-//            root.text = steam_input.action(root.name).localizedName
+            root.text = steam_input.action(root.name).localizedName
         }
     }
 }
