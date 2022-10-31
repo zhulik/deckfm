@@ -10,6 +10,6 @@ Item {
     Label {
         anchors.fill: parent
 
-        text: `Glyph path: ${steam_input.action(root.name).glyphs[0]}`
+        text: `Action name: ${root.name}, action: ${JSON.stringify(steam_input.action(root.name))}`
     }
 }
