@@ -446,9 +446,8 @@ const QSteamworks::ActionSetLayer &QSteamInput::currentActionSetLayer() const { 
 const QString &QSteamInput::qmlActionSetLayer() const { return m_currentActionSetLayer.name(); }
 
 void QSteamInput::setActionSetLayer(const QString &newActionSetLayer) {
-  m_currentActionSetLayer = ActionSetLayer(
-      -1, QString("action set: '%1',  requested layer: '%2'").arg(m_actionSet.name()).arg(newActionSetLayer),
-      QList<Action>());
+  m_currentActionSetLayer =
+      ActionSetLayer(-1, QString("requested layer: '%1'").arg(newActionSetLayer), QList<Action>());
   emit actionSetLayerChanged();
   return;
 
