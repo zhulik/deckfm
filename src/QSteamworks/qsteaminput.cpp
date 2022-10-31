@@ -321,9 +321,6 @@ void QSteamInput::onConfigurationLoaded(SteamInputConfigurationLoaded_t *) {
   runFrame();
   updateActionSets();
   setActionSet(m_defaultActionSet);
-  if (m_currentActionSetLayer.name() != "") {
-    setActionSetLayer(m_currentActionSetLayer.name());
-  }
   emit configurationLoaded();
 }
 
@@ -340,8 +337,6 @@ void QSteamInput::setActionSet(const QSteamworks::ActionSet &newActionSet) {
   if (m_currentController.handle() != 0) {
     SteamInput()->ActivateActionSet(m_currentController.handle(), m_actionSet.handle());
   }
-
-  emit actionSetChanged();
 }
 
 const QString &QSteamInput::qmlActionSet() const { return m_actionSet.name(); }
@@ -428,6 +423,9 @@ void QSteamInput::setDefaultActionSet(const QString &newDefaultActionSet) {
   if (m_defaultActionSet == newDefaultActionSet)
     return;
   m_defaultActionSet = newDefaultActionSet;
+  if (m_currentActionSetLayer.name() != "") {
+    setActionSetLayer(m_currentActionSetLayer.name());
+  }
   emit defaultActionSetChanged();
 }
 
