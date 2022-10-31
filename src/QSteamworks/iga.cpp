@@ -1,5 +1,7 @@
 #include <QDebug>
 
+#include "actiondefinition.h"
+#include "actionsetdefinition.h"
 #include "iga.h"
 
 using namespace QSteamworks;
@@ -14,21 +16,23 @@ IGA::IGA(const QJsonObject &definition) {
 
   foreach (auto &actionSet, actions.toVariantMap().toStdMap()) {
     foreach (auto &type, actionTypes.toStdMap()) {
+      QList<ActionDefinition> actions;
       foreach (auto &name, actionSet.second.toMap()[type.first].toMap().keys()) {
-        m_actionSets[actionSet.first].append(ActionDefinition(name, type.first, actionSet.first, type.second));
+        actions.append(ActionDefinition(name, type.first, actionSet.first, type.second));
       }
+      m_actionSets[actionSet.first] = ActionSetDefinition(actionSet.first, actions);
     }
   }
   auto actionLayers = manifest["action_layers"].toObject();
 }
 
-const QMap<QString, QList<ActionDefinition>> &IGA::actionSets() const { return m_actionSets; }
+const QMap<QString, ActionSetDefinition> &IGA::actionSets() const { return m_actionSets; }
 
 QStringList IGA::qmlActionSets() const { return m_actionSets.keys(); }
 
 QStringList IGA::actionsForSet(const QString &name) const {
   QStringList result;
-  foreach (auto &action, m_actionSets[name]) {
+  foreach (auto &action, m_actionSets[name].actions()) {
     result << action.name();
   }
   return result;
@@ -37,7 +41,7 @@ QStringList IGA::actionsForSet(const QString &name) const {
 QVariantList IGA::qmlActionsForSet(const QString &name) const {
   QVariantList result;
 
-  foreach (auto &action, m_actionSets[name]) {
+  foreach (auto &action, m_actionSets[name].actions()) {
     result << QVariant::fromValue(action);
   }
   return result;
@@ -46,7 +50,7 @@ QVariantList IGA::qmlActionsForSet(const QString &name) const {
 QStringList IGA::qmlActions() const {
   QStringList result;
   foreach (auto &actionSet, m_actionSets.toStdMap()) {
-    foreach (auto &action, actionSet.second) {
+    foreach (auto &action, actionSet.second.actions()) {
       result << action.name();
     }
   }
@@ -55,7 +59,7 @@ QStringList IGA::qmlActions() const {
 
 QSteamworks::ActionDefinition IGA::actionDefinition(const QString &name) const {
   foreach (auto &actionSet, m_actionSets.toStdMap()) {
-    foreach (auto &action, actionSet.second) {
+    foreach (auto &action, actionSet.second.actions()) {
       if (action.name() == name) {
         return action;
       }

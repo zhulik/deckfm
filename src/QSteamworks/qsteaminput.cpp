@@ -306,7 +306,7 @@ void QSteamInput::updateActionSets() {
 
   foreach (auto &actionSet, m_iga.actionSets().toStdMap()) {
     auto handle = SteamInput()->GetActionSetHandle(actionSet.first.toLocal8Bit());
-    m_actionSets << ActionSet(handle, actionSet.first, getActions(handle, actionSet.second));
+    m_actionSets << ActionSet(handle, actionSet.first, getActions(handle, actionSet.second.actions()));
   }
   emit actionSetsChanged();
 }
