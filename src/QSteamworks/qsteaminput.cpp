@@ -446,8 +446,13 @@ const QSteamworks::ActionSetLayer &QSteamInput::currentActionSetLayer() const { 
 const QString &QSteamInput::qmlActionSetLayer() const { return m_currentActionSetLayer.name(); }
 
 void QSteamInput::setActionSetLayer(const QString &newActionSetLayer) {
-  if (m_actionSet.name() == "" || newActionSetLayer == "" || m_currentActionSetLayer.name() == newActionSetLayer)
+  if (m_actionSet.name() == "" || newActionSetLayer == "" || m_currentActionSetLayer.name() == newActionSetLayer) {
+    m_currentActionSetLayer = ActionSetLayer(
+        -1, QString("%1 %2").arg(m_currentActionSetLayer.name() == newActionSetLayer).arg(newActionSetLayer == ""),
+        QList<Action>());
+    emit actionSetLayerChanged();
     return;
+  }
 
   m_currentActionSetLayer = ActionSetLayer(
       -1, QString("%1 %2").arg(m_currentActionSetLayer.name() == newActionSetLayer).arg(newActionSetLayer == ""),
