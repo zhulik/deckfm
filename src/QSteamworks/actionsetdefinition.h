@@ -3,9 +3,10 @@
 #include <QObject>
 
 #include "actiondefinition.h"
-#include "actionsetlayerdefinition.h"
 
 namespace QSteamworks {
+
+class ActionSetLayerDefinition;
 
 class ActionSetDefinition {
   Q_GADGET

@@ -1,11 +1,12 @@
 #pragma once
 
-#include "actionsetlayerdefinition.h"
+#include "actiondefinition.h"
 #include <QJsonObject>
-#include <actiondefinition.h>
-#include <actionsetdefinition.h>
 
 namespace QSteamworks {
+
+class ActionSetDefinition;
+class ActionSetLayerDefinition;
 
 class IGA {
   Q_GADGET
