@@ -44,17 +44,17 @@ Item {
         actionSetLayer: "file_manager"
 
         pressHandlers: {
-            "folder_down": view.moveCurrentIndexDown,
-            "folder_up": view.moveCurrentIndexUp,
-            "folder_left": view.moveCurrentIndexLeft,
-            "folder_right": view.moveCurrentIndexRight,
-            "folder_activate": () => root.cdIndex(view.currentIndex),
-            "folder_go_up": fs_model.goUp,
-            "folder_go_home": fs_model.goHome
+            "down": view.moveCurrentIndexDown,
+            "up": view.moveCurrentIndexUp,
+            "left": view.moveCurrentIndexLeft,
+            "right": view.moveCurrentIndexRight,
+            "fm_open": () => root.cdIndex(view.currentIndex),
+            "fm_go_up": fs_model.goUp,
+            "fm_go_home": fs_model.goHome
         }
 
         analogHandlers: {
-            "folder_scroll": e => view.flick(e.analogX * 50, e.analogY * 50)
+            "scroll": e => view.flick(e.analogX * 50, e.analogY * 50)
         }
     }
 
