@@ -47,7 +47,7 @@ Item {
         enabled: deckControlsEnabled
 
         analogHandlers: {
-            "media_seek": (e) => {
+            "scroll": (e) => {
                 const abs = Math.abs(e.analogX)
 
                 if (abs <= 1) {

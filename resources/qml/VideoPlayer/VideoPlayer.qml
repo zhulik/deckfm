@@ -46,7 +46,7 @@ Item {
     Steamworks.SteamInputScope {
         enabled: root.activeFocus
 
-        actionSet: "media_navigation"
+        actionSetLayer: "media_controls"
     }
 
     Controls {
