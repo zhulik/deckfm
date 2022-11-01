@@ -21,7 +21,7 @@ IGA::IGA(const QJsonObject &definition) {
         actions.append(ActionDefinition(name, type.first, layer.first, type.second));
       }
     }
-    m_actionSetLayers[layer.first] = ActionSetLayerDefinition(layer.first, actions);
+    m_actionSetLayers[layer.first] = new ActionSetLayerDefinition(layer.first, actions);
   }
 
   foreach (auto &actionSet, actions.toVariantMap().toStdMap()) {
@@ -31,7 +31,7 @@ IGA::IGA(const QJsonObject &definition) {
         actions.append(ActionDefinition(name, type.first, actionSet.first, type.second));
       }
     }
-    QList<ActionSetLayerDefinition> layers;
+    QList<ActionSetLayerDefinition *> layers;
 
     auto layerNames = actionSet.second.toMap()["Layers"];
 
@@ -45,7 +45,10 @@ IGA::IGA(const QJsonObject &definition) {
   }
 }
 
-IGA::~IGA() { qDeleteAll(m_actionSets.values()); }
+IGA::~IGA() {
+  qDeleteAll(m_actionSets);
+  qDeleteAll(m_actionSetLayers);
+}
 
 const QMap<QString, ActionSetDefinition *> &IGA::actionSets() const { return m_actionSets; }
 

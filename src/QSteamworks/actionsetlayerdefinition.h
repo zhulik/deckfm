@@ -8,7 +8,6 @@ namespace QSteamworks {
 class ActionSetLayerDefinition {
   Q_GADGET
 public:
-  ActionSetLayerDefinition();
   ActionSetLayerDefinition(const QString &name, const QList<ActionDefinition> &actions);
 
   const QString &name() const;

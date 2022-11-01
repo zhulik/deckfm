@@ -158,7 +158,7 @@ private:
   QString m_igaPath;
   QString m_defaultActionSet;
 
-  QList<ActionSetLayer> getActionSetLayers(const QList<ActionSetLayerDefinition> &) const;
+  QList<ActionSetLayer> getActionSetLayers(const QList<ActionSetLayerDefinition *> &) const;
   QSteamworks::ActionSetLayer m_currentActionSetLayer;
   QString m_defaultActionSetLayer;
 };

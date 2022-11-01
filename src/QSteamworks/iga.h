@@ -36,7 +36,7 @@ public:
 
 private:
   QMap<QString, ActionSetDefinition *> m_actionSets;
-  QMap<QString, ActionSetLayerDefinition> m_actionSetLayers;
+  QMap<QString, ActionSetLayerDefinition *> m_actionSetLayers;
 };
 }; // namespace QSteamworks
 

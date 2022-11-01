@@ -60,7 +60,7 @@ QSteamInput::QSteamInput(QObject *parent) : QObject{parent} {
   qRegisterMetaType<QSteamworks::IGA *>();
   qRegisterMetaType<QSteamworks::ActionDefinition>();
   qRegisterMetaType<QSteamworks::ActionSetDefinition *>();
-  qRegisterMetaType<QSteamworks::ActionSetLayerDefinition>();
+  qRegisterMetaType<QSteamworks::ActionSetLayerDefinition *>();
   qRegisterMetaType<QSteamworks::Controller>();
   qRegisterMetaType<QSteamworks::Action>();
   qRegisterMetaType<QSteamworks::ActionSet>();
@@ -161,12 +161,12 @@ void QSteamworks::QSteamInput::sendInputEvents(InputEvent e) {
   }
 }
 
-QList<ActionSetLayer> QSteamInput::getActionSetLayers(const QList<ActionSetLayerDefinition> &definitions) const {
+QList<ActionSetLayer> QSteamInput::getActionSetLayers(const QList<ActionSetLayerDefinition *> &definitions) const {
   QList<ActionSetLayer> result;
   foreach (auto &definition, definitions) {
 
-    auto handle = SteamInput()->GetActionSetHandle(definition.name().toLocal8Bit());
-    result << ActionSetLayer(handle, definition.name(), getActions(handle, definition.actions()));
+    auto handle = SteamInput()->GetActionSetHandle(definition->name().toLocal8Bit());
+    result << ActionSetLayer(handle, definition->name(), getActions(handle, definition->actions()));
   }
   return result;
 }
