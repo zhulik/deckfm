@@ -2,6 +2,9 @@
 #include <QFile>
 #include <QMap>
 
+#include "actionsetdefinition.h"
+#include "actionsetlayer.h"
+#include "actionsetlayerdefinition.h"
 #include "steam/isteaminput.h"
 #include "steam/steam_api.h"
 
@@ -56,9 +59,12 @@ QSteamInput::QSteamInput(QObject *parent) : QObject{parent} {
   }
   qRegisterMetaType<QSteamworks::IGA>();
   qRegisterMetaType<QSteamworks::ActionDefinition>();
+  qRegisterMetaType<QSteamworks::ActionSetDefinition>();
+  qRegisterMetaType<QSteamworks::ActionSetLayerDefinition>();
   qRegisterMetaType<QSteamworks::Controller>();
   qRegisterMetaType<QSteamworks::Action>();
   qRegisterMetaType<QSteamworks::ActionSet>();
+  qRegisterMetaType<QSteamworks::ActionSetLayer>();
   qRegisterMetaType<QSteamworks::InputEvent>();
 
   m_instance = this;
@@ -148,6 +154,16 @@ void QSteamworks::QSteamInput::sendInputEvents(InputEvent e) {
   } else {
     emit releasedEvent(e);
   }
+}
+
+QList<ActionSetLayer> QSteamInput::getActionSetLayers(const QList<ActionSetLayerDefinition> &definitions) const {
+  QList<ActionSetLayer> result;
+  foreach (auto &definition, definitions) {
+
+    auto handle = SteamInput()->GetActionSetHandle(definition.name().toLocal8Bit());
+    result << ActionSetLayer(handle, definition.name(), getActions(handle, definition.actions()));
+  }
+  return result;
 }
 
 void QSteamInput::onActionEvent(SteamInputActionEvent_t *event) {
@@ -279,22 +295,18 @@ QList<Action> QSteamInput::getActions(InputActionSetHandle_t actionSetHandle,
   return result;
 }
 
-Action QSteamInput::action(const QString &name) const {
-  foreach (auto &actionSet, m_actionSets) {
-    foreach (auto &action, actionSet.actions()) {
-      if (action.actionDefinition().name() == name) {
-        return action;
-      }
-    }
-  }
-  return Action();
-}
-
 Action QSteamInput::action(unsigned long long handle, bool digital) const {
   foreach (auto &actionSet, m_actionSets) {
     foreach (auto &action, actionSet.actions()) {
       if (action.handle() == handle && action.actionDefinition().isDigital() == digital) {
         return action;
+      }
+    }
+    foreach (auto &layer, actionSet.layers()) {
+      foreach (auto &action, layer.actions()) {
+        if (action.handle() == handle && action.actionDefinition().isDigital() == digital) {
+          return action;
+        }
       }
     }
   }
@@ -306,7 +318,8 @@ void QSteamInput::updateActionSets() {
 
   foreach (auto &actionSet, m_iga.actionSets().toStdMap()) {
     auto handle = SteamInput()->GetActionSetHandle(actionSet.first.toLocal8Bit());
-    m_actionSets << ActionSet(handle, actionSet.first, getActions(handle, actionSet.second));
+    m_actionSets << ActionSet(handle, actionSet.first, getActions(handle, actionSet.second.actions()),
+                              getActionSetLayers(actionSet.second.layers()));
   }
   emit actionSetsChanged();
 }
@@ -315,6 +328,7 @@ void QSteamInput::onConfigurationLoaded(SteamInputConfigurationLoaded_t *) {
   runFrame();
   updateActionSets();
   setActionSet(m_defaultActionSet);
+  setActionSetLayer(m_defaultActionSetLayer);
   emit configurationLoaded();
 }
 
@@ -423,3 +437,38 @@ void QSteamInput::setDefaultActionSet(const QString &newDefaultActionSet) {
 }
 
 const QSteamworks::ActionSet &QSteamInput::currentActionSet() const { return m_actionSet; }
+
+const QSteamworks::ActionSetLayer &QSteamInput::currentActionSetLayer() const { return m_currentActionSetLayer; }
+
+const QString &QSteamInput::qmlActionSetLayer() const { return m_currentActionSetLayer.name(); }
+
+void QSteamInput::setActionSetLayer(const QString &newActionSetLayer) {
+  if (m_actionSet.name() == "" || newActionSetLayer == "" || m_currentActionSetLayer.name() == newActionSetLayer) {
+    return;
+  }
+
+  if (!m_iga.qmlActionSetLayers().contains(newActionSetLayer)) {
+    throw std::runtime_error(QString("Cannot find action set layer %1").arg(newActionSetLayer).toLocal8Bit());
+  }
+
+  SteamInput()->DeactivateAllActionSetLayers(m_currentController.handle());
+
+  foreach (auto &layer, m_actionSet.layers()) {
+    if (layer.name() == newActionSetLayer) {
+      m_currentActionSetLayer = layer;
+      SteamInput()->ActivateActionSetLayer(m_currentController.handle(), layer.handle());
+      emit actionSetLayerChanged();
+      return;
+    }
+  }
+  throw std::runtime_error(QString("Cannot find action set layer %1").arg(newActionSetLayer).toLocal8Bit());
+}
+
+const QString &QSteamInput::defaultActionSetLayer() const { return m_defaultActionSetLayer; }
+
+void QSteamInput::setDefaultActionSetLayer(const QString &newDefaultActionSetLayer) {
+  if (m_defaultActionSetLayer == newDefaultActionSetLayer)
+    return;
+  m_defaultActionSetLayer = newDefaultActionSetLayer;
+  emit defaultActionSetLayerChanged();
+}

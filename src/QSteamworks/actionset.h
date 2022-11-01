@@ -5,32 +5,24 @@
 
 #include "steam/steam_api.h"
 
-#include "action.h"
+#include "actionsetlayer.h"
 
 namespace QSteamworks {
 
-class ActionSet {
+class ActionSet : public ActionSetLayer {
   Q_GADGET
-  Q_PROPERTY(unsigned long long handle READ handle CONSTANT)
-  Q_PROPERTY(QString name READ name CONSTANT)
-  Q_PROPERTY(QVariantMap actions READ qmlActions CONSTANT)
+  Q_PROPERTY(QStringList layers READ qmlLayers CONSTANT)
 
 public:
-  ActionSet(){};
-  ActionSet(InputActionSetHandle_t handle, const QString &name, const QList<Action> &actions);
+  ActionSet() : ActionSetLayer(){};
+  ActionSet(InputActionSetHandle_t handle, const QString &name, const QList<Action> &actions,
+            const QList<ActionSetLayer> &layers);
 
-  unsigned long long handle() const;
-  const QString &name() const;
-
-  const QList<Action> actions() const;
-
-  QVariantMap qmlActions() const;
-
-  bool operator==(const ActionSet &other) const;
+  const QList<ActionSetLayer> &layers() const;
+  QStringList qmlLayers() const;
 
 private:
-  InputActionSetHandle_t m_handle;
-  QString m_name;
-  QList<Action> m_actions;
+  QList<ActionSetLayer> m_layers;
 };
 } // namespace QSteamworks
+Q_DECLARE_METATYPE(QSteamworks::ActionSet)

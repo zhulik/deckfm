@@ -42,3 +42,4 @@ private:
   float m_analogY = 0;
 };
 } // namespace QSteamworks
+Q_DECLARE_METATYPE(QSteamworks::InputEvent)

@@ -1,21 +1,22 @@
 #include "actionset.h"
+#include "actionsetlayer.h"
 
-QSteamworks::ActionSet::ActionSet(InputActionSetHandle_t handle, const QString &name, const QList<Action> &actions)
-    : m_handle(handle), m_name(name), m_actions(actions) {}
+using namespace QSteamworks;
 
-unsigned long long QSteamworks::ActionSet::handle() const { return m_handle; }
+ActionSet::ActionSet(InputActionSetHandle_t handle, const QString &name, const QList<Action> &actions,
+                     const QList<ActionSetLayer> &layers)
+    : ActionSetLayer(handle, name, actions), m_layers(layers) {
+  foreach (auto &layer, m_layers) {
+    m_actions.append(layer.actions());
+  }
+}
 
-const QString &QSteamworks::ActionSet::name() const { return m_name; }
+const QList<ActionSetLayer> &ActionSet::layers() const { return m_layers; }
 
-const QList<QSteamworks::Action> QSteamworks::ActionSet::actions() const { return m_actions; }
-
-QVariantMap QSteamworks::ActionSet::qmlActions() const {
-
-  QVariantMap result;
-  foreach (auto &action, m_actions) {
-    result[action.actionDefinition().name()] = QVariant::fromValue(action);
+QStringList ActionSet::qmlLayers() const {
+  QStringList result;
+  foreach (auto &layer, m_layers) {
+    result << layer.name();
   }
   return result;
 }
-
-bool QSteamworks::ActionSet::operator==(const ActionSet &other) const { return m_handle == other.m_handle; }

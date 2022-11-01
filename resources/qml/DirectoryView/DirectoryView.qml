@@ -20,7 +20,7 @@ Item {
     property alias path: fs_model.path
 
     property bool showFooter: true
-    property var hintActions: ["folder_scroll", "folder_activate", "folder_go_home", "folder_go_up"]
+    property var hintActions: ["scroll", "file_manager_open", "file_manager_go_back", "file_manager_go_home"]
 
     FolderListModel {
         id: fs_model
@@ -40,20 +40,21 @@ Item {
 
     Steamworks.SteamInputScope {
         enabled: parent.activeFocus
-        actionSet: "folder_navigation"
+        actionSet: "deckfm"
+        actionSetLayer: "file_manager"
 
         pressHandlers: {
-            "folder_down": view.moveCurrentIndexDown,
-            "folder_up": view.moveCurrentIndexUp,
-            "folder_left": view.moveCurrentIndexLeft,
-            "folder_right": view.moveCurrentIndexRight,
-            "folder_activate": () => root.cdIndex(view.currentIndex),
-            "folder_go_up": fs_model.goUp,
-            "folder_go_home": fs_model.goHome
+            "down": view.moveCurrentIndexDown,
+            "up": view.moveCurrentIndexUp,
+            "left": view.moveCurrentIndexLeft,
+            "right": view.moveCurrentIndexRight,
+            "file_manager_open": () => root.cdIndex(view.currentIndex),
+            "file_manager_go_back": fs_model.goUp,
+            "file_manager_go_home": fs_model.goHome
         }
 
         analogHandlers: {
-            "folder_scroll": e => view.flick(e.analogX * 50, e.analogY * 50)
+            "scroll": e => view.flick(e.analogX * 50, e.analogY * 50)
         }
     }
 

@@ -46,7 +46,8 @@ ApplicationWindow {
             url.slice(6, url.length)
         }
 
-        defaultActionSet: "folder_navigation"
+        defaultActionSet: "deckfm"
+        defaultActionSetLayer: "file_manager"
     }
 
     header: Header {
@@ -81,8 +82,7 @@ ApplicationWindow {
 
     Steamworks.SteamInputScope {
         pressHandlers: {
-            "folder_debug": debugOverlay.toggle,
-            "media_debug": debugOverlay.toggle
+            "debug": debugOverlay.toggle,
         }
     }
 

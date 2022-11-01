@@ -1,7 +1,9 @@
 #pragma once
 
+#include "actionsetlayerdefinition.h"
 #include <QJsonObject>
 #include <actiondefinition.h>
+#include <actionsetdefinition.h>
 
 namespace QSteamworks {
 
@@ -9,12 +11,13 @@ class IGA {
   Q_GADGET
   Q_PROPERTY(QStringList actionSets READ qmlActionSets CONSTANT)
   Q_PROPERTY(QStringList actions READ qmlActions CONSTANT)
+  Q_PROPERTY(QStringList actionSetLayers READ qmlActionSetLayers CONSTANT)
 
 public:
   IGA();
   IGA(const QJsonObject &definition);
 
-  const QMap<QString, QList<ActionDefinition>> &actionSets() const;
+  const QMap<QString, ActionSetDefinition> &actionSets() const;
 
   QStringList qmlActionSets() const;
 
@@ -29,8 +32,11 @@ public:
   Q_INVOKABLE
   QSteamworks::ActionDefinition actionDefinition(const QString &) const;
 
+  QStringList qmlActionSetLayers() const;
+
 private:
-  QMap<QString, QList<ActionDefinition>> m_actionSets;
+  QMap<QString, ActionSetDefinition> m_actionSets;
+  QMap<QString, ActionSetLayerDefinition> m_actionSetLayers;
 };
 }; // namespace QSteamworks
 

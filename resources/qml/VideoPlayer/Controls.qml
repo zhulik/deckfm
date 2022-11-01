@@ -61,6 +61,7 @@ Item {
     }
 
     MC.Buttons {
+        visible: !seekLeabel.visible
         height: 80
         spacing: 60
         playing: video.playbackState === M.MediaPlayer.PlayingState
@@ -92,8 +93,10 @@ Item {
 
         onPressedChanged: {
             if (pressed) {
+                show()
                 video.pause()
             } else {
+                hide()
                 video.play()
             }
         }
@@ -102,6 +105,7 @@ Item {
     }
 
     Label {
+        id: seekLeabel
         visible: slider.pressed
         text: slider.timeToHuman(slider.selectedPosition - slider.moveStartPosition, true)
         font.pointSize: 128
