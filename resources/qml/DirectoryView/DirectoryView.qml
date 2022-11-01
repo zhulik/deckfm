@@ -48,9 +48,9 @@ Item {
             "up": view.moveCurrentIndexUp,
             "left": view.moveCurrentIndexLeft,
             "right": view.moveCurrentIndexRight,
-            "fm_open": () => root.cdIndex(view.currentIndex),
-            "fm_go_up": fs_model.goUp,
-            "fm_go_home": fs_model.goHome
+            "file_manager_open": () => root.cdIndex(view.currentIndex),
+            "file_manager_go_up": fs_model.goUp,
+            "file_manager_go_home": fs_model.goHome
         }
 
         analogHandlers: {
