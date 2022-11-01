@@ -22,6 +22,8 @@
 				"accept"		"#Accept"
 				"cancel"		"#Cancel"
 				"debug"		"#Debug"
+
+				"scroll_touch"		"#ScrollTouch"
 			}
 			"StickPadGyro"
 			{

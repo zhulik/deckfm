@@ -17,7 +17,7 @@ Item {
 
     property alias deckControlsEnabled: input.enabled
 
-    readonly property bool pressed: slider.pressed || input.actionStates["media_seek_control"] || false
+    readonly property bool pressed: slider.pressed || input.actionStates["scroll_touch"] || false
 
     signal seek(int position, bool debounce)
 
@@ -67,8 +67,6 @@ Item {
         id: layout
         spacing: -10
         width: parent.width
-//        anchors.fill: parent
-
 
         Label {
             font.pointSize: 14
