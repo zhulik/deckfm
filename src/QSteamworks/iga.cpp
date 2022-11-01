@@ -9,8 +9,6 @@ using namespace QSteamworks;
 
 static const QMap<QString, bool> actionTypes{{"Button", true}, {"StickPadGyro", false}, {"AnalogTrigger", false}};
 
-IGA::IGA() {}
-
 IGA::IGA(const QJsonObject &definition) {
   auto manifest = definition["Action Manifest"].toObject();
   auto actions = manifest["actions"].toObject();

@@ -21,7 +21,7 @@ class QSteamAPI;
 class QSteamInput : public QObject {
   Q_OBJECT
 
-  Q_PROPERTY(QSteamworks::IGA iga READ iga NOTIFY igaChanged)
+  Q_PROPERTY(QSteamworks::IGA *iga READ iga NOTIFY igaChanged)
   Q_PROPERTY(QVariantList controllers READ qmlControllers NOTIFY qmlControllersChanged)
   Q_PROPERTY(QSteamworks::Controller currentController READ currentController WRITE setCurrentController NOTIFY
                  currentControllerChanged)
@@ -66,7 +66,7 @@ public:
   void triggerSimpleHapticEvent(const QString &location, unsigned char nIntensity, char nGainDB,
                                 unsigned char nOtherIntensity, char nOtherGainDB) const;
 
-  const IGA &iga() const;
+  IGA *iga() const;
 
   QVariantList qmlControllers() const;
 
@@ -132,7 +132,7 @@ signals:
   void defaultActionSetLayerChanged();
 
 private:
-  IGA m_iga;
+  IGA *m_iga = nullptr;
   QSet<Controller> m_controllers;
   Controller m_currentController;
   QList<ActionSet> m_actionSets;

@@ -14,7 +14,6 @@ class IGA {
   Q_PROPERTY(QStringList actionSetLayers READ qmlActionSetLayers CONSTANT)
 
 public:
-  IGA();
   IGA(const QJsonObject &definition);
 
   const QMap<QString, ActionSetDefinition> &actionSets() const;
@@ -40,4 +39,4 @@ private:
 };
 }; // namespace QSteamworks
 
-Q_DECLARE_METATYPE(QSteamworks::IGA)
+Q_DECLARE_METATYPE(QSteamworks::IGA *)

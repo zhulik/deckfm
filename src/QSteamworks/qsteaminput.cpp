@@ -57,7 +57,7 @@ QSteamInput::QSteamInput(QObject *parent) : QObject{parent} {
   if (m_instance != nullptr) {
     throw InitializationFailed("Steam input is already initialized");
   }
-  qRegisterMetaType<QSteamworks::IGA>();
+  qRegisterMetaType<QSteamworks::IGA *>();
   qRegisterMetaType<QSteamworks::ActionDefinition>();
   qRegisterMetaType<QSteamworks::ActionSetDefinition>();
   qRegisterMetaType<QSteamworks::ActionSetLayerDefinition>();
@@ -70,7 +70,12 @@ QSteamInput::QSteamInput(QObject *parent) : QObject{parent} {
   m_instance = this;
 }
 
-QSteamInput::~QSteamInput() { SteamInput()->Shutdown(); }
+QSteamInput::~QSteamInput() {
+  SteamInput()->Shutdown();
+  if (m_iga) {
+    delete m_iga;
+  }
+}
 
 void QSteamInput::runFrame() {
   SteamInput()->RunFrame();
@@ -115,7 +120,7 @@ void QSteamInput::triggerSimpleHapticEvent(const QString &location, unsigned cha
                                          nOtherGainDB);
 }
 
-const IGA &QSteamInput::iga() const { return m_iga; }
+IGA *QSteamInput::iga() const { return m_iga; }
 
 QVariantList QSteamInput::qmlControllers() const {
   QVariantList result;
@@ -316,7 +321,7 @@ Action QSteamInput::action(unsigned long long handle, bool digital) const {
 void QSteamInput::updateActionSets() {
   m_actionSets.clear();
 
-  foreach (auto &actionSet, m_iga.actionSets().toStdMap()) {
+  foreach (auto &actionSet, m_iga->actionSets().toStdMap()) {
     auto handle = SteamInput()->GetActionSetHandle(actionSet.first.toLocal8Bit());
     m_actionSets << ActionSet(handle, actionSet.first, getActions(handle, actionSet.second.actions()),
                               getActionSetLayers(actionSet.second.layers()));
@@ -355,7 +360,7 @@ void QSteamInput::setActionSet(const QString &newActionSet) {
   if (m_actionSet.name() == newActionSet || newActionSet == "")
     return;
 
-  if (!m_iga.actionSets().contains(newActionSet)) {
+  if (!m_iga->actionSets().contains(newActionSet)) {
     throw std::runtime_error(QString("Cannot find action set %1").arg(newActionSet).toLocal8Bit());
   }
 
@@ -415,7 +420,7 @@ void QSteamInput::setIgaPath(const QString &newIgaPath) {
   }
 
   auto vdfContent = readFile(newIgaPath);
-  m_iga = IGA(VDFParser().parse(vdfContent));
+  m_iga = new IGA(VDFParser().parse(vdfContent));
   emit igaChanged();
 
   SteamInput()->EnableDeviceCallbacks();
@@ -447,7 +452,7 @@ void QSteamInput::setActionSetLayer(const QString &newActionSetLayer) {
     return;
   }
 
-  if (!m_iga.qmlActionSetLayers().contains(newActionSetLayer)) {
+  if (!m_iga->qmlActionSetLayers().contains(newActionSetLayer)) {
     throw std::runtime_error(QString("Cannot find action set layer %1").arg(newActionSetLayer).toLocal8Bit());
   }
 
