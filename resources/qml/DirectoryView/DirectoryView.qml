@@ -49,7 +49,7 @@ Item {
             "left": view.moveCurrentIndexLeft,
             "right": view.moveCurrentIndexRight,
             "file_manager_open": () => root.cdIndex(view.currentIndex),
-            "file_manager_go_up": fs_model.goUp,
+            "file_manager_go_back": fs_model.goUp,
             "file_manager_go_home": fs_model.goHome
         }
 
