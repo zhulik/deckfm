@@ -2,8 +2,6 @@
 
 using namespace QSteamworks;
 
-ActionSetDefinition::ActionSetDefinition() {}
-
 ActionSetDefinition::ActionSetDefinition(const QString &name, const QList<ActionDefinition> &actions,
                                          const QList<ActionSetLayerDefinition> &layers)
     : m_name(name), m_actions(actions), m_layers(layers) {}

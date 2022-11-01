@@ -11,7 +11,6 @@ class ActionSetDefinition {
   Q_GADGET
 
 public:
-  ActionSetDefinition();
   ActionSetDefinition(const QString &name, const QList<ActionDefinition> &actions,
                       const QList<ActionSetLayerDefinition> &layers);
 
@@ -27,4 +26,4 @@ private:
   QList<ActionSetLayerDefinition> m_layers;
 };
 } // namespace QSteamworks
-Q_DECLARE_METATYPE(QSteamworks::ActionSetDefinition)
+Q_DECLARE_METATYPE(QSteamworks::ActionSetDefinition *)

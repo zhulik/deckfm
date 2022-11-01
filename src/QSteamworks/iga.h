@@ -15,8 +15,9 @@ class IGA {
 
 public:
   IGA(const QJsonObject &definition);
+  virtual ~IGA();
 
-  const QMap<QString, ActionSetDefinition> &actionSets() const;
+  const QMap<QString, ActionSetDefinition *> &actionSets() const;
 
   QStringList qmlActionSets() const;
 
@@ -34,7 +35,7 @@ public:
   QStringList qmlActionSetLayers() const;
 
 private:
-  QMap<QString, ActionSetDefinition> m_actionSets;
+  QMap<QString, ActionSetDefinition *> m_actionSets;
   QMap<QString, ActionSetLayerDefinition> m_actionSetLayers;
 };
 }; // namespace QSteamworks

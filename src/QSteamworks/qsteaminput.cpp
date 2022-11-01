@@ -59,7 +59,7 @@ QSteamInput::QSteamInput(QObject *parent) : QObject{parent} {
   }
   qRegisterMetaType<QSteamworks::IGA *>();
   qRegisterMetaType<QSteamworks::ActionDefinition>();
-  qRegisterMetaType<QSteamworks::ActionSetDefinition>();
+  qRegisterMetaType<QSteamworks::ActionSetDefinition *>();
   qRegisterMetaType<QSteamworks::ActionSetLayerDefinition>();
   qRegisterMetaType<QSteamworks::Controller>();
   qRegisterMetaType<QSteamworks::Action>();
@@ -323,8 +323,8 @@ void QSteamInput::updateActionSets() {
 
   foreach (auto &actionSet, m_iga->actionSets().toStdMap()) {
     auto handle = SteamInput()->GetActionSetHandle(actionSet.first.toLocal8Bit());
-    m_actionSets << ActionSet(handle, actionSet.first, getActions(handle, actionSet.second.actions()),
-                              getActionSetLayers(actionSet.second.layers()));
+    m_actionSets << ActionSet(handle, actionSet.first, getActions(handle, actionSet.second->actions()),
+                              getActionSetLayers(actionSet.second->layers()));
   }
   emit actionSetsChanged();
 }

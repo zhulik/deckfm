@@ -4,6 +4,7 @@
 #include "actionsetdefinition.h"
 #include "actionsetlayerdefinition.h"
 #include "iga.h"
+#include "qalgorithms.h"
 
 using namespace QSteamworks;
 
@@ -40,17 +41,19 @@ IGA::IGA(const QJsonObject &definition) {
       }
     }
 
-    m_actionSets[actionSet.first] = ActionSetDefinition(actionSet.first, actions, layers);
+    m_actionSets[actionSet.first] = new ActionSetDefinition(actionSet.first, actions, layers);
   }
 }
 
-const QMap<QString, ActionSetDefinition> &IGA::actionSets() const { return m_actionSets; }
+IGA::~IGA() { qDeleteAll(m_actionSets.values()); }
+
+const QMap<QString, ActionSetDefinition *> &IGA::actionSets() const { return m_actionSets; }
 
 QStringList IGA::qmlActionSets() const { return m_actionSets.keys(); }
 
 QStringList IGA::actionsForSet(const QString &name) const {
   QStringList result;
-  foreach (auto &action, m_actionSets[name].actions()) {
+  foreach (auto &action, m_actionSets[name]->actions()) {
     result << action.name();
   }
   return result;
@@ -59,7 +62,7 @@ QStringList IGA::actionsForSet(const QString &name) const {
 QVariantList IGA::qmlActionsForSet(const QString &name) const {
   QVariantList result;
 
-  foreach (auto &action, m_actionSets[name].actions()) {
+  foreach (auto &action, m_actionSets[name]->actions()) {
     result << QVariant::fromValue(action);
   }
   return result;
@@ -68,7 +71,7 @@ QVariantList IGA::qmlActionsForSet(const QString &name) const {
 QStringList IGA::qmlActions() const {
   QStringList result;
   foreach (auto &actionSet, m_actionSets.toStdMap()) {
-    foreach (auto &action, actionSet.second.actions()) {
+    foreach (auto &action, actionSet.second->actions()) {
       result << action.name();
     }
   }
@@ -77,7 +80,7 @@ QStringList IGA::qmlActions() const {
 
 QSteamworks::ActionDefinition IGA::actionDefinition(const QString &name) const {
   foreach (auto &actionSet, m_actionSets.toStdMap()) {
-    foreach (auto &action, actionSet.second.actions()) {
+    foreach (auto &action, actionSet.second->actions()) {
       if (action.name() == name) {
         return action;
       }
