@@ -92,8 +92,10 @@ Item {
 
         onPressedChanged: {
             if (pressed) {
+                show()
                 video.pause()
             } else {
+                hide()
                 video.play()
             }
         }
