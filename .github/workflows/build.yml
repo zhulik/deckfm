@@ -1,4 +1,4 @@
-name: Update image
+name: Build
 
 on:
   workflow_dispatch:
