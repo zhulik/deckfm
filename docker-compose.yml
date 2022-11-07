@@ -5,7 +5,7 @@ services:
     image: ghcr.io/zhulik/holo-dev
     volumes:
       - ./:/mnt
-    user: ${BULDER_UID}:${BUILDER_GID}
+    user: ${BUILDER_UID}:${BUILDER_GID}
     command: |
       bash -c "set -eu &&
         cd /mnt &&
