@@ -1,4 +1,5 @@
 #!/usr/bin/bash
 
-./build/deckfm
+set -eu
 
+LD_LIBRARY_PATH=$(pwd) ./deckfm

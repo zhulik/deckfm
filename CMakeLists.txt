@@ -33,4 +33,5 @@ target_link_libraries(deckfm PRIVATE Qt5::Core Qt5::Quick Qt5::QuickControls2 ${
 
 install(TARGETS deckfm DESTINATION deckfm)
 install(FILES libsteam_api.so steam_appid.txt input.vdf DESTINATION deckfm)
+install(PROGRAMS deckfm.sh DESTINATION deckfm)
 install(DIRECTORY resources DESTINATION deckfm)
