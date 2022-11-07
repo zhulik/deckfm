@@ -12,4 +12,5 @@ services:
         mkdir -p build.holo &&
         cd build.holo &&
         cmake .. -DCMAKE_INSTALL_PREFIX:PATH=`pwd`/dist &&
-        make -j`nproc`"
+        make -j`nproc` &&
+        make install"

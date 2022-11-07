@@ -14,3 +14,11 @@ jobs:
 
       - name: Build DeckFM
         run: BUILDER_UID="$(id -u)" BUILDER_GID="$(id -g)" docker-compose up
+
+      - name: Prepare distribution
+        run: tar -czf deckfm.tar.gz -C ./build.holo/dist ./deckfm
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: deckfm.tar.gz
+          path: deckfm.tar.gz
