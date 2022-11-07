@@ -24,4 +24,4 @@ make -j8
 
 cd ..
 
-$(pwd)/deckfm.sh
+LD_LIBRARY_PATH=$(pwd) ./build/deckfm

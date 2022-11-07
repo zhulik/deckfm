@@ -11,5 +11,5 @@ services:
         cd /mnt &&
         mkdir -p build.holo &&
         cd build.holo &&
-        cmake .. &&
+        cmake .. -DCMAKE_INSTALL_PREFIX:PATH=`pwd`/dist &&
         make -j`nproc`"
