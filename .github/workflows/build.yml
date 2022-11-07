@@ -1,0 +1,16 @@
+name: Build
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build_image:
+    name: Build DeckFM
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v3
+
+      - name: Build DeckFM
+        run: BUILDER_UID="$(id -u)" BUILDER_GID="$(id -g)" docker-compose up
