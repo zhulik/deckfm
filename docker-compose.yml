@@ -5,9 +5,9 @@ services:
     image: ghcr.io/zhulik/holo-dev
     volumes:
       - ./:/mnt
-    command: bash -c "
-      cd /mnt &&
-      mkdir -p build.holo &&
-      cd build.holo &&
-      cmake .. &&
-      make -j$(nproc)"
+    command: |
+      bash -c "cd /mnt &&
+        mkdir -p build.holo &&
+        cd build.holo &&
+        cmake .. &&
+        make -j$(nproc)"
