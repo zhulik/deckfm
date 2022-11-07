@@ -1,34 +1,16 @@
 name: Build
 
 on:
+  push:
   workflow_dispatch:
-  schedule:
-    - cron: "0 0 * * *" # Every day
 
 jobs:
   build_image:
-    name: Build container
+    name: Build DeckFM
     runs-on: ubuntu-latest
     steps:
       - name: Check out
         uses: actions/checkout@v3
 
-      - name: Get Time
-        id: time
-        uses: nanzm/get-time-action@v1.1
-        with:
-          format: "YYYY.MM.DD"
-
-      - name: Authenticate at ghcr.io
-        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u USERNAME --password-stdin
-
-      - name: Build
-        run: docker build -t "ghcr.io/zhulik/holo-dev" .
-
-      - name: Push
-        env:
-          VERSION: "${{ steps.time.outputs.time }}"
-        run: |
-          docker tag "ghcr.io/zhulik/holo-dev" "ghcr.io/zhulik/holo-dev:$VERSION"
-          docker push "ghcr.io/zhulik/holo-dev:latest"
-          docker push "ghcr.io/zhulik/holo-dev:$VERSION"
+      - name: Build DeckFM
+        run: docker-compose up

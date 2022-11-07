@@ -1,13 +1,12 @@
 name: Update image
 
 on:
-  push:
   workflow_dispatch:
   schedule:
     - cron: "0 0 * * *" # Every day
 
 jobs:
-  build_image:
+  update_image:
     name: Build container
     runs-on: ubuntu-latest
     steps:
