@@ -28,3 +28,9 @@ configure_file(${CMAKE_SOURCE_DIR}/steam_controller.vdf ${CMAKE_CURRENT_BINARY_D
 
 add_executable(deckfm ${PROJECT_SOURCES})
 target_link_libraries(deckfm PRIVATE Qt5::Core Qt5::Quick Qt5::QuickControls2 ${CMAKE_SOURCE_DIR}/libsteam_api.so)
+
+###################### INSTALL
+
+install(TARGETS deckfm DESTINATION deckfm)
+install(FILES libsteam_api.so steam_appid.txt input.vdf DESTINATION deckfm)
+install(DIRECTORY resources DESTINATION deckfm)
