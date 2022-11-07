@@ -1,9 +1,9 @@
 #!/usr/bin/bash
 
-set -eu
+set -eu -o pipefail
 
-wget https://server.home.zhulik.wtf/deckfm.tar.gz -O - | tar --strip-components=2 --overwrite -C . -xz ./deckfm
+wget https://server.home.zhulik.wtf/deckfm.tar.gz -O - | tar --strip-components=2 --overwrite --exclude=deckfm_update_and_run -C . -xz ./deckfm
 
 
 
-./deckfm.sh
+LD_LIBRARY_PATH=$(pwd) ./deckfm
