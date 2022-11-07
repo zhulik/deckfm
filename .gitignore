@@ -72,6 +72,8 @@ Thumbs.db
 *.exe
 
 
+# Customized
 *.user
 /build*/
 /cmake-*
+*.gz
