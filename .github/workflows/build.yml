@@ -13,10 +13,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Build DeckFM
-        run: BUILDER_UID="$(id -u)" BUILDER_GID="$(id -g)" docker-compose up
-
-      - name: Prepare distribution
-        run: tar -czf deckfm.tar.gz -C ./build.holo/dist ./deckfm
+        run: make
 
       - uses: actions/upload-artifact@v3
         with:
