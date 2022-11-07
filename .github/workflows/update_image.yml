@@ -24,7 +24,7 @@ jobs:
         run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u USERNAME --password-stdin
 
       - name: Build
-        run: docker build -t "ghcr.io/zhulik/holo-dev" .
+        run: docker build -t "ghcr.io/zhulik/holo-dev" .holo-dev
 
       - name: Push
         env:
