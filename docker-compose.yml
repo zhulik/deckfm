@@ -10,4 +10,4 @@ services:
         mkdir -p build.holo &&
         cd build.holo &&
         cmake .. &&
-        make -j$(nproc)"
+        make -j`nproc`"
