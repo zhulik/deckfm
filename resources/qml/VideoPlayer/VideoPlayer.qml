@@ -40,7 +40,7 @@ Item {
         title: `Can't play video: ${video.errorString}`
         standardButtons: Dialog.Ok
 
-        onClosed: root.visible = false
+        onClosed: root.closed()
     }
 
     Steamworks.SteamInputScope {
