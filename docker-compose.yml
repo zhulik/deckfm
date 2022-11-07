@@ -5,8 +5,10 @@ services:
     image: ghcr.io/zhulik/holo-dev
     volumes:
       - ./:/mnt
+    user: ${UID}:${GID}
     command: |
-      bash -c "cd /mnt &&
+      bash -c "set -eu &&
+        cd /mnt &&
         mkdir -p build.holo &&
         cd build.holo &&
         cmake .. &&
