@@ -11,7 +11,6 @@ class ActionDefinition {
   Q_PROPERTY(bool isDigital READ isDigital CONSTANT)
 
 public:
-  ActionDefinition();
   ActionDefinition(const QString &name, const QString &type, const QString &actionSet, bool);
 
   bool isDigital() const;
@@ -29,4 +28,4 @@ private:
   QString m_actionSet;
 };
 } // namespace QSteamworks
-Q_DECLARE_METATYPE(QSteamworks::ActionDefinition)
+Q_DECLARE_METATYPE(QSteamworks::ActionDefinition *)

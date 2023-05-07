@@ -1,14 +1,11 @@
 #pragma once
 
-#include "actiondefinition.h"
-#include "actionsetlayerdefinition.h"
 #include "controller.h"
 
 #include <QObject>
 
 #include "iga.h"
 
-#include "qobjectdefs.h"
 #include "steam/steam_api.h"
 
 #include "actionset.h"
@@ -143,7 +140,7 @@ private:
 
   void setCurrentController(const Controller &newCurrentController);
   void updateActionSets();
-  QList<Action> getActions(InputActionSetHandle_t actionSetHandle, const QList<ActionDefinition> &actions) const;
+  QList<Action> getActions(InputActionSetHandle_t actionSetHandle, const QList<ActionDefinition *> &actions) const;
 
   Action action(unsigned long long, bool = true) const;
 

@@ -16,7 +16,7 @@ const QList<Action> ActionSetLayer::actions() const { return m_actions; }
 QVariantMap ActionSetLayer::qmlActions() const {
   QVariantMap result;
   foreach (auto &action, m_actions) {
-    result[action.actionDefinition().name()] = QVariant::fromValue(action);
+    result[action.actionDefinition()->name()] = QVariant::fromValue(action);
   }
   return result;
 }

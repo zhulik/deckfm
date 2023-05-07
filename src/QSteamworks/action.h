@@ -16,10 +16,10 @@ class Action {
 
 public:
   Action(){};
-  Action(unsigned long long handle, const ActionDefinition &definition, const QString &localizedName,
+  Action(unsigned long long handle, ActionDefinition *definition, const QString &localizedName,
          const QStringList &origins, const QStringList &glyphs);
 
-  const QSteamworks::ActionDefinition &actionDefinition() const;
+  const QSteamworks::ActionDefinition *actionDefinition() const;
   unsigned long long handle() const;
   const QString &localizedName() const;
   const QStringList &glyphs() const;
@@ -30,7 +30,7 @@ public:
 private:
   unsigned long long m_handle;
 
-  ActionDefinition m_definition;
+  ActionDefinition *m_definition;
   QString m_localizedName;
   QStringList m_origins;
   QStringList m_glyphs;

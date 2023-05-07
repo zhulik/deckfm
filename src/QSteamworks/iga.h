@@ -1,10 +1,10 @@
 #pragma once
 
-#include "actiondefinition.h"
 #include <QJsonObject>
 
 namespace QSteamworks {
 
+class ActionDefinition;
 class ActionSetDefinition;
 class ActionSetLayerDefinition;
 
@@ -31,13 +31,14 @@ public:
   QStringList qmlActions() const;
 
   Q_INVOKABLE
-  QSteamworks::ActionDefinition actionDefinition(const QString &) const;
+  ActionDefinition *actionDefinition(const QString &) const;
 
   QStringList qmlActionSetLayers() const;
 
 private:
   QMap<QString, ActionSetDefinition *> m_actionSets;
   QMap<QString, ActionSetLayerDefinition *> m_actionSetLayers;
+  QList<ActionDefinition *> m_actions;
 };
 }; // namespace QSteamworks
 
