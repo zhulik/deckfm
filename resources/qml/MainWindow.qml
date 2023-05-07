@@ -109,9 +109,7 @@ ApplicationWindow {
         DirView.DirectoryView {
             id: directoryView
 
-            onFileOpened: {
-                JS.openFile(path)
-            }
+            onFileOpened: JS.openFile(path)
         }
     }
 
@@ -134,7 +132,5 @@ ApplicationWindow {
         property alias path: directoryView.path
     }
 
-    onOpenFileChanged: {
-        JS.openFile(openFile)
-    }
+    onOpenFileChanged: JS.openFile(openFile)
 }

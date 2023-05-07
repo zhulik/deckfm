@@ -1,0 +1,21 @@
+name: Build
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build_image:
+    name: Build DeckFM
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v3
+
+      - name: Build DeckFM
+        run: make
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: deckfm.tar.gz
+          path: deckfm.tar.gz

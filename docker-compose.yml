@@ -1,17 +1,16 @@
 version: '3.8'
 
 services:
-  deckfm:
-    build: .
-    privileged: true
-    ipc: host
-    network_mode: host
+  builder:
+    image: ghcr.io/zhulik/holo-dev
     volumes:
-      - $XDG_RUNTIME_DIR/$WAYLAND_DISPLAY:/tmp/$WAYLAND_DISPLAY
-      - /home/zhulik/.local/share/Steam/linux64/steamclient.so:/home/deck/.steam/sdk64/steamclient.so
-      - /dev:/dev
-    environment:
-      - XDG_RUNTIME_DIR=/tmp
-      - WAYLAND_DISPLAY=$WAYLAND_DISPLAY
-    user: $UID:$GID
-    command: "./build/deckfm"
+      - ./:/mnt
+    user: ${BUILDER_UID}:${BUILDER_GID}
+    command: |
+      bash -c "set -eu &&
+        cd /mnt &&
+        mkdir -p build.holo &&
+        cd build.holo &&
+        cmake .. -DCMAKE_INSTALL_PREFIX:PATH=`pwd`/dist &&
+        make -j`nproc` &&
+        make install"
