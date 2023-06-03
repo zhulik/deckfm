@@ -29,6 +29,9 @@ ToolBar {
             Layout.fillWidth: parent
         }
 
+        FPSCounter {
+        }
+
         ToolSeparator {}
 
         MDI.Button {
