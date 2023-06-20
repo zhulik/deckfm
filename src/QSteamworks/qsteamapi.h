@@ -17,5 +17,6 @@ public:
 
   Q_INVOKABLE
   void runCallbacks() const;
+  bool RestartAppIfNecessary() const;
 };
 } // namespace QSteamworks

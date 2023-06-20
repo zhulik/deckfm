@@ -58,8 +58,9 @@ Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
       QObject::connect(mainWindow, &QQuickWindow::frameSwapped, runCallbacks);
     }
 
+    qDebug() << arguments().at(1);
     if (arguments().count() > 1) {
-      mainWindow->setProperty("openFile", arguments()[1]);
+      mainWindow->setProperty("openFile", arguments().at(1));
     }
   });
 
