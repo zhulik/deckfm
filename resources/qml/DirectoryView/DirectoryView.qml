@@ -54,7 +54,7 @@ Item {
         }
 
         analogHandlers: {
-            "scroll": e => view.flick(e.analogX * 50, e.analogY * 50)
+            "scroll": e => view.flick(e.analogX, e.analogY)
         }
     }
 

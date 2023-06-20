@@ -129,7 +129,7 @@ ApplicationWindow {
 
     DebugOverlay {
         id: debugOverlay
-        visible: false
+        visible: true
 
         x: 0
         y: 0

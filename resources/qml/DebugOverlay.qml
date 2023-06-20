@@ -46,10 +46,12 @@ Item {
         }
 
         Label {
-            Layout.fillHeight: parent
             id: lastEventLabel
         }
 
-        Debug.IGAView{}
+        Debug.IGAView{
+            Layout.fillHeight: parent
+            Layout.fillWidth: parent
+        }
     }
 }
