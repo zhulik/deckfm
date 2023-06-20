@@ -59,7 +59,7 @@ Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
     }
 
     if (arguments().count() > 1) {
-      mainWindow->setProperty("openFile", arguments()[1]);
+      mainWindow->setProperty("openFile", arguments().at(1));
     }
   });
 

@@ -31,7 +31,7 @@ ApplicationWindow {
     }
 
     width: 1280
-    height: 800
+    height: 720
 
     SteamUtils {
         id: steamUtils
@@ -68,6 +68,7 @@ ApplicationWindow {
 
     Shortcut {
         sequence: "F2"
+
         context: Qt.ApplicationShortcut
 
         onActivated: drawer.visible = !drawer.visible
@@ -78,6 +79,13 @@ ApplicationWindow {
         context: Qt.ApplicationShortcut
 
         onActivated: debugOverlay.toggle()
+    }
+
+    Shortcut {
+        sequence: "F4"
+        context: Qt.ApplicationShortcut
+
+        onActivated: Qt.quit()
     }
 
     Steamworks.SteamInputScope {
@@ -121,6 +129,7 @@ ApplicationWindow {
 
     DebugOverlay {
         id: debugOverlay
+        visible: false
 
         x: 0
         y: 0

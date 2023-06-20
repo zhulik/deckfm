@@ -18,3 +18,5 @@ QSteamAPI::QSteamAPI(QObject *parent) : QObject{parent} {
 QSteamAPI::~QSteamAPI() { SteamAPI_Shutdown(); }
 
 void QSteamAPI::runCallbacks() const { SteamAPI_RunCallbacks(); }
+
+bool QSteamAPI::RestartAppIfNecessary() const { return SteamAPI_RestartAppIfNecessary(480); }

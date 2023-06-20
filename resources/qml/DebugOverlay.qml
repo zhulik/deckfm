@@ -6,7 +6,13 @@ import "QSteamworks" as Steamworks
 
 Item {
     id: root
-    visible: false
+
+    signal closed()
+
+    property var deckfmSettings: ({
+                                      showCloseButton: false,
+                                      showFooter: false
+                                  })
 
     function toggle() {
         root.visible = !root.visible
@@ -16,12 +22,6 @@ Item {
         anchors.fill: parent
         color: "black"
         opacity: 0.6
-    }
-
-    MouseArea {
-        anchors.fill: parent
-
-        onClicked: steam_input.actionSetLayer = "file_manager"
     }
 
     Steamworks.SteamInputScope {
