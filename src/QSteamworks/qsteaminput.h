@@ -18,7 +18,7 @@ class QSteamAPI;
 class QSteamInput : public QObject {
   Q_OBJECT
 
-  Q_PROPERTY(QSteamworks::IGA *iga READ iga NOTIFY igaChanged)
+  Q_PROPERTY(QSteamworks::IGA iga READ iga NOTIFY igaChanged)
   Q_PROPERTY(QVariantList controllers READ qmlControllers NOTIFY qmlControllersChanged)
   Q_PROPERTY(QSteamworks::Controller currentController READ currentController WRITE setCurrentController NOTIFY
                  currentControllerChanged)
@@ -63,7 +63,7 @@ public:
   void triggerSimpleHapticEvent(const QString &location, unsigned char nIntensity, char nGainDB,
                                 unsigned char nOtherIntensity, char nOtherGainDB) const;
 
-  IGA *iga() const;
+  IGA iga() const;
 
   QVariantList qmlControllers() const;
 
@@ -129,7 +129,7 @@ signals:
   void defaultActionSetLayerChanged();
 
 private:
-  IGA *m_iga = nullptr;
+  IGA m_iga;
   QSet<Controller> m_controllers;
   Controller m_currentController;
   QList<ActionSet> m_actionSets;
@@ -140,7 +140,7 @@ private:
 
   void setCurrentController(const Controller &newCurrentController);
   void updateActionSets();
-  QList<Action> getActions(InputActionSetHandle_t actionSetHandle, const QList<ActionDefinition *> &actions) const;
+  QList<Action> getActions(InputActionSetHandle_t actionSetHandle, const QList<ActionDefinition> &actions) const;
 
   Action action(unsigned long long, bool = true) const;
 
@@ -155,7 +155,7 @@ private:
   QString m_igaPath;
   QString m_defaultActionSet;
 
-  QList<ActionSetLayer> getActionSetLayers(const QList<ActionSetLayerDefinition *> &) const;
+  QList<ActionSetLayer> getActionSetLayers(const QList<ActionSetLayerDefinition> &) const;
   QSteamworks::ActionSetLayer m_currentActionSetLayer;
   QString m_defaultActionSetLayer;
 };

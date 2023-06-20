@@ -4,6 +4,8 @@ import QtQuick.Layouts 1.15
 
 import "QSteamworks" as Steamworks
 
+import "debug" as Debug
+
 Item {
     id: root
 
@@ -47,5 +49,7 @@ Item {
             Layout.fillHeight: parent
             id: lastEventLabel
         }
+
+        Debug.IGAView{}
     }
 }

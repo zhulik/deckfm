@@ -2,11 +2,10 @@
 
 #include <QJsonObject>
 
-namespace QSteamworks {
+#include "actiondefinition.h"
+#include "actionsetdefinition.h"
 
-class ActionDefinition;
-class ActionSetDefinition;
-class ActionSetLayerDefinition;
+namespace QSteamworks {
 
 class IGA {
   Q_GADGET
@@ -15,10 +14,10 @@ class IGA {
   Q_PROPERTY(QStringList actionSetLayers READ qmlActionSetLayers CONSTANT)
 
 public:
+  IGA(){};
   IGA(const QJsonObject &definition);
-  virtual ~IGA();
 
-  const QMap<QString, ActionSetDefinition *> &actionSets() const;
+  const QMap<QString, ActionSetDefinition> &actionSets() const;
 
   QStringList qmlActionSets() const;
 
@@ -31,15 +30,15 @@ public:
   QStringList qmlActions() const;
 
   Q_INVOKABLE
-  ActionDefinition *actionDefinition(const QString &) const;
+  ActionDefinition actionDefinition(const QString &) const;
 
   QStringList qmlActionSetLayers() const;
 
 private:
-  QMap<QString, ActionSetDefinition *> m_actionSets;
-  QMap<QString, ActionSetLayerDefinition *> m_actionSetLayers;
-  QList<ActionDefinition *> m_actions;
+  QMap<QString, ActionSetDefinition> m_actionSets;
+  QMap<QString, ActionSetLayerDefinition> m_actionSetLayers;
+  QList<ActionDefinition> m_actions;
 };
 }; // namespace QSteamworks
 
-Q_DECLARE_METATYPE(QSteamworks::IGA *)
+Q_DECLARE_METATYPE(QSteamworks::IGA)

@@ -15,27 +15,27 @@ IGA::IGA(const QJsonObject &definition) {
   auto actions = manifest["actions"].toObject();
 
   foreach (auto &layer, manifest["action_layers"].toObject().toVariantMap().toStdMap()) {
-    QList<ActionDefinition *> actions;
+    QList<ActionDefinition> actions;
     foreach (auto &type, actionTypes.toStdMap()) {
       foreach (auto &name, layer.second.toMap()[type.first].toMap().keys()) {
-        auto action = new ActionDefinition(name, type.first, layer.first, type.second);
+        auto action = ActionDefinition(name, type.first, layer.first, type.second);
         m_actions << action;
         actions << actions;
       }
     }
-    m_actionSetLayers[layer.first] = new ActionSetLayerDefinition(layer.first, actions);
+    m_actionSetLayers[layer.first] = ActionSetLayerDefinition(layer.first, actions);
   }
 
   foreach (auto &actionSet, actions.toVariantMap().toStdMap()) {
-    QList<ActionDefinition *> actions;
+    QList<ActionDefinition> actions;
     foreach (auto &type, actionTypes.toStdMap()) {
       foreach (auto &name, actionSet.second.toMap()[type.first].toMap().keys()) {
-        auto action = new ActionDefinition(name, type.first, actionSet.first, type.second);
+        auto action = ActionDefinition(name, type.first, actionSet.first, type.second);
         m_actions << action;
         actions << action;
       }
     }
-    QList<ActionSetLayerDefinition *> layers;
+    QList<ActionSetLayerDefinition> layers;
 
     auto layerNames = actionSet.second.toMap()["Layers"];
 
@@ -45,24 +45,18 @@ IGA::IGA(const QJsonObject &definition) {
       }
     }
 
-    m_actionSets[actionSet.first] = new ActionSetDefinition(actionSet.first, actions, layers);
+    m_actionSets[actionSet.first] = ActionSetDefinition(actionSet.first, actions, layers);
   }
 }
 
-IGA::~IGA() {
-  qDeleteAll(m_actionSets);
-  qDeleteAll(m_actionSetLayers);
-  qDeleteAll(m_actions);
-}
-
-const QMap<QString, ActionSetDefinition *> &IGA::actionSets() const { return m_actionSets; }
+const QMap<QString, ActionSetDefinition> &IGA::actionSets() const { return m_actionSets; }
 
 QStringList IGA::qmlActionSets() const { return m_actionSets.keys(); }
 
 QStringList IGA::actionsForSet(const QString &name) const {
   QStringList result;
-  foreach (auto &action, m_actionSets[name]->actions()) {
-    result << action->name();
+  foreach (auto &action, m_actionSets[name].actions()) {
+    result << action.name();
   }
   return result;
 }
@@ -70,7 +64,7 @@ QStringList IGA::actionsForSet(const QString &name) const {
 QVariantList IGA::qmlActionsForSet(const QString &name) const {
   QVariantList result;
 
-  foreach (auto &action, m_actionSets[name]->actions()) {
+  foreach (auto &action, m_actionSets[name].actions()) {
     result << QVariant::fromValue(action);
   }
   return result;
@@ -79,22 +73,22 @@ QVariantList IGA::qmlActionsForSet(const QString &name) const {
 QStringList IGA::qmlActions() const {
   QStringList result;
   foreach (auto &actionSet, m_actionSets.toStdMap()) {
-    foreach (auto &action, actionSet.second->actions()) {
-      result << action->name();
+    foreach (auto &action, actionSet.second.actions()) {
+      result << action.name();
     }
   }
   return result;
 }
 
-QSteamworks::ActionDefinition *IGA::actionDefinition(const QString &name) const {
+QSteamworks::ActionDefinition IGA::actionDefinition(const QString &name) const {
   foreach (auto &actionSet, m_actionSets.toStdMap()) {
-    foreach (auto &action, actionSet.second->actions()) {
-      if (action->name() == name) {
+    foreach (auto &action, actionSet.second.actions()) {
+      if (action.name() == name) {
         return action;
       }
     }
   }
-  return nullptr;
+  return QSteamworks::ActionDefinition();
 }
 
 QStringList IGA::qmlActionSetLayers() const {

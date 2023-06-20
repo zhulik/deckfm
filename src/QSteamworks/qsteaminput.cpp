@@ -57,10 +57,10 @@ QSteamInput::QSteamInput(QObject *parent) : QObject{parent} {
   if (m_instance != nullptr) {
     throw InitializationFailed("Steam input is already initialized");
   }
-  qRegisterMetaType<QSteamworks::IGA *>();
-  qRegisterMetaType<QSteamworks::ActionDefinition *>();
-  qRegisterMetaType<QSteamworks::ActionSetDefinition *>();
-  qRegisterMetaType<QSteamworks::ActionSetLayerDefinition *>();
+  qRegisterMetaType<QSteamworks::IGA>();
+  qRegisterMetaType<QSteamworks::ActionDefinition>();
+  qRegisterMetaType<QSteamworks::ActionSetDefinition>();
+  qRegisterMetaType<QSteamworks::ActionSetLayerDefinition>();
   qRegisterMetaType<QSteamworks::Controller>();
   qRegisterMetaType<QSteamworks::Action>();
   qRegisterMetaType<QSteamworks::ActionSet>();
@@ -70,12 +70,7 @@ QSteamInput::QSteamInput(QObject *parent) : QObject{parent} {
   m_instance = this;
 }
 
-QSteamInput::~QSteamInput() {
-  SteamInput()->Shutdown();
-  if (m_iga) {
-    delete m_iga;
-  }
-}
+QSteamInput::~QSteamInput() { SteamInput()->Shutdown(); }
 
 void QSteamInput::runFrame() {
   SteamInput()->RunFrame();
@@ -120,7 +115,7 @@ void QSteamInput::triggerSimpleHapticEvent(const QString &location, unsigned cha
                                          nOtherGainDB);
 }
 
-IGA *QSteamInput::iga() const { return m_iga; }
+IGA QSteamInput::iga() const { return m_iga; }
 
 QVariantList QSteamInput::qmlControllers() const {
   QVariantList result;
@@ -135,13 +130,13 @@ QVariantList QSteamInput::qmlControllers() const {
 void QSteamInput::updateActionStates(const Action &action, bool digitalState, float analogX, float analogY) {
   QVariant state;
 
-  if (action.actionDefinition()->isDigital()) {
+  if (action.actionDefinition().isDigital()) {
     state = digitalState;
   } else {
     state = QVariantMap{{"x", analogX}, {"y", analogY}};
   }
 
-  m_actionStates[action.actionDefinition()->name()] = state;
+  m_actionStates[action.actionDefinition().name()] = state;
 
   emit actionStatesChanged();
 }
@@ -149,7 +144,7 @@ void QSteamInput::updateActionStates(const Action &action, bool digitalState, fl
 void QSteamworks::QSteamInput::sendInputEvents(InputEvent e) {
   emit inputEvent(e);
 
-  if (!e.action().actionDefinition()->isDigital()) {
+  if (!e.action().actionDefinition().isDigital()) {
     emit analogEvent(e);
     return;
   }
@@ -161,12 +156,12 @@ void QSteamworks::QSteamInput::sendInputEvents(InputEvent e) {
   }
 }
 
-QList<ActionSetLayer> QSteamInput::getActionSetLayers(const QList<ActionSetLayerDefinition *> &definitions) const {
+QList<ActionSetLayer> QSteamInput::getActionSetLayers(const QList<ActionSetLayerDefinition> &definitions) const {
   QList<ActionSetLayer> result;
   foreach (auto &definition, definitions) {
 
-    auto handle = SteamInput()->GetActionSetHandle(definition->name().toLocal8Bit());
-    result << ActionSetLayer(handle, definition->name(), getActions(handle, definition->actions()));
+    auto handle = SteamInput()->GetActionSetHandle(definition.name().toLocal8Bit());
+    result << ActionSetLayer(handle, definition.name(), getActions(handle, definition.actions()));
   }
   return result;
 }
@@ -259,7 +254,7 @@ void QSteamInput::setCurrentController(const Controller &newCurrentController) {
 }
 
 QList<Action> QSteamInput::getActions(InputActionSetHandle_t actionSetHandle,
-                                      const QList<ActionDefinition *> &actions) const {
+                                      const QList<ActionDefinition> &actions) const {
   QList<Action> result;
 
   foreach (auto &action, actions) {
@@ -272,8 +267,8 @@ QList<Action> QSteamInput::getActions(InputActionSetHandle_t actionSetHandle,
     int n = 0;
     QString localizedName;
 
-    if (action->isDigital()) {
-      handle = SteamInput()->GetDigitalActionHandle(action->name().toLocal8Bit());
+    if (action.isDigital()) {
+      handle = SteamInput()->GetDigitalActionHandle(action.name().toLocal8Bit());
       Q_ASSERT(handle != 0);
 
       n = SteamInput()->GetDigitalActionOrigins(m_currentController.handle(), actionSetHandle, handle,
@@ -281,7 +276,7 @@ QList<Action> QSteamInput::getActions(InputActionSetHandle_t actionSetHandle,
 
       localizedName = SteamInput()->GetStringForDigitalActionName(handle);
     } else {
-      handle = SteamInput()->GetAnalogActionHandle(action->name().toLocal8Bit());
+      handle = SteamInput()->GetAnalogActionHandle(action.name().toLocal8Bit());
       Q_ASSERT(handle != 0);
 
       n = SteamInput()->GetAnalogActionOrigins(m_currentController.handle(), actionSetHandle, handle,
@@ -303,13 +298,13 @@ QList<Action> QSteamInput::getActions(InputActionSetHandle_t actionSetHandle,
 Action QSteamInput::action(unsigned long long handle, bool digital) const {
   foreach (auto &actionSet, m_actionSets) {
     foreach (auto &action, actionSet.actions()) {
-      if (action.handle() == handle && action.actionDefinition()->isDigital() == digital) {
+      if (action.handle() == handle && action.actionDefinition().isDigital() == digital) {
         return action;
       }
     }
     foreach (auto &layer, actionSet.layers()) {
       foreach (auto &action, layer.actions()) {
-        if (action.handle() == handle && action.actionDefinition()->isDigital() == digital) {
+        if (action.handle() == handle && action.actionDefinition().isDigital() == digital) {
           return action;
         }
       }
@@ -321,10 +316,10 @@ Action QSteamInput::action(unsigned long long handle, bool digital) const {
 void QSteamInput::updateActionSets() {
   m_actionSets.clear();
 
-  foreach (auto &actionSet, m_iga->actionSets().toStdMap()) {
+  foreach (auto &actionSet, m_iga.actionSets().toStdMap()) {
     auto handle = SteamInput()->GetActionSetHandle(actionSet.first.toLocal8Bit());
-    m_actionSets << ActionSet(handle, actionSet.first, getActions(handle, actionSet.second->actions()),
-                              getActionSetLayers(actionSet.second->layers()));
+    m_actionSets << ActionSet(handle, actionSet.first, getActions(handle, actionSet.second.actions()),
+                              getActionSetLayers(actionSet.second.layers()));
   }
   emit actionSetsChanged();
 }
@@ -366,7 +361,7 @@ void QSteamInput::setActionSet(const QString &newActionSet) {
   if (m_actionSet.name() == newActionSet || newActionSet == "")
     return;
 
-  if (!m_iga->actionSets().contains(newActionSet)) {
+  if (!m_iga.actionSets().contains(newActionSet)) {
     throw std::runtime_error(QString("Cannot find action set %1").arg(newActionSet).toLocal8Bit());
   }
 
@@ -426,7 +421,7 @@ void QSteamInput::setIgaPath(const QString &newIgaPath) {
   }
 
   auto vdfContent = readFile(newIgaPath);
-  m_iga = new IGA(VDFParser().parse(vdfContent));
+  m_iga = IGA(VDFParser().parse(vdfContent));
   emit igaChanged();
 
   SteamInput()->EnableDeviceCallbacks();
@@ -452,7 +447,7 @@ void QSteamInput::setActionSetLayer(const QString &newActionSetLayer) {
     return;
   }
 
-  if (!m_iga->qmlActionSetLayers().contains(newActionSetLayer)) {
+  if (!m_iga.qmlActionSetLayers().contains(newActionSetLayer)) {
     throw std::runtime_error(QString("Cannot find action set layer %1").arg(newActionSetLayer).toLocal8Bit());
   }
 
