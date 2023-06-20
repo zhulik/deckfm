@@ -2,4 +2,4 @@
 
 set -eu
 
-LD_LIBRARY_PATH=$(pwd) ./deckfm
+LD_LIBRARY_PATH=$(pwd) gamescope -f ./build/deckfm

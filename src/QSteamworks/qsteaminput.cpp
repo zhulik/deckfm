@@ -199,6 +199,9 @@ void QSteamInput::onActionEvent(SteamInputActionEvent_t *event) {
   }
 
   auto a = action(actionHandle, event->eEventType == ESteamInputActionEventType_DigitalAction);
+  if (a.handle() == 0) {
+    return;
+  }
 
   Q_ASSERT(a.handle() != 0);
 
