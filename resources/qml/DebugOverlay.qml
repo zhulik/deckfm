@@ -40,6 +40,8 @@ Item {
             id: bar
             Layout.fillWidth: parent
 
+            currentIndex: 1
+
             TabButton {
                 text: "Controller state"
             }

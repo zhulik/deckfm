@@ -2,6 +2,8 @@ import QtQuick 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15
 
+import "../MDI" as MDI
+
 Item {
     id: root
     signal closed()
@@ -10,13 +12,6 @@ Item {
                                       showCloseButton: false,
                                       showFooter: false
                                   })
-
-    property var labels:({// TODO: MDI
-                             "command": ">>",
-                             "result": "<-",
-                             "error": "X>",
-                             "info": "=="
-                         })
 
     ColumnLayout {
         anchors.fill: parent
@@ -31,23 +26,40 @@ Item {
 
             model: ListModel {
                 id: logsModel
+
+                ListElement {
+                    replType: "info"
+                    replLine: ">>>"
+                }
             }
 
             delegate: ItemDelegate {
                 width: replView.width
                 height: lineLabel.height
 
+                property var typeIcons:({
+                                            "command": "arrowLeft",
+                                            "result": "arrowRight",
+                                            "error": "bug",
+                                            "info": "information"
+                                        })
+
                 RowLayout {
                     anchors.fill: parent
 
-                    Label {
-                        Layout.preferredWidth: 20
-                        text: root.labels[replType]
+                    MDI.Icon {
+                        Layout.preferredWidth: 30
+
+                        name: typeIcons[replType]
+                        color: "gray"
                     }
 
                     Label {
                         id: lineLabel
+
                         Layout.fillWidth: parent
+
+                        font.pointSize: 16
 
                         text: replLine
                     }
@@ -99,24 +111,17 @@ Item {
                             }
 
             function evalCommand(cmd) {
-                logsModel.insert(0, {replLine: cmd, replType: "command"})
+                addLine("command", cmd)
                 try {
-                    logsModel.insert(0, {replLine: `${eval(cmd)}`, replType: "result"})
+                    addLine("result", `${eval(cmd)}`)
                 } catch (e) {
-                    logsModel.insert(0, {replLine: `${e}`, replType: "error"})
+                    addLine("error", `${e}`)
                 }
             }
         }
     }
 
-    Timer {
-        interval: 100
-        repeat: false
-        running: true
-
-        onTriggered: {
-            replEdit.forceActiveFocus()
-            logsModel.insert(0, {replLine: ">>>", replType: "info"})
-        }
+    function addLine(type, line) {
+        logsModel.insert(0, {replLine: line, replType: type})
     }
 }
