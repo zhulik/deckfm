@@ -19,6 +19,10 @@ ToolBar {
             onClicked: root.menuClicked()
         }
 
+        BusyIndicator {
+            running: true
+        }
+
         MDI.Button {
             text: "DECKFM"
             font.pointSize: 24

@@ -334,6 +334,12 @@ void QSteamInput::onConfigurationLoaded(SteamInputConfigurationLoaded_t *) {
   updateActionSets();
   setActionSet(m_defaultActionSet);
   setActionSetLayer(m_defaultActionSetLayer);
+  auto cb = [](SteamInputActionEvent_t *event) {
+    QSteamInput::instance()->onActionEvent(event); // Dirty hack, but I didn't find a better way
+  };
+
+  SteamInput()->EnableActionEventCallbacks(cb);
+
   emit configurationLoaded();
 }
 
@@ -423,13 +429,9 @@ void QSteamInput::setIgaPath(const QString &newIgaPath) {
   m_iga = new IGA(VDFParser().parse(vdfContent));
   emit igaChanged();
 
+  qDebug() << m_iga->actionSets().first()->layers().count();
+
   SteamInput()->EnableDeviceCallbacks();
-
-  auto cb = [](SteamInputActionEvent_t *event) {
-    QSteamInput::instance()->onActionEvent(event); // Dirty hack, but I didn't find a better way
-  };
-
-  SteamInput()->EnableActionEventCallbacks(cb);
 }
 
 const QString &QSteamInput::defaultActionSet() const { return m_defaultActionSet; }
@@ -457,6 +459,8 @@ void QSteamInput::setActionSetLayer(const QString &newActionSetLayer) {
   }
 
   SteamInput()->DeactivateAllActionSetLayers(m_currentController.handle());
+  m_currentActionSetLayer = ActionSetLayer();
+  emit actionSetLayerChanged();
 
   foreach (auto &layer, m_actionSet.layers()) {
     if (layer.name() == newActionSetLayer) {

@@ -9,7 +9,7 @@ namespace QSteamworks {
 class Action {
   Q_GADGET
   Q_PROPERTY(unsigned long long handle READ handle CONSTANT)
-  Q_PROPERTY(QSteamworks::ActionDefinition actionDefinition READ actionDefinition CONSTANT)
+  Q_PROPERTY(const QSteamworks::ActionDefinition *actionDefinition READ actionDefinition CONSTANT)
   Q_PROPERTY(QString localizedName READ localizedName CONSTANT)
   Q_PROPERTY(QStringList glyphs READ glyphs CONSTANT)
   Q_PROPERTY(QStringList origins READ origins CONSTANT)
