@@ -19,7 +19,7 @@ IGA::IGA(const QJsonObject &definition) {
       foreach (auto &name, layer.second.toMap()[type.first].toMap().keys()) {
         auto action = ActionDefinition(name, type.first, layer.first, type.second);
         m_actions << action;
-        actions << actions;
+        actions << action;
       }
     }
     m_actionSetLayers[layer.first] = ActionSetLayerDefinition(layer.first, actions);

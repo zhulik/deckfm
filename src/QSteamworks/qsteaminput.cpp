@@ -4,6 +4,7 @@
 #include "actionsetdefinition.h"
 #include "actionsetlayer.h"
 #include "actionsetlayerdefinition.h"
+#include "qglobal.h"
 #include "steam/isteaminput.h"
 #include "steam/steam_api.h"
 
@@ -94,6 +95,13 @@ bool QSteamInput::showBindingPanel() const {
     return false;
   }
   return SteamInput()->ShowBindingPanel(m_currentController.handle());
+}
+
+void QSteamInput::stopAnalogActionMomentum(const QString &actionName) const {
+  auto action = actionByName(actionName);
+
+  Q_ASSERT(action.handle() != 0);
+  SteamInput()->StopAnalogActionMomentum(m_currentController.handle(), action.handle());
 }
 
 void QSteamInput::triggerSimpleHapticEvent(const QString &location, unsigned char nIntensity, char nGainDB,
@@ -192,15 +200,33 @@ void QSteamInput::onActionEvent(SteamInputActionEvent_t *event) {
     analogY = event->analogAction.analogActionData.y;
   }
 
-  auto a = action(actionHandle, event->eEventType == ESteamInputActionEventType_DigitalAction);
+  auto a = actionByHandle(actionHandle, event->eEventType == ESteamInputActionEventType_DigitalAction);
 
-  Q_ASSERT(a.handle() != 0);
+  //  Q_ASSERT(a.handle() != 0);
 
   updateActionStates(a, digitalState, analogX, analogY);
 
   auto iEvent = InputEvent(type, m_currentController, a, digitalState, analogX, analogY);
 
   sendInputEvents(iEvent);
+}
+
+const Action &QSteamInput::actionByName(const QString &name) const {
+  foreach (auto &action, m_actionSet.actions()) {
+    if (action.actionDefinition().name() == name) {
+      return action;
+    }
+  }
+
+  foreach (auto &layer, m_actionSet.layers()) {
+    foreach (auto &action, layer.actions()) {
+      if (action.actionDefinition().name() == name) {
+        return action;
+      }
+    }
+  }
+
+  return Action();
 }
 
 void QSteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb) {
@@ -294,7 +320,7 @@ QList<Action> QSteamInput::getActions(InputActionSetHandle_t actionSetHandle,
   return result;
 }
 
-Action QSteamInput::action(unsigned long long handle, bool digital) const {
+const Action &QSteamInput::actionByHandle(unsigned long long handle, bool digital) const {
   foreach (auto &actionSet, m_actionSets) {
     foreach (auto &action, actionSet.actions()) {
       if (action.handle() == handle && action.actionDefinition().isDigital() == digital) {

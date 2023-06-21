@@ -40,7 +40,7 @@ Item {
             id: bar
             Layout.fillWidth: parent
 
-            currentIndex: 1
+            currentIndex: 2
 
             TabButton {
                 text: "Controller state"
@@ -67,7 +67,7 @@ Item {
                 }
 
                 Label {
-                    text: `Current layer: ${JSON.stringify(input.actionSetLayer)} (available: ${JSON.stringify(steam_input.currentActionSet.layers)})`
+                    text: `Current layer: ${JSON.stringify(input.actionSetLayer)}`
                 }
 
                 Label {

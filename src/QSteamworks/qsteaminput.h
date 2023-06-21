@@ -6,6 +6,7 @@
 
 #include "iga.h"
 
+#include "qobjectdefs.h"
 #include "steam/steam_api.h"
 
 #include "actionset.h"
@@ -58,6 +59,9 @@ public:
 
   Q_INVOKABLE
   virtual bool showBindingPanel() const;
+
+  Q_INVOKABLE
+  virtual void stopAnalogActionMomentum(const QString &actionName) const;
 
   Q_INVOKABLE
   void triggerSimpleHapticEvent(const QString &location, unsigned char nIntensity, char nGainDB,
@@ -138,11 +142,12 @@ private:
   static QSteamInput *m_instance;
   void onActionEvent(SteamInputActionEvent_t *event);
 
+  const QSteamworks::Action &actionByHandle(unsigned long long, bool = true) const;
+  const QSteamworks::Action &actionByName(const QString &) const;
+
   void setCurrentController(const Controller &newCurrentController);
   void updateActionSets();
   QList<Action> getActions(InputActionSetHandle_t actionSetHandle, const QList<ActionDefinition> &actions) const;
-
-  Action action(unsigned long long, bool = true) const;
 
   ActionSet m_actionSet;
   void setActionSet(const QSteamworks::ActionSet &newActionSet);

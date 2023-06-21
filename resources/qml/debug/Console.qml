@@ -18,6 +18,8 @@ Item {
 
             verticalLayoutDirection: ListView.BottomToTop
 
+            clip: true
+
             model: ListModel {
                 id: logsModel
 

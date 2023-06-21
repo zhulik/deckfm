@@ -7,94 +7,137 @@ import QtQuick.Controls.Material 2.12
 import "../../../resources/qml/models" as Models
 import "../../../resources/qml/MDI" as MDI
 
-Item {
+Rectangle {
     id: root
 
-    RowLayout {
+    color: Material.background
+
+    opacity: 1
+
+    ColumnLayout {
         anchors.fill: parent
 
-        ListView {
-            id: actionSetsView
 
-            Layout.preferredWidth: root.width / 3
-            Layout.fillHeight: parent
+        TabBar {
+            id: bar
 
-            property string currentActionSet: model.get(currentIndex).value
+            Layout.fillWidth: parent
 
-            model: Models.JSONListModel {
-                data: steam_input.iga.actionSets
+            Label {
+                width: 200
+                height: 100
+                text: "Action set layers"
             }
 
-            delegate: ItemDelegate {
-                width: actionSetsView.width
-                height: 70
+            Repeater {
+                model: steam_input.actionSets
 
-                Label {
-                    height: parent.height
-                    verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 36
-                    text: value
+                TabButton {
+                    Layout.fillWidth: parent
+                    text: modelData.name
+
+                    MDI.Icon {
+                        name: "star"
+                        visible: input.actionSet === modelData.name
+
+                        anchors.centerIn: parent
+                        anchors.horizontalCenterOffset: -100
+                    }
                 }
-                onClicked: actionSetsView.currentIndex = index
-            }
 
-            highlight: Rectangle {
-                width: actionSetsView.delegate.width
-                height: actionSetsView.delegate.height
-                color: Material.primary
+                Component.onCompleted: {
+                    console.log(steam_input.actionSets)
+                }
             }
         }
 
-        ListView {
-            id: actionsView
-
-            Layout.preferredWidth: root.width / 3 * 2
+        StackLayout {
+            id: stack
+            Layout.fillWidth: parent
             Layout.fillHeight: parent
 
-            model: Models.JSONListModel {
-                data: steam_input.iga.qmlActionsForSet(actionSetsView.currentActionSet)
-            }
+            currentIndex: bar.currentIndex
 
-            delegate: ItemDelegate {
-                width: actionsView.width
-                height: 70
+            Repeater {
+                model: steam_input.actionSets
 
                 RowLayout {
-                    anchors.fill: parent
 
-                    MDI.Icon {
-                        name: isDigital ? "gestureTapButton" : "sineWave"
-                        Layout.preferredWidth: 40
-                    }
-
-                    Label {
+                    ActionList {
                         Layout.fillHeight: parent
-
-                        verticalAlignment: Text.AlignVCenter
-                        font.pointSize: 36
-
-                        text: name
-                    }
-
-                    Item {
                         Layout.fillWidth: parent
+
+                        actions: steam_input.actionSets[stack.currentIndex].actions
+
+                        header: Label {
+                            text: "Actions"
+                        }
                     }
 
-                    Label {
+                    ListView {
+                        id: layersView
                         Layout.fillHeight: parent
+                        Layout.fillWidth: parent
 
-                        verticalAlignment: Text.AlignVCenter
-                        font.pointSize: 36
+                        clip: true
 
-                        text: type
+                        model: Models.JSONListModel {
+                            data: steam_input.actionSets[stack.currentIndex].layers
+                        }
+
+                        highlight: Rectangle {
+                            color: Material.primary
+                            visible: true
+                        }
+
+                        delegate: ItemDelegate {
+                            width: stack.width
+                            height: 50
+
+                            onClicked: {
+                                layersView.currentIndex = index
+                            }
+
+                            RowLayout {
+                                anchors.fill: parent
+
+                                MDI.Icon {
+                                    name: "star"
+                                    opacity: steam_input.actionSetLayer === model.name ? 100 : 0
+                                }
+
+                                Label {
+                                    Layout.fillWidth: parent
+                                    height: parent.height
+                                    font.pointSize: 20
+
+                                    text: model.name
+                                    verticalAlignment: Qt.AlignVCenter
+                                }
+                            }
+                        }
+
+                        header: Label {
+                            text: "Action set layers"
+                        }
                     }
-                }
-            }
 
-            highlight: Rectangle {
-                width: actionsView.delegate.width
-                height: actionsView.delegate.height
-                color: Material.primary
+                    ActionList {
+                        Layout.fillHeight: parent
+                        Layout.fillWidth: parent
+
+                        actions: steam_input.actionSets[stack.currentIndex].layers[layersView.currentIndex].actions
+
+                        onActionsChanged: {
+                            console.log(Object.keys(steam_input.actionSets[stack.currentIndex].layers[layersView.currentIndex].actions))
+                        }
+
+                        header: Label {
+                            text: "Actions of selected layer"
+                        }
+                    }
+
+                }
             }
         }
     }

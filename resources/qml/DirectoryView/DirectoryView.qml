@@ -204,6 +204,10 @@ Item {
                             const y = fileHighlight.belowView ? view.contentY + view.cellHeight : view.contentY + view.height - view.cellHeight
                             view.currentIndex = view.indexAt(fileHighlight.x, y)
                         }
+
+                        if (!view.moving) {
+                            steam_input.stopAnalogActionMomentum("scroll")
+                        }
                     }
                 }
             }
