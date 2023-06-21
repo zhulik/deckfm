@@ -4,10 +4,11 @@ import QtQuick.Layouts 1.15
 import "QSteamworks" as Steamworks
 
 ToolBar {
+    id: root
 
     property alias hintActions: repeater.model
 
-    height: 60
+    height: 20
 
     Rectangle {
         anchors.fill: parent
@@ -29,6 +30,7 @@ ToolBar {
             id: repeater
 
             ActionLabel {
+                height: root.height
                 name: modelData
             }
         }

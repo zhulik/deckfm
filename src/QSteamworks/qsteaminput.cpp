@@ -1,4 +1,3 @@
-#include <QDebug>
 #include <QFile>
 #include <QMap>
 
@@ -423,8 +422,6 @@ void QSteamInput::setIgaPath(const QString &newIgaPath) {
   auto vdfContent = readFile(newIgaPath);
   m_iga = IGA(VDFParser().parse(vdfContent));
   emit igaChanged();
-
-  qDebug() << m_iga->actionSets().first()->layers().count();
 
   SteamInput()->EnableDeviceCallbacks();
 }

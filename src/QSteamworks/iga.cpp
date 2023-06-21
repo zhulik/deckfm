@@ -4,7 +4,6 @@
 #include "actionsetdefinition.h"
 #include "actionsetlayerdefinition.h"
 #include "iga.h"
-#include "qalgorithms.h"
 
 using namespace QSteamworks;
 
