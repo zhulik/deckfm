@@ -34,24 +34,52 @@ Item {
     }
 
     ColumnLayout {
-
         anchors.fill: parent
 
-        Label {
-            text: `Action set: ${input.actionSet}`
-        }
-
-        Label {
-            text: `Current layer: ${JSON.stringify(input.actionSetLayer)} (available: ${JSON.stringify(steam_input.currentActionSet.layers)})`
-        }
-
-        Label {
-            id: lastEventLabel
-        }
-
-        Debug.IGAView{
-            Layout.fillHeight: parent
+        TabBar {
+            id: bar
             Layout.fillWidth: parent
+
+            TabButton {
+                text: "Controller state"
+            }
+
+            TabButton {
+                text: "Console"
+            }
+
+            TabButton {
+                text: "IGA"
+            }
+        }
+
+        StackLayout {
+            Layout.fillWidth: parent
+
+            currentIndex: bar.currentIndex
+
+            ColumnLayout {
+
+                Label {
+                    text: `Action set: ${input.actionSet}`
+                }
+
+                Label {
+                    text: `Current layer: ${JSON.stringify(input.actionSetLayer)} (available: ${JSON.stringify(steam_input.currentActionSet.layers)})`
+                }
+
+                Label {
+                    id: lastEventLabel
+                }
+            }
+
+            Debug.Console{
+
+            }
+
+            Debug.IGAView {
+
+            }
         }
     }
 }
