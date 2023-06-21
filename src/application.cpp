@@ -22,6 +22,13 @@ Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
   setOrganizationName("zhulik");
   setApplicationName("deckfm");
 
+  QSurfaceFormat format;
+  format.setRenderableType(QSurfaceFormat::OpenGL);
+  format.setProfile(QSurfaceFormat::CompatibilityProfile);
+  format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
+  format.setSwapInterval(1);
+  QSurfaceFormat::setDefaultFormat(format);
+
   QFontDatabase::addApplicationFont("resources/fonts/materialdesignicons-webfont.ttf");
   QQuickStyle::setStyle("Material");
 
@@ -58,6 +65,7 @@ Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
       QObject::connect(mainWindow, &QQuickWindow::frameSwapped, runCallbacks);
     }
 
+    qDebug() << arguments().at(1);
     if (arguments().count() > 1) {
       mainWindow->setProperty("openFile", arguments().at(1));
     }

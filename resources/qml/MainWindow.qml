@@ -23,7 +23,6 @@ ApplicationWindow {
     Material.theme: Material.Dark
 
     title: "DeckFM"
-    visible: true
 
     visibility: {
         steamUtils.isSteamRunningOnSteamDeck
