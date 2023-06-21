@@ -31,7 +31,7 @@ Item {
                 }
             }
 
-            delegate: LineDelegate{
+            delegate: LineDelegate {
                 width: parent.width
             }
         }
@@ -40,16 +40,14 @@ Item {
             id: replEdit
             Layout.fillWidth: parent
 
-            onEvalRequested: evalCommand(line)
-        }
-    }
-
-    function evalCommand(cmd) {
-        logsModel.addLine("command", cmd)
-        try {
-            logsModel.addLine("result", `${eval(cmd)}`)
-        } catch (e) {
-            logsModel.addLine("error", `${e}`)
+            onEvalRequested: {
+                logsModel.addLine("command", line)
+                try {
+                    logsModel.addLine("result", `${eval(line)}`)
+                } catch (e) {
+                    logsModel.addLine("error", `${e}`)
+                }
+            }
         }
     }
 }
