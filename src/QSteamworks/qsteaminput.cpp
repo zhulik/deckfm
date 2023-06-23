@@ -58,9 +58,16 @@ QSteamInput::QSteamInput(QObject *parent) : QObject{parent} {
     throw InitializationFailed("Steam input is already initialized");
   }
   qRegisterMetaType<QSteamworks::IGA>();
+
   qRegisterMetaType<QSteamworks::ActionDefinition>();
+  qRegisterMetaType<QList<QSteamworks::ActionDefinition>>();
+
   qRegisterMetaType<QSteamworks::ActionSetDefinition>();
+  qRegisterMetaType<QList<QSteamworks::ActionSetDefinition>>();
+
   qRegisterMetaType<QSteamworks::ActionSetLayerDefinition>();
+  qRegisterMetaType<QList<QSteamworks::ActionSetLayerDefinition>>();
+
   qRegisterMetaType<QSteamworks::Controller>();
   qRegisterMetaType<QSteamworks::Action>();
   qRegisterMetaType<QSteamworks::ActionSet>();
@@ -211,7 +218,7 @@ void QSteamInput::onActionEvent(SteamInputActionEvent_t *event) {
   sendInputEvents(iEvent);
 }
 
-const Action &QSteamInput::actionByName(const QString &name) const {
+const Action QSteamInput::actionByName(const QString &name) const {
   foreach (auto &action, m_actionSet.actions()) {
     if (action.actionDefinition().name() == name) {
       return action;
@@ -341,10 +348,10 @@ const Action &QSteamInput::actionByHandle(unsigned long long handle, bool digita
 void QSteamInput::updateActionSets() {
   m_actionSets.clear();
 
-  foreach (auto &actionSet, m_iga.actionSets().toStdMap()) {
-    auto handle = SteamInput()->GetActionSetHandle(actionSet.first.toLocal8Bit());
-    m_actionSets << ActionSet(handle, actionSet.first, getActions(handle, actionSet.second.actions()),
-                              getActionSetLayers(actionSet.second.layers()));
+  foreach (auto &actionSet, m_iga.actionSets()) {
+    auto handle = SteamInput()->GetActionSetHandle(actionSet.name().toLocal8Bit());
+    m_actionSets << ActionSet(handle, actionSet.name(), getActions(handle, actionSet.actions()),
+                              getActionSetLayers(actionSet.layers()));
   }
   emit actionSetsChanged();
 }
@@ -386,16 +393,13 @@ void QSteamInput::setActionSet(const QString &newActionSet) {
   if (m_actionSet.name() == newActionSet || newActionSet == "")
     return;
 
-  if (!m_iga.actionSets().contains(newActionSet)) {
-    throw std::runtime_error(QString("Cannot find action set %1").arg(newActionSet).toLocal8Bit());
-  }
-
   foreach (auto &actionSet, m_actionSets) {
     if (actionSet.name() == newActionSet) {
       setActionSet(actionSet);
       return;
     }
   }
+  //  throw std::runtime_error(QString("Cannot find action set %1").arg(newActionSet).toLocal8Bit());
 }
 
 unsigned short QSteamInput::vibrationSpeedLeft() const { return m_vibrationSpeedLeft; }
@@ -470,10 +474,6 @@ const QString &QSteamInput::qmlActionSetLayer() const { return m_currentActionSe
 void QSteamInput::setActionSetLayer(const QString &newActionSetLayer) {
   if (m_actionSet.name() == "" || newActionSetLayer == "" || m_currentActionSetLayer.name() == newActionSetLayer) {
     return;
-  }
-
-  if (!m_iga.qmlActionSetLayers().contains(newActionSetLayer)) {
-    throw std::runtime_error(QString("Cannot find action set layer %1").arg(newActionSetLayer).toLocal8Bit());
   }
 
   SteamInput()->DeactivateAllActionSetLayers(m_currentController.handle());

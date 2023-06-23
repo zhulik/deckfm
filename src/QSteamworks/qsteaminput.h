@@ -143,7 +143,7 @@ private:
   void onActionEvent(SteamInputActionEvent_t *event);
 
   const QSteamworks::Action &actionByHandle(unsigned long long, bool = true) const;
-  const QSteamworks::Action &actionByName(const QString &) const;
+  const QSteamworks::Action actionByName(const QString &) const;
 
   void setCurrentController(const Controller &newCurrentController);
   void updateActionSets();

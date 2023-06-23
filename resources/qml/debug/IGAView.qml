@@ -21,6 +21,8 @@ Rectangle {
         TabBar {
             id: bar
 
+            property var currentActionSet: steam_input.iga.actionSets[currentIndex]
+
             Layout.fillWidth: parent
 
             Label {
@@ -30,7 +32,7 @@ Rectangle {
             }
 
             Repeater {
-                model: steam_input.actionSets
+                model: steam_input.iga.actionSets
 
                 TabButton {
                     Layout.fillWidth: parent
@@ -44,10 +46,6 @@ Rectangle {
                         anchors.horizontalCenterOffset: -100
                     }
                 }
-
-                Component.onCompleted: {
-                    console.log(steam_input.actionSets)
-                }
             }
         }
 
@@ -59,7 +57,7 @@ Rectangle {
             currentIndex: bar.currentIndex
 
             Repeater {
-                model: steam_input.actionSets
+                model: steam_input.iga.actionSets
 
                 RowLayout {
 
@@ -67,7 +65,7 @@ Rectangle {
                         Layout.fillHeight: parent
                         Layout.fillWidth: parent
 
-                        actions: steam_input.actionSets[stack.currentIndex].actions
+                        actions: bar.currentActionSet.actions
 
                         header: Label {
                             text: "Actions"
@@ -79,10 +77,12 @@ Rectangle {
                         Layout.fillHeight: parent
                         Layout.fillWidth: parent
 
+                        property var currentLayer: bar.currentActionSet.layers[layersView.currentIndex]
+
                         clip: true
 
                         model: Models.JSONListModel {
-                            data: steam_input.actionSets[stack.currentIndex].layers
+                            data: bar.currentActionSet.layers
                         }
 
                         highlight: Rectangle {
@@ -100,11 +100,6 @@ Rectangle {
 
                             RowLayout {
                                 anchors.fill: parent
-
-                                MDI.Icon {
-                                    name: "star"
-                                    opacity: steam_input.actionSetLayer === model.name ? 100 : 0
-                                }
 
                                 Label {
                                     Layout.fillWidth: parent
@@ -126,10 +121,10 @@ Rectangle {
                         Layout.fillHeight: parent
                         Layout.fillWidth: parent
 
-                        actions: steam_input.actionSets[stack.currentIndex].layers[layersView.currentIndex].actions
-
-                        onActionsChanged: {
-                            console.log(Object.keys(steam_input.actionSets[stack.currentIndex].layers[layersView.currentIndex].actions))
+                        actions: {
+                            if (layersView.currentLayer) {
+                                layersView.currentLayer.actions
+                            }
                         }
 
                         header: Label {

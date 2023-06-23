@@ -21,18 +21,12 @@ ListView {
         RowLayout {
             anchors.fill: parent
 
-            Image {
-                width: height
-                height: parent.height
-                source: `file://${glyphs[0]}`
-            }
-
             Label {
                 Layout.fillWidth: parent
                 height: parent.height
                 font.pointSize: 20
 
-                text: localizedName
+                text: name
                 verticalAlignment: Qt.AlignVCenter
             }
         }
