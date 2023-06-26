@@ -131,16 +131,6 @@ void QSteamInput::triggerSimpleHapticEvent(const QString &location, unsigned cha
 
 IGA QSteamInput::iga() const { return m_iga; }
 
-QVariantList QSteamInput::qmlControllers() const {
-  QVariantList result;
-
-  foreach (auto &controller, m_controllers) {
-    result << QVariant::fromValue(controller);
-  }
-
-  return result;
-}
-
 void QSteamInput::updateActionStates(const Action &action, bool digitalState, float analogX, float analogY) {
   QVariant state;
 
@@ -246,7 +236,6 @@ void QSteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb) {
   auto controller = Controller(handle, name, image);
   m_controllers << controller;
   setCurrentController(controller);
-  emit qmlControllersChanged();
 
   runFrame();
 }
@@ -257,8 +246,6 @@ void QSteamInput::onControllerDisconnected(SteamInputDeviceDisconnected_t *cb) {
   if (m_controllers.contains(controller)) {
     m_controllers.remove(controller);
   }
-
-  emit qmlControllersChanged();
 
   if (!m_controllers.empty()) {
     m_currentController = Controller();
@@ -400,30 +387,6 @@ void QSteamInput::setActionSet(const QString &newActionSet) {
     }
   }
   //  throw std::runtime_error(QString("Cannot find action set %1").arg(newActionSet).toLocal8Bit());
-}
-
-unsigned short QSteamInput::vibrationSpeedLeft() const { return m_vibrationSpeedLeft; }
-
-void QSteamInput::setVibrationSpeedLeft(unsigned short newVibrationSpeedLeft) {
-  if (m_vibrationSpeedLeft == newVibrationSpeedLeft)
-    return;
-  m_vibrationSpeedLeft = newVibrationSpeedLeft;
-  if (m_currentController.handle() != 0) {
-    SteamInput()->TriggerVibration(m_currentController.handle(), m_vibrationSpeedLeft, m_vibrationSpeedRight);
-  }
-  emit vibrationSpeedLeftChanged();
-}
-
-unsigned short QSteamInput::vibrationSpeedRight() const { return m_vibrationSpeedRight; }
-
-void QSteamInput::setVibrationSpeedRight(unsigned short newVibrationSpeedRight) {
-  if (m_vibrationSpeedRight == newVibrationSpeedRight)
-    return;
-  m_vibrationSpeedRight = newVibrationSpeedRight;
-  if (m_currentController.handle() != 0) {
-    SteamInput()->TriggerVibration(m_currentController.handle(), m_vibrationSpeedLeft, m_vibrationSpeedRight);
-  }
-  emit vibrationSpeedRightChanged();
 }
 
 const QVariantMap &QSteamInput::actionStates() const { return m_actionStates; }

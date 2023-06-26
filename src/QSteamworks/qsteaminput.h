@@ -20,16 +20,10 @@ class QSteamInput : public QObject {
   Q_OBJECT
 
   Q_PROPERTY(QSteamworks::IGA iga READ iga NOTIFY igaChanged)
-  Q_PROPERTY(QVariantList controllers READ qmlControllers NOTIFY qmlControllersChanged)
   Q_PROPERTY(QSteamworks::Controller currentController READ currentController WRITE setCurrentController NOTIFY
                  currentControllerChanged)
   Q_PROPERTY(QVariantList actionSets READ qmlActionSets NOTIFY actionSetsChanged)
   Q_PROPERTY(QString actionSet READ qmlActionSet WRITE setActionSet NOTIFY actionSetChanged)
-
-  Q_PROPERTY(unsigned short vibrationSpeedLeft READ vibrationSpeedLeft WRITE setVibrationSpeedLeft NOTIFY
-                 vibrationSpeedLeftChanged)
-  Q_PROPERTY(unsigned short vibrationSpeedRight READ vibrationSpeedRight WRITE setVibrationSpeedRight NOTIFY
-                 vibrationSpeedRightChanged)
 
   Q_PROPERTY(QVariantMap actionStates READ actionStates NOTIFY actionStatesChanged)
   Q_PROPERTY(QString igaPath READ igaPath WRITE setIgaPath NOTIFY igaPathChanged)
@@ -69,8 +63,6 @@ public:
 
   IGA iga() const;
 
-  QVariantList qmlControllers() const;
-
   const Controller &currentController() const;
   QVariantList qmlActionSets() const;
 
@@ -78,12 +70,6 @@ public:
 
   const QString &qmlActionSet() const;
   void setActionSet(const QString &newActionSet);
-
-  unsigned short vibrationSpeedLeft() const;
-  void setVibrationSpeedLeft(unsigned short newVibrationSpeedLeft);
-
-  unsigned short vibrationSpeedRight() const;
-  void setVibrationSpeedRight(unsigned short newVibrationSpeedRight);
 
   const QVariantMap &actionStates() const;
 
@@ -104,7 +90,6 @@ public:
   void setDefaultActionSetLayer(const QString &newDefaultActionSetLayer);
 
 signals:
-  void qmlControllersChanged();
   void inputEvent(QSteamworks::InputEvent);
   void pressedEvent(QSteamworks::InputEvent);
   void releasedEvent(QSteamworks::InputEvent);
@@ -115,10 +100,6 @@ signals:
   void configurationLoaded();
 
   void actionSetChanged();
-
-  void vibrationSpeedLeftChanged();
-
-  void vibrationSpeedRightChanged();
 
   void actionStatesChanged();
 
@@ -152,8 +133,6 @@ private:
   ActionSet m_actionSet;
   void setActionSet(const QSteamworks::ActionSet &newActionSet);
 
-  unsigned short m_vibrationSpeedLeft = 0;
-  unsigned short m_vibrationSpeedRight = 0;
   QVariantMap m_actionStates;
   void updateActionStates(const Action &action, bool digitalState, float analogX, float analogY);
   void sendInputEvents(InputEvent iEvent);
