@@ -34,13 +34,6 @@ static const QMap<ESteamInputType, QString> controllerNames{
     {k_ESteamInputType_SwitchProController, "Switch Pro"},
     {k_ESteamInputType_MobileTouch, "Mobile Touch"}};
 
-static QString nameForControllerType(ESteamInputType inputType) {
-  if (controllerNames.contains(inputType)) {
-    return controllerNames[inputType];
-  }
-  return "Unknown";
-}
-
 QString readFile(QString const &path) {
   QFile f(path);
 
@@ -78,55 +71,7 @@ QSteamInput::QSteamInput(QObject *parent) : QObject{parent} {
 
 QSteamInput::~QSteamInput() { SteamInput()->Shutdown(); }
 
-void QSteamInput::runFrame() {
-  SteamInput()->RunFrame();
-
-  if (m_currentController->handle() != 0 && !m_actionSets.empty()) {
-    auto handle = SteamInput()->GetCurrentActionSet(m_currentController->handle());
-
-    foreach (auto &actionSet, m_actionSets) {
-      if (actionSet.handle() == handle) {
-        setActionSet(actionSet);
-      }
-    }
-  }
-}
-
-bool QSteamInput::showBindingPanel(InputHandle_t inputHandle) const {
-  return SteamInput()->ShowBindingPanel(inputHandle);
-}
-
-bool QSteamInput::showBindingPanel() const {
-  if (m_currentController->handle() == 0) {
-    return false;
-  }
-  return SteamInput()->ShowBindingPanel(m_currentController->handle());
-}
-
-void QSteamInput::stopAnalogActionMomentum(const QString &actionName) const {
-  auto action = actionByName(actionName);
-
-  Q_ASSERT(action.handle() != 0);
-  SteamInput()->StopAnalogActionMomentum(m_currentController->handle(), action.handle());
-}
-
-void QSteamInput::triggerSimpleHapticEvent(const QString &location, unsigned char nIntensity, char nGainDB,
-                                           unsigned char nOtherIntensity, char nOtherGainDB) const {
-  if (m_currentController->handle() == 0) {
-    return;
-  }
-
-  auto eLocation = k_EControllerHapticLocation_Left;
-  if (location == "left") {
-    eLocation = k_EControllerHapticLocation_Left;
-  } else if (location == "right") {
-    eLocation = k_EControllerHapticLocation_Right;
-  } else {
-    eLocation = k_EControllerHapticLocation_Both;
-  }
-  SteamInput()->TriggerSimpleHapticEvent(m_currentController->handle(), eLocation, nIntensity, nGainDB, nOtherIntensity,
-                                         nOtherGainDB);
-}
+void QSteamInput::runFrame() { SteamInput()->RunFrame(); }
 
 IGA QSteamInput::iga() const { return m_iga; }
 
@@ -198,7 +143,7 @@ void QSteamInput::onActionEvent(SteamInputActionEvent_t *event) {
 
   updateActionStates(a, digitalState, analogX, analogY);
 
-  auto iEvent = InputEvent(type, m_currentController, a, digitalState, analogX, analogY);
+  auto iEvent = InputEvent(type, m_controllers[event->controllerHandle], a, digitalState, analogX, analogY);
 
   sendInputEvents(iEvent);
 }
@@ -225,7 +170,7 @@ void QSteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb) {
   auto handle = cb->m_ulConnectedDeviceHandle;
 
   auto inputType = SteamInput()->GetInputTypeForHandle(handle);
-  auto name = nameForControllerType(inputType);
+  auto name = controllerNames.value(inputType, "Unknown");
 
   auto controller = new Controller(handle, name, this);
   m_controllers[handle] = controller;
@@ -245,9 +190,9 @@ void QSteamInput::onControllerDisconnected(SteamInputDeviceDisconnected_t *cb) {
   }
 
   if (!m_controllers.empty()) {
-    m_currentController = nullptr;
+    setCurrentController(nullptr);
   } else {
-    m_currentController = m_controllers[0];
+    setCurrentController(m_controllers[0]);
   }
 }
 
@@ -264,8 +209,9 @@ QVariantList QSteamInput::qmlActionSets() const {
 }
 
 void QSteamInput::setCurrentController(Controller *newCurrentController) {
-  if (m_currentController->handle() == newCurrentController->handle())
+  if (m_currentController == newCurrentController) {
     return;
+  }
 
   m_currentController = newCurrentController;
   emit currentControllerChanged();
@@ -331,7 +277,7 @@ const Action &QSteamInput::actionByHandle(InputHandle_t handle, bool digital) co
   return Action();
 }
 
-void QSteamInput::updateActionSets() {
+void QSteamInput::loadActionSets() {
   m_actionSets.clear();
 
   foreach (auto &actionSet, m_iga.actionSets()) {
@@ -344,12 +290,12 @@ void QSteamInput::updateActionSets() {
 
 void QSteamInput::onConfigurationLoaded(SteamInputConfigurationLoaded_t *) {
   runFrame();
-  updateActionSets();
+  loadActionSets();
   setActionSet(m_defaultActionSet);
   setActionSetLayer(m_defaultActionSetLayer);
-  auto cb = [](SteamInputActionEvent_t *event) {
-    QSteamInput::instance()->onActionEvent(event); // Dirty hack, but I didn't find a better way
-  };
+
+  // Dirty hack, but I didn't find a better way
+  auto cb = [](auto e) { QSteamInput::instance()->onActionEvent(e); };
 
   SteamInput()->EnableActionEventCallbacks(cb);
 
@@ -366,7 +312,7 @@ void QSteamInput::setActionSet(const QSteamworks::ActionSet &newActionSet) {
 
   m_actionSet = newActionSet;
 
-  if (m_currentController->handle() != 0) {
+  if (m_currentController) {
     SteamInput()->ActivateActionSet(m_currentController->handle(), m_actionSet.handle());
   }
 

@@ -1,5 +1,4 @@
 #include "action.h"
-#include "qglobal.h"
 
 using namespace QSteamworks;
 

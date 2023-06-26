@@ -205,9 +205,9 @@ Item {
                             view.currentIndex = view.indexAt(fileHighlight.x, y)
                         }
 
-                        if (!view.moving) {
-                            steam_input.stopAnalogActionMomentum("scroll")
-                        }
+//                        if (!view.moving) {
+//                            steam_input.stopAnalogActionMomentum("scroll")
+//                        }
                     }
                 }
             }

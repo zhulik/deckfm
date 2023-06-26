@@ -49,19 +49,6 @@ public:
   Q_INVOKABLE
   void runFrame();
 
-  Q_INVOKABLE
-  virtual bool showBindingPanel(InputHandle_t inputHandle) const;
-
-  Q_INVOKABLE
-  virtual bool showBindingPanel() const;
-
-  Q_INVOKABLE
-  virtual void stopAnalogActionMomentum(const QString &actionName) const;
-
-  Q_INVOKABLE
-  void triggerSimpleHapticEvent(const QString &location, unsigned char nIntensity, char nGainDB,
-                                unsigned char nOtherIntensity, char nOtherGainDB) const;
-
   IGA iga() const;
 
   Controller *currentController() const;
@@ -122,13 +109,14 @@ private:
 
   static QSteamInput *instance();
   static QSteamInput *m_instance;
+
   void onActionEvent(SteamInputActionEvent_t *event);
 
   const QSteamworks::Action &actionByHandle(InputHandle_t, bool = true) const;
   const QSteamworks::Action actionByName(const QString &) const;
 
   void setCurrentController(Controller *newCurrentController);
-  void updateActionSets();
+  void loadActionSets();
   QList<Action> getActions(InputActionSetHandle_t actionSetHandle, const QList<ActionDefinition> &actions) const;
 
   ActionSet m_actionSet;
