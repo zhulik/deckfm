@@ -1,7 +1,5 @@
 #pragma once
 
-#include "controller.h"
-
 #include <QObject>
 
 #include "iga.h"
@@ -15,13 +13,16 @@
 namespace QSteamworks {
 
 class QSteamAPI;
+class Controller;
 
 class QSteamInput : public QObject {
   Q_OBJECT
 
   Q_PROPERTY(QSteamworks::IGA iga READ iga NOTIFY igaChanged)
-  Q_PROPERTY(QSteamworks::Controller currentController READ currentController WRITE setCurrentController NOTIFY
+
+  Q_PROPERTY(QSteamworks::Controller *currentController READ currentController WRITE setCurrentController NOTIFY
                  currentControllerChanged)
+
   Q_PROPERTY(QVariantList actionSets READ qmlActionSets NOTIFY actionSetsChanged)
   Q_PROPERTY(QString actionSet READ qmlActionSet WRITE setActionSet NOTIFY actionSetChanged)
 
@@ -63,7 +64,7 @@ public:
 
   IGA iga() const;
 
-  const Controller &currentController() const;
+  Controller *currentController() const;
   QVariantList qmlActionSets() const;
 
   const QSteamworks::ActionSet &actionSet() const;
@@ -115,8 +116,8 @@ signals:
 
 private:
   IGA m_iga;
-  QSet<Controller> m_controllers;
-  Controller m_currentController;
+  QSet<Controller *> m_controllers;
+  Controller *m_currentController;
   QList<ActionSet> m_actionSets;
 
   static QSteamInput *instance();
@@ -126,7 +127,7 @@ private:
   const QSteamworks::Action &actionByHandle(unsigned long long, bool = true) const;
   const QSteamworks::Action actionByName(const QString &) const;
 
-  void setCurrentController(const Controller &newCurrentController);
+  void setCurrentController(Controller *newCurrentController);
   void updateActionSets();
   QList<Action> getActions(InputActionSetHandle_t actionSetHandle, const QList<ActionDefinition> &actions) const;
 

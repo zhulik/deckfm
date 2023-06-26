@@ -68,7 +68,6 @@ QSteamInput::QSteamInput(QObject *parent) : QObject{parent} {
   qRegisterMetaType<QSteamworks::ActionSetLayerDefinition>();
   qRegisterMetaType<QList<QSteamworks::ActionSetLayerDefinition>>();
 
-  qRegisterMetaType<QSteamworks::Controller>();
   qRegisterMetaType<QSteamworks::Action>();
   qRegisterMetaType<QSteamworks::ActionSet>();
   qRegisterMetaType<QSteamworks::ActionSetLayer>();
@@ -82,8 +81,8 @@ QSteamInput::~QSteamInput() { SteamInput()->Shutdown(); }
 void QSteamInput::runFrame() {
   SteamInput()->RunFrame();
 
-  if (m_currentController.handle() != 0 && !m_actionSets.empty()) {
-    auto handle = SteamInput()->GetCurrentActionSet(m_currentController.handle());
+  if (m_currentController->handle() != 0 && !m_actionSets.empty()) {
+    auto handle = SteamInput()->GetCurrentActionSet(m_currentController->handle());
 
     foreach (auto &actionSet, m_actionSets) {
       if (actionSet.handle() == handle) {
@@ -98,22 +97,22 @@ bool QSteamInput::showBindingPanel(unsigned long long inputHandle) const {
 }
 
 bool QSteamInput::showBindingPanel() const {
-  if (m_currentController.handle() == 0) {
+  if (m_currentController->handle() == 0) {
     return false;
   }
-  return SteamInput()->ShowBindingPanel(m_currentController.handle());
+  return SteamInput()->ShowBindingPanel(m_currentController->handle());
 }
 
 void QSteamInput::stopAnalogActionMomentum(const QString &actionName) const {
   auto action = actionByName(actionName);
 
   Q_ASSERT(action.handle() != 0);
-  SteamInput()->StopAnalogActionMomentum(m_currentController.handle(), action.handle());
+  SteamInput()->StopAnalogActionMomentum(m_currentController->handle(), action.handle());
 }
 
 void QSteamInput::triggerSimpleHapticEvent(const QString &location, unsigned char nIntensity, char nGainDB,
                                            unsigned char nOtherIntensity, char nOtherGainDB) const {
-  if (m_currentController.handle() == 0) {
+  if (m_currentController->handle() == 0) {
     return;
   }
 
@@ -125,7 +124,7 @@ void QSteamInput::triggerSimpleHapticEvent(const QString &location, unsigned cha
   } else {
     eLocation = k_EControllerHapticLocation_Both;
   }
-  SteamInput()->TriggerSimpleHapticEvent(m_currentController.handle(), eLocation, nIntensity, nGainDB, nOtherIntensity,
+  SteamInput()->TriggerSimpleHapticEvent(m_currentController->handle(), eLocation, nIntensity, nGainDB, nOtherIntensity,
                                          nOtherGainDB);
 }
 
@@ -172,7 +171,7 @@ QList<ActionSetLayer> QSteamInput::getActionSetLayers(const QList<ActionSetLayer
 
 void QSteamInput::onActionEvent(SteamInputActionEvent_t *event) {
   foreach (auto &controller, m_controllers) {
-    if (controller.handle() == event->controllerHandle) {
+    if (controller->handle() == event->controllerHandle) {
       setCurrentController(controller);
     }
   }
@@ -233,7 +232,7 @@ void QSteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb) {
   auto name = nameForControllerType(inputType);
   auto image = QString("resources/images/controllers/%1.png").arg(name);
 
-  auto controller = Controller(handle, name, image);
+  auto controller = new Controller(handle, name, image, this);
   m_controllers << controller;
   setCurrentController(controller);
 
@@ -242,17 +241,21 @@ void QSteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb) {
 
 void QSteamInput::onControllerDisconnected(SteamInputDeviceDisconnected_t *cb) {
   auto handle = cb->m_ulDisconnectedDeviceHandle;
-  auto controller = Controller(handle, "", "");
-  if (m_controllers.contains(controller)) {
-    m_controllers.remove(controller);
+
+  auto controllerIt =
+      std::find_if(m_controllers.begin(), m_controllers.end(), [handle](auto &c) { return c->handle() == handle; });
+
+  if (controllerIt != m_controllers.end()) {
+    delete *controllerIt;
   }
+  m_controllers.erase(controllerIt);
 
   if (!m_controllers.empty()) {
-    m_currentController = Controller();
+    m_currentController = nullptr;
   }
 }
 
-const Controller &QSteamInput::currentController() const { return m_currentController; }
+Controller *QSteamInput::currentController() const { return m_currentController; }
 
 QVariantList QSteamInput::qmlActionSets() const {
   QVariantList result;
@@ -264,8 +267,8 @@ QVariantList QSteamInput::qmlActionSets() const {
   return result;
 }
 
-void QSteamInput::setCurrentController(const Controller &newCurrentController) {
-  if (m_currentController == newCurrentController)
+void QSteamInput::setCurrentController(Controller *newCurrentController) {
+  if (m_currentController->handle() == newCurrentController->handle())
     return;
 
   m_currentController = newCurrentController;
@@ -290,7 +293,7 @@ QList<Action> QSteamInput::getActions(InputActionSetHandle_t actionSetHandle,
       handle = SteamInput()->GetDigitalActionHandle(action.name().toLocal8Bit());
       Q_ASSERT(handle != 0);
 
-      n = SteamInput()->GetDigitalActionOrigins(m_currentController.handle(), actionSetHandle, handle,
+      n = SteamInput()->GetDigitalActionOrigins(m_currentController->handle(), actionSetHandle, handle,
                                                 originsBuf.data());
 
       localizedName = SteamInput()->GetStringForDigitalActionName(handle);
@@ -298,7 +301,7 @@ QList<Action> QSteamInput::getActions(InputActionSetHandle_t actionSetHandle,
       handle = SteamInput()->GetAnalogActionHandle(action.name().toLocal8Bit());
       Q_ASSERT(handle != 0);
 
-      n = SteamInput()->GetAnalogActionOrigins(m_currentController.handle(), actionSetHandle, handle,
+      n = SteamInput()->GetAnalogActionOrigins(m_currentController->handle(), actionSetHandle, handle,
                                                originsBuf.data());
       localizedName = SteamInput()->GetStringForAnalogActionName(handle);
     }
@@ -367,8 +370,8 @@ void QSteamInput::setActionSet(const QSteamworks::ActionSet &newActionSet) {
 
   m_actionSet = newActionSet;
 
-  if (m_currentController.handle() != 0) {
-    SteamInput()->ActivateActionSet(m_currentController.handle(), m_actionSet.handle());
+  if (m_currentController->handle() != 0) {
+    SteamInput()->ActivateActionSet(m_currentController->handle(), m_actionSet.handle());
   }
 
   emit actionSetChanged();
@@ -439,14 +442,14 @@ void QSteamInput::setActionSetLayer(const QString &newActionSetLayer) {
     return;
   }
 
-  SteamInput()->DeactivateAllActionSetLayers(m_currentController.handle());
+  SteamInput()->DeactivateAllActionSetLayers(m_currentController->handle());
   m_currentActionSetLayer = ActionSetLayer();
   emit actionSetLayerChanged();
 
   foreach (auto &layer, m_actionSet.layers()) {
     if (layer.name() == newActionSetLayer) {
       m_currentActionSetLayer = layer;
-      SteamInput()->ActivateActionSetLayer(m_currentController.handle(), layer.handle());
+      SteamInput()->ActivateActionSetLayer(m_currentController->handle(), layer.handle());
       emit actionSetLayerChanged();
       return;
     }

@@ -11,7 +11,7 @@ class InputEvent {
   Q_GADGET
   Q_PROPERTY(QString type READ type CONSTANT)
 
-  Q_PROPERTY(QSteamworks::Controller controller READ controller CONSTANT)
+  Q_PROPERTY(Controller *controller READ controller CONSTANT)
   Q_PROPERTY(QSteamworks::Action action READ action CONSTANT)
 
   Q_PROPERTY(bool digitalState READ digitalState CONSTANT)
@@ -21,11 +21,11 @@ class InputEvent {
 public:
   InputEvent() {}
 
-  InputEvent(const QString &type, const Controller &controller, const Action &action, bool digitalState, float analogX,
+  InputEvent(const QString &type, Controller *controller, const Action &action, bool digitalState, float analogX,
              float analogY);
 
   const QString &type() const;
-  Controller controller() const;
+  Controller *controller() const;
 
   Action action() const;
 
@@ -35,7 +35,7 @@ public:
 
 private:
   QString m_type;
-  Controller m_controller;
+  Controller *m_controller;
   Action m_action;
   bool m_digitalState = false;
   float m_analogX = 0;

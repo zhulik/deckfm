@@ -5,15 +5,14 @@
 #include "steam/steam_api.h"
 
 namespace QSteamworks {
-class Controller {
-  Q_GADGET
+class Controller : public QObject {
+  Q_OBJECT
   Q_PROPERTY(unsigned long long handle READ handle CONSTANT)
   Q_PROPERTY(QString name READ name CONSTANT)
   Q_PROPERTY(QString image READ image CONSTANT)
 
 public:
-  Controller();
-  Controller(InputHandle_t, const QString &, const QString &);
+  Controller(InputHandle_t, const QString &, const QString &, QObject *parent = nullptr);
 
   unsigned long long handle() const;
 
@@ -32,5 +31,3 @@ private:
 inline uint qHash(const QSteamworks::Controller &key) { return ::qHash(key.handle()); }
 
 } // namespace QSteamworks
-
-Q_DECLARE_METATYPE(QSteamworks::Controller)

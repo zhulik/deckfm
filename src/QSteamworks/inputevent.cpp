@@ -2,13 +2,14 @@
 
 using namespace QSteamworks;
 
-InputEvent::InputEvent(const QString &type, const Controller &controller, const Action &action, bool digitalState, float analogX, float analogY)
+InputEvent::InputEvent(const QString &type, Controller *controller, const Action &action, bool digitalState,
+                       float analogX, float analogY)
     : m_type(type), m_controller(controller), m_action(action), m_digitalState(digitalState), m_analogX(analogX),
       m_analogY(analogY) {}
 
 const QString &InputEvent::type() const { return m_type; }
 
-Controller InputEvent::controller() const { return m_controller; }
+Controller *InputEvent::controller() const { return m_controller; }
 
 Action InputEvent::action() const { return m_action; }
 
