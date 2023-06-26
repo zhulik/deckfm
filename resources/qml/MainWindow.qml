@@ -44,9 +44,6 @@ ApplicationWindow {
 
             url.slice(6, url.length)
         }
-
-        defaultActionSet: "deckfm"
-        defaultActionSetLayer: "file_manager"
     }
 
     header: Header {

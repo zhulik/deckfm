@@ -20,6 +20,8 @@ class QSteamInput : public QObject {
 
   Q_PROPERTY(QSteamworks::IGA iga READ iga NOTIFY igaChanged)
 
+  Q_PROPERTY(QMap<InputHandle_t, Controller *> controllers READ controllers NOTIFY controllersChanged)
+
   Q_PROPERTY(QSteamworks::Controller *currentController READ currentController WRITE setCurrentController NOTIFY
                  currentControllerChanged)
 
@@ -28,10 +30,6 @@ class QSteamInput : public QObject {
 
   Q_PROPERTY(QVariantMap actionStates READ actionStates NOTIFY actionStatesChanged)
   Q_PROPERTY(QString igaPath READ igaPath WRITE setIgaPath NOTIFY igaPathChanged)
-
-  Q_PROPERTY(QString defaultActionSet READ defaultActionSet WRITE setDefaultActionSet NOTIFY defaultActionSetChanged)
-  Q_PROPERTY(QString defaultActionSetLayer READ defaultActionSetLayer WRITE setDefaultActionSetLayer NOTIFY
-                 defaultActionSetLayerChanged)
 
   Q_PROPERTY(QSteamworks::ActionSet currentActionSet READ currentActionSet NOTIFY actionSetChanged)
 
@@ -64,9 +62,6 @@ public:
   const QString &igaPath() const;
   void setIgaPath(const QString &newIgaPath);
 
-  const QString &defaultActionSet() const;
-  void setDefaultActionSet(const QString &newDefaultActionSet);
-
   const QSteamworks::ActionSet &currentActionSet() const;
 
   const QSteamworks::ActionSetLayer &currentActionSetLayer() const;
@@ -74,8 +69,7 @@ public:
   const QString &qmlActionSetLayer() const;
   void setActionSetLayer(const QString &newActionSetLayer);
 
-  const QString &defaultActionSetLayer() const;
-  void setDefaultActionSetLayer(const QString &newDefaultActionSetLayer);
+  QMap<InputHandle_t, Controller *> controllers() const;
 
 signals:
   void inputEvent(QSteamworks::InputEvent);
@@ -92,14 +86,11 @@ signals:
   void actionStatesChanged();
 
   void igaChanged();
-
   void igaPathChanged();
-
-  void defaultActionSetChanged();
 
   void actionSetLayerChanged();
 
-  void defaultActionSetLayerChanged();
+  void controllersChanged();
 
 private:
   IGA m_iga;
@@ -126,10 +117,8 @@ private:
   void updateActionStates(const Action &action, bool digitalState, float analogX, float analogY);
   void sendInputEvents(InputEvent iEvent);
   QString m_igaPath;
-  QString m_defaultActionSet;
 
   QList<ActionSetLayer> getActionSetLayers(const QList<ActionSetLayerDefinition> &) const;
   QSteamworks::ActionSetLayer m_currentActionSetLayer;
-  QString m_defaultActionSetLayer;
 };
 } // namespace QSteamworks

@@ -174,9 +174,9 @@ void QSteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb) {
 
   auto controller = new Controller(handle, name, this);
   m_controllers[handle] = controller;
-  setCurrentController(controller);
+  emit controllersChanged();
 
-  runFrame();
+  setCurrentController(controller);
 }
 
 void QSteamInput::onControllerDisconnected(SteamInputDeviceDisconnected_t *cb) {
@@ -184,6 +184,8 @@ void QSteamInput::onControllerDisconnected(SteamInputDeviceDisconnected_t *cb) {
 
   delete m_controllers[handle];
   m_controllers.remove(handle);
+
+  emit controllersChanged();
 
   if (m_currentController->handle() != handle) {
     return;
@@ -289,10 +291,7 @@ void QSteamInput::loadActionSets() {
 }
 
 void QSteamInput::onConfigurationLoaded(SteamInputConfigurationLoaded_t *) {
-  runFrame();
   loadActionSets();
-  setActionSet(m_defaultActionSet);
-  setActionSetLayer(m_defaultActionSetLayer);
 
   // Dirty hack, but I didn't find a better way
   auto cb = [](auto e) { QSteamInput::instance()->onActionEvent(e); };
@@ -364,15 +363,6 @@ void QSteamInput::setIgaPath(const QString &newIgaPath) {
   SteamInput()->EnableDeviceCallbacks();
 }
 
-const QString &QSteamInput::defaultActionSet() const { return m_defaultActionSet; }
-
-void QSteamInput::setDefaultActionSet(const QString &newDefaultActionSet) {
-  if (m_defaultActionSet == newDefaultActionSet)
-    return;
-  m_defaultActionSet = newDefaultActionSet;
-  emit defaultActionSetChanged();
-}
-
 const QSteamworks::ActionSet &QSteamInput::currentActionSet() const { return m_actionSet; }
 
 const QSteamworks::ActionSetLayer &QSteamInput::currentActionSetLayer() const { return m_currentActionSetLayer; }
@@ -399,11 +389,4 @@ void QSteamInput::setActionSetLayer(const QString &newActionSetLayer) {
   throw std::runtime_error(QString("Cannot find action set layer %1").arg(newActionSetLayer).toLocal8Bit());
 }
 
-const QString &QSteamInput::defaultActionSetLayer() const { return m_defaultActionSetLayer; }
-
-void QSteamInput::setDefaultActionSetLayer(const QString &newDefaultActionSetLayer) {
-  if (m_defaultActionSetLayer == newDefaultActionSetLayer)
-    return;
-  m_defaultActionSetLayer = newDefaultActionSetLayer;
-  emit defaultActionSetLayerChanged();
-}
+QMap<InputHandle_t, Controller *> QSteamInput::controllers() const { return m_controllers; }
