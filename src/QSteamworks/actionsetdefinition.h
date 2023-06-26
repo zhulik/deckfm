@@ -2,28 +2,32 @@
 
 #include <QObject>
 
-namespace QSteamworks {
+#include "actiondefinition.h"
+#include "actionsetlayerdefinition.h"
 
-class ActionDefinition;
-class ActionSetLayerDefinition;
+namespace QSteamworks {
 
 class ActionSetDefinition {
   Q_GADGET
+  Q_PROPERTY(QString name READ name CONSTANT)
+  Q_PROPERTY(QList<QSteamworks::ActionDefinition> actions READ actions CONSTANT)
+  Q_PROPERTY(QList<QSteamworks::ActionSetLayerDefinition> layers READ layers CONSTANT)
 
 public:
-  ActionSetDefinition(const QString &name, const QList<ActionDefinition *> &actions,
-                      const QList<ActionSetLayerDefinition *> &layers);
+  ActionSetDefinition(){};
+  ActionSetDefinition(const QString &name, const QList<ActionDefinition> &actions,
+                      const QList<ActionSetLayerDefinition> &layers);
 
-  const QList<ActionDefinition *> &actions() const;
+  const QList<ActionDefinition> &actions() const;
 
   const QString &name() const;
 
-  const QList<ActionSetLayerDefinition *> &layers() const;
+  const QList<ActionSetLayerDefinition> &layers() const;
 
 private:
   QString m_name;
-  QList<ActionDefinition *> m_actions;
-  QList<ActionSetLayerDefinition *> m_layers;
+  QList<ActionDefinition> m_actions;
+  QList<ActionSetLayerDefinition> m_layers;
 };
 } // namespace QSteamworks
-Q_DECLARE_METATYPE(QSteamworks::ActionSetDefinition *)
+Q_DECLARE_METATYPE(QSteamworks::ActionSetDefinition)

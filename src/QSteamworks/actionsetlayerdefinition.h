@@ -2,21 +2,27 @@
 
 #include <QObject>
 
-namespace QSteamworks {
+#include "actiondefinition.h"
 
-class ActionDefinition;
+namespace QSteamworks {
 
 class ActionSetLayerDefinition {
   Q_GADGET
+  Q_PROPERTY(QString name READ name CONSTANT)
+  Q_PROPERTY(QList<QSteamworks::ActionDefinition> actions READ actions CONSTANT)
+
 public:
-  ActionSetLayerDefinition(const QString &name, const QList<ActionDefinition *> &actions);
+  ActionSetLayerDefinition(){};
+  ActionSetLayerDefinition(const QString &name, const QList<ActionDefinition> &actions);
 
   const QString &name() const;
 
-  const QList<ActionDefinition *> &actions() const;
+  const QList<ActionDefinition> &actions() const;
 
 private:
   QString m_name;
-  QList<ActionDefinition *> m_actions;
+  QList<ActionDefinition> m_actions;
 };
 } // namespace QSteamworks
+
+Q_DECLARE_METATYPE(QSteamworks::ActionSetLayerDefinition)

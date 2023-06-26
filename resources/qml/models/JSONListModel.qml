@@ -12,12 +12,14 @@ Q.ListModel {
         } else {
             if (typeof(data) === 'object' && data !== null) {
                 newData = Object.values(data)
+            } else {
+                newData = []
             }
         }
 
         root.clear()
 
-        newData.forEach(function(row){
+        newData.forEach(row => {
             if (typeof(row) !== 'object') {
                 row = {value: row}
             }

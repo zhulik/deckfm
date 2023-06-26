@@ -52,7 +52,7 @@ Item {
             Layout.fillHeight: parent
 
             model: Models.JSONListModel {
-                data: steam_input.iga.qmlActionsForSet(actionSetsView.currentActionSet)
+                data: actionSetsView.currentActionSet.actions
             }
 
             delegate: ItemDelegate {

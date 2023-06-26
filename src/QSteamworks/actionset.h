@@ -11,7 +11,7 @@ namespace QSteamworks {
 
 class ActionSet : public ActionSetLayer {
   Q_GADGET
-  Q_PROPERTY(QStringList layers READ qmlLayers CONSTANT)
+  Q_PROPERTY(QVariantList layers READ qmlLayers CONSTANT)
 
 public:
   ActionSet() : ActionSetLayer(){};
@@ -19,7 +19,8 @@ public:
             const QList<ActionSetLayer> &layers);
 
   const QList<ActionSetLayer> &layers() const;
-  QStringList qmlLayers() const;
+
+  QVariantList qmlLayers() const;
 
 private:
   QList<ActionSetLayer> m_layers;

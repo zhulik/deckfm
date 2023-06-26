@@ -1,4 +1,3 @@
-#include <QDebug>
 #include <QDir>
 #include <QMimeDatabase>
 #include <QUrl>

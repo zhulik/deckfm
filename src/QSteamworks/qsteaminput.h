@@ -6,6 +6,7 @@
 
 #include "iga.h"
 
+#include "qobjectdefs.h"
 #include "steam/steam_api.h"
 
 #include "actionset.h"
@@ -18,7 +19,7 @@ class QSteamAPI;
 class QSteamInput : public QObject {
   Q_OBJECT
 
-  Q_PROPERTY(QSteamworks::IGA *iga READ iga NOTIFY igaChanged)
+  Q_PROPERTY(QSteamworks::IGA iga READ iga NOTIFY igaChanged)
   Q_PROPERTY(QVariantList controllers READ qmlControllers NOTIFY qmlControllersChanged)
   Q_PROPERTY(QSteamworks::Controller currentController READ currentController WRITE setCurrentController NOTIFY
                  currentControllerChanged)
@@ -60,10 +61,13 @@ public:
   virtual bool showBindingPanel() const;
 
   Q_INVOKABLE
+  virtual void stopAnalogActionMomentum(const QString &actionName) const;
+
+  Q_INVOKABLE
   void triggerSimpleHapticEvent(const QString &location, unsigned char nIntensity, char nGainDB,
                                 unsigned char nOtherIntensity, char nOtherGainDB) const;
 
-  IGA *iga() const;
+  IGA iga() const;
 
   QVariantList qmlControllers() const;
 
@@ -129,7 +133,7 @@ signals:
   void defaultActionSetLayerChanged();
 
 private:
-  IGA *m_iga = nullptr;
+  IGA m_iga;
   QSet<Controller> m_controllers;
   Controller m_currentController;
   QList<ActionSet> m_actionSets;
@@ -138,11 +142,12 @@ private:
   static QSteamInput *m_instance;
   void onActionEvent(SteamInputActionEvent_t *event);
 
+  const QSteamworks::Action &actionByHandle(unsigned long long, bool = true) const;
+  const QSteamworks::Action actionByName(const QString &) const;
+
   void setCurrentController(const Controller &newCurrentController);
   void updateActionSets();
-  QList<Action> getActions(InputActionSetHandle_t actionSetHandle, const QList<ActionDefinition *> &actions) const;
-
-  Action action(unsigned long long, bool = true) const;
+  QList<Action> getActions(InputActionSetHandle_t actionSetHandle, const QList<ActionDefinition> &actions) const;
 
   ActionSet m_actionSet;
   void setActionSet(const QSteamworks::ActionSet &newActionSet);
@@ -155,7 +160,7 @@ private:
   QString m_igaPath;
   QString m_defaultActionSet;
 
-  QList<ActionSetLayer> getActionSetLayers(const QList<ActionSetLayerDefinition *> &) const;
+  QList<ActionSetLayer> getActionSetLayers(const QList<ActionSetLayerDefinition> &) const;
   QSteamworks::ActionSetLayer m_currentActionSetLayer;
   QString m_defaultActionSetLayer;
 };

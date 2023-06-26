@@ -18,7 +18,7 @@ RowLayout {
         Layout.fillHeight: parent
         verticalAlignment: Text.AlignVCenter
 
-        font.pointSize: 18
+        font.pointSize: root.height - 4
 
         name: root.name
     }

@@ -9,17 +9,17 @@ namespace QSteamworks {
 class Action {
   Q_GADGET
   Q_PROPERTY(unsigned long long handle READ handle CONSTANT)
-  Q_PROPERTY(const QSteamworks::ActionDefinition *actionDefinition READ actionDefinition CONSTANT)
+  Q_PROPERTY(const QSteamworks::ActionDefinition actionDefinition READ actionDefinition CONSTANT)
   Q_PROPERTY(QString localizedName READ localizedName CONSTANT)
   Q_PROPERTY(QStringList glyphs READ glyphs CONSTANT)
   Q_PROPERTY(QStringList origins READ origins CONSTANT)
 
 public:
   Action(){};
-  Action(unsigned long long handle, ActionDefinition *definition, const QString &localizedName,
+  Action(unsigned long long handle, ActionDefinition definition, const QString &localizedName,
          const QStringList &origins, const QStringList &glyphs);
 
-  const QSteamworks::ActionDefinition *actionDefinition() const;
+  const QSteamworks::ActionDefinition actionDefinition() const;
   unsigned long long handle() const;
   const QString &localizedName() const;
   const QStringList &glyphs() const;
@@ -30,7 +30,7 @@ public:
 private:
   unsigned long long m_handle;
 
-  ActionDefinition *m_definition;
+  ActionDefinition m_definition;
   QString m_localizedName;
   QStringList m_origins;
   QStringList m_glyphs;

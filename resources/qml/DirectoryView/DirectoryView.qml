@@ -54,7 +54,7 @@ Item {
         }
 
         analogHandlers: {
-            "scroll": e => view.flick(e.analogX * 50, e.analogY * 50)
+            "scroll": e => view.flick(e.analogX, e.analogY)
         }
     }
 
@@ -203,6 +203,10 @@ Item {
                         if (!view.moving && !fileHighlight.inView) {
                             const y = fileHighlight.belowView ? view.contentY + view.cellHeight : view.contentY + view.height - view.cellHeight
                             view.currentIndex = view.indexAt(fileHighlight.x, y)
+                        }
+
+                        if (!view.moving) {
+                            steam_input.stopAnalogActionMomentum("scroll")
                         }
                     }
                 }
