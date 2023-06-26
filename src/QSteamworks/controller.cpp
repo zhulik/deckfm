@@ -2,10 +2,11 @@
 
 using namespace QSteamworks;
 
-Controller::Controller(InputHandle_t handle, const QString &name, const QString &image, QObject *parent)
-    : QObject(parent), m_handle(handle), m_name(name), m_image(image) {}
+Controller::Controller(InputHandle_t handle, const QString &name, QObject *parent)
+    : QObject(parent), m_handle(handle), m_name(name),
+      m_image(QString("resources/images/controllers/%1.png").arg(name)) {}
 
-unsigned long long Controller::handle() const { return m_handle; }
+InputHandle_t Controller::handle() const { return m_handle; }
 
 const QString &Controller::name() const { return m_name; }
 

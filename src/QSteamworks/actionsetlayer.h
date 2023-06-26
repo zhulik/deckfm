@@ -11,7 +11,7 @@ namespace QSteamworks {
 
 class ActionSetLayer {
   Q_GADGET
-  Q_PROPERTY(unsigned long long handle READ handle CONSTANT)
+  Q_PROPERTY(InputHandle_t handle READ handle CONSTANT)
   Q_PROPERTY(QString name READ name CONSTANT)
   Q_PROPERTY(QVariantMap actions READ qmlActions CONSTANT)
 
@@ -19,7 +19,7 @@ public:
   ActionSetLayer();
   ActionSetLayer(InputActionSetHandle_t handle, const QString &name, const QList<Action> &actions);
 
-  unsigned long long handle() const;
+  InputHandle_t handle() const;
   const QString &name() const;
 
   const QList<Action> actions() const;

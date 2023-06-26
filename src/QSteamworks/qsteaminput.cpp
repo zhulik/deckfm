@@ -92,7 +92,7 @@ void QSteamInput::runFrame() {
   }
 }
 
-bool QSteamInput::showBindingPanel(unsigned long long inputHandle) const {
+bool QSteamInput::showBindingPanel(InputHandle_t inputHandle) const {
   return SteamInput()->ShowBindingPanel(inputHandle);
 }
 
@@ -170,13 +170,9 @@ QList<ActionSetLayer> QSteamInput::getActionSetLayers(const QList<ActionSetLayer
 }
 
 void QSteamInput::onActionEvent(SteamInputActionEvent_t *event) {
-  foreach (auto &controller, m_controllers) {
-    if (controller->handle() == event->controllerHandle) {
-      setCurrentController(controller);
-    }
-  }
+  setCurrentController(m_controllers[event->controllerHandle]);
 
-  unsigned long long actionHandle = 0;
+  InputHandle_t actionHandle = 0;
   QString type;
   bool digitalState = false;
   float analogX = 0;
@@ -230,10 +226,9 @@ void QSteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb) {
 
   auto inputType = SteamInput()->GetInputTypeForHandle(handle);
   auto name = nameForControllerType(inputType);
-  auto image = QString("resources/images/controllers/%1.png").arg(name);
 
-  auto controller = new Controller(handle, name, image, this);
-  m_controllers << controller;
+  auto controller = new Controller(handle, name, this);
+  m_controllers[handle] = controller;
   setCurrentController(controller);
 
   runFrame();
@@ -242,16 +237,17 @@ void QSteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb) {
 void QSteamInput::onControllerDisconnected(SteamInputDeviceDisconnected_t *cb) {
   auto handle = cb->m_ulDisconnectedDeviceHandle;
 
-  auto controllerIt =
-      std::find_if(m_controllers.begin(), m_controllers.end(), [handle](auto &c) { return c->handle() == handle; });
+  delete m_controllers[handle];
+  m_controllers.remove(handle);
 
-  if (controllerIt != m_controllers.end()) {
-    delete *controllerIt;
+  if (m_currentController->handle() != handle) {
+    return;
   }
-  m_controllers.erase(controllerIt);
 
   if (!m_controllers.empty()) {
     m_currentController = nullptr;
+  } else {
+    m_currentController = m_controllers[0];
   }
 }
 
@@ -285,7 +281,7 @@ QList<Action> QSteamInput::getActions(InputActionSetHandle_t actionSetHandle,
 
     QVector<EInputActionOrigin> originsBuf(STEAM_INPUT_MAX_ORIGINS);
 
-    unsigned long long handle = 0;
+    InputHandle_t handle = 0;
     int n = 0;
     QString localizedName;
 
@@ -317,7 +313,7 @@ QList<Action> QSteamInput::getActions(InputActionSetHandle_t actionSetHandle,
   return result;
 }
 
-const Action &QSteamInput::actionByHandle(unsigned long long handle, bool digital) const {
+const Action &QSteamInput::actionByHandle(InputHandle_t handle, bool digital) const {
   foreach (auto &actionSet, m_actionSets) {
     foreach (auto &action, actionSet.actions()) {
       if (action.handle() == handle && action.actionDefinition().isDigital() == digital) {

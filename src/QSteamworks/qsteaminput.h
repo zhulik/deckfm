@@ -50,7 +50,7 @@ public:
   void runFrame();
 
   Q_INVOKABLE
-  virtual bool showBindingPanel(unsigned long long inputHandle) const;
+  virtual bool showBindingPanel(InputHandle_t inputHandle) const;
 
   Q_INVOKABLE
   virtual bool showBindingPanel() const;
@@ -116,7 +116,7 @@ signals:
 
 private:
   IGA m_iga;
-  QSet<Controller *> m_controllers;
+  QMap<InputHandle_t, Controller *> m_controllers;
   Controller *m_currentController;
   QList<ActionSet> m_actionSets;
 
@@ -124,7 +124,7 @@ private:
   static QSteamInput *m_instance;
   void onActionEvent(SteamInputActionEvent_t *event);
 
-  const QSteamworks::Action &actionByHandle(unsigned long long, bool = true) const;
+  const QSteamworks::Action &actionByHandle(InputHandle_t, bool = true) const;
   const QSteamworks::Action actionByName(const QString &) const;
 
   void setCurrentController(Controller *newCurrentController);

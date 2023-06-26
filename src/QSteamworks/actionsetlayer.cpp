@@ -7,7 +7,7 @@ ActionSetLayer::ActionSetLayer() {}
 ActionSetLayer::ActionSetLayer(InputActionSetHandle_t handle, const QString &name, const QList<Action> &actions)
     : m_handle(handle), m_name(name), m_actions(actions) {}
 
-unsigned long long ActionSetLayer::handle() const { return m_handle; }
+InputHandle_t ActionSetLayer::handle() const { return m_handle; }
 
 const QString &ActionSetLayer::name() const { return m_name; }
 

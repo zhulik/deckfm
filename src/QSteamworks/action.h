@@ -3,12 +3,13 @@
 #include <QObject>
 
 #include "actiondefinition.h"
+#include "steam/isteaminput.h"
 
 namespace QSteamworks {
 
 class Action {
   Q_GADGET
-  Q_PROPERTY(unsigned long long handle READ handle CONSTANT)
+  Q_PROPERTY(InputHandle_t handle READ handle CONSTANT)
   Q_PROPERTY(const QSteamworks::ActionDefinition actionDefinition READ actionDefinition CONSTANT)
   Q_PROPERTY(QString localizedName READ localizedName CONSTANT)
   Q_PROPERTY(QStringList glyphs READ glyphs CONSTANT)
@@ -16,11 +17,11 @@ class Action {
 
 public:
   Action(){};
-  Action(unsigned long long handle, ActionDefinition definition, const QString &localizedName,
-         const QStringList &origins, const QStringList &glyphs);
+  Action(InputHandle_t handle, ActionDefinition definition, const QString &localizedName, const QStringList &origins,
+         const QStringList &glyphs);
 
   const QSteamworks::ActionDefinition actionDefinition() const;
-  unsigned long long handle() const;
+  InputHandle_t handle() const;
   const QString &localizedName() const;
   const QStringList &glyphs() const;
   const QStringList &origins() const;
@@ -28,7 +29,7 @@ public:
   bool operator==(const Action &other);
 
 private:
-  unsigned long long m_handle;
+  InputHandle_t m_handle;
 
   ActionDefinition m_definition;
   QString m_localizedName;
