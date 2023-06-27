@@ -172,7 +172,7 @@ void QSteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb) {
   auto inputType = SteamInput()->GetInputTypeForHandle(handle);
   auto name = controllerNames.value(inputType, "Unknown");
 
-  auto controller = new Controller(handle, name, this);
+  auto controller = new Controller(handle, name, m_iga, this);
   m_controllers[handle] = controller;
   emit controllersChanged();
 
