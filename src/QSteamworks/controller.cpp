@@ -5,14 +5,9 @@
 using namespace QSteamworks;
 
 Controller::Controller(InputHandle_t handle, const QString &name, const IGA &iga, QObject *parent)
-    : QObject(parent), m_handle(handle), m_name(name),
+    : QObject(parent), m_handle(handle), m_name(name), m_iga(iga),
       m_image(QDir::current().absoluteFilePath("./resources/images/controllers/%1.png").arg(name)) {
-  foreach (auto &actionSet, iga.actionSets()) {
-    auto handle = SteamInput()->GetActionSetHandle(actionSet.name().toLocal8Bit());
-    Q_ASSERT(handle != 0);
-    m_actionSets << ActionSet(handle, actionSet.name(), getActions(handle, actionSet.actions()),
-                              getActionSetLayers(actionSet.layers()));
-  }
+  loadActions();
 }
 
 InputHandle_t Controller::handle() const { return m_handle; }
@@ -71,3 +66,14 @@ QList<ActionSetLayer> Controller::getActionSetLayers(const QList<ActionSetLayerD
 }
 
 QList<QSteamworks::ActionSet> Controller::actionSets() const { return m_actionSets; }
+
+void Controller::loadActions() {
+  m_actionSets.clear();
+  foreach (auto &actionSet, m_iga.actionSets()) {
+    auto handle = SteamInput()->GetActionSetHandle(actionSet.name().toLocal8Bit());
+    Q_ASSERT(handle != 0);
+    m_actionSets << ActionSet(handle, actionSet.name(), getActions(handle, actionSet.actions()),
+                              getActionSetLayers(actionSet.layers()));
+  }
+  emit actionsSetsChanged();
+}

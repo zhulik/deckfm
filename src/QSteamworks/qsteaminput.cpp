@@ -8,6 +8,7 @@
 #include "actionsetlayerdefinition.h"
 #include "controller.h"
 #include "qglobal.h"
+#include "qtimer.h"
 #include "qwindowdefs.h"
 #include "steam/isteaminput.h"
 #include "steam/steam_api.h"
@@ -151,6 +152,16 @@ void QSteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb) {
   auto name = controllerNames.value(inputType, "Unknown");
 
   auto controller = new Controller(handle, name, m_iga);
+
+  QTimer *timer = new QTimer();
+  timer->start(500);
+  timer->setSingleShot(true);
+  connect(timer, &QTimer::timeout, this, [timer, controller]() {
+    timer->deleteLater();
+    controller->loadActions();
+  });
+
+  connect(this, &QSteamInput::configurationLoaded, controller, &Controller::loadActions);
   controller->moveToThread(QGuiApplication::instance()->thread());
   controller->setParent(this);
 
