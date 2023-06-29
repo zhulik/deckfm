@@ -109,7 +109,11 @@ Rectangle {
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
                 font.pointSize: 24
-                text: `ActionSet: ${steam_input.actionSet}`
+                text: if (controllersView.selectedController) {
+                          controllersView.selectedController.actionSet.name
+                      } else {
+                          ""
+                      }
             }
 
             TabBar {
@@ -132,6 +136,8 @@ Rectangle {
 
                     TabButton {
                         text: modelData.name
+
+                        onDoubleClicked: controllersView.selectedController.actionSet = bar.currentActionSet
                     }
                 }
             }

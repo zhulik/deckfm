@@ -8,7 +8,6 @@
 #include "actionsetlayerdefinition.h"
 #include "controller.h"
 #include "qglobal.h"
-#include "qtimer.h"
 #include "qwindowdefs.h"
 #include "steam/isteaminput.h"
 #include "steam/steam_api.h"
@@ -112,37 +111,12 @@ void QSteamworks::QSteamInput::sendInputEvents(InputEvent e) {
 }
 
 void QSteamInput::onActionEvent(SteamInputActionEvent_t *event) {
-  //  setCurrentController(m_controllers[event->controllerHandle]);
+  auto controller = m_controllers[event->controllerHandle];
+  if (!controller) {
+    return;
+  }
 
-  //  InputHandle_t actionHandle = 0;
-  //  QString type;
-  //  bool digitalState = false;
-  //  float analogX = 0;
-  //  float analogY = 0;
-
-  //  if (event->eEventType == ESteamInputActionEventType_DigitalAction) {
-  //    type = "digital";
-  //    actionHandle = event->digitalAction.actionHandle;
-
-  //    digitalState = event->digitalAction.digitalActionData.bState;
-  //  } else {
-  //    type = "analog";
-  //    actionHandle = event->analogAction.actionHandle;
-
-  //    // TODO: add support for event->analogAction.analogActionData.eMode
-  //    analogX = event->analogAction.analogActionData.x;
-  //    analogY = event->analogAction.analogActionData.y;
-  //  }
-
-  //  auto a = actionByHandle(actionHandle, event->eEventType == ESteamInputActionEventType_DigitalAction);
-
-  //  //  Q_ASSERT(a.handle() != 0);
-
-  //  updateActionStates(a, digitalState, analogX, analogY);
-
-  //  auto iEvent = InputEvent(type, m_controllers[event->controllerHandle], a, digitalState, analogX, analogY);
-
-  //  sendInputEvents(iEvent);
+  controller->onActionEvent(event);
 }
 
 void QSteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb) {
@@ -152,14 +126,6 @@ void QSteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb) {
   auto name = controllerNames.value(inputType, "Unknown");
 
   auto controller = new Controller(handle, name, m_iga);
-
-  QTimer *timer = new QTimer();
-  timer->start(500);
-  timer->setSingleShot(true);
-  connect(timer, &QTimer::timeout, this, [timer, controller]() {
-    timer->deleteLater();
-    controller->loadActions();
-  });
 
   connect(this, &QSteamInput::configurationLoaded, controller, &Controller::loadActions);
   controller->moveToThread(QGuiApplication::instance()->thread());
@@ -190,22 +156,6 @@ void QSteamInput::onConfigurationLoaded(SteamInputConfigurationLoaded_t *) {
   emit configurationLoaded();
   qDebug() << "Confuguration loaded";
 }
-
-// void QSteamInput::setActionSet(const QSteamworks::ActionSet &newActionSet) {
-//   Q_ASSERT(newActionSet.handle() != 0);
-
-//  if (m_actionSet == newActionSet)
-//    return;
-
-//  m_actionSet = newActionSet;
-
-//  if (m_currentController) {
-//    SteamInput()->ActivateActionSet(m_currentController->handle(), m_actionSet.handle());
-//  }
-
-//  emit actionSetChanged();
-//}
-
 const QVariantMap &QSteamInput::actionStates() const { return m_actionStates; }
 
 const QString &QSteamInput::igaPath() const { return m_igaPath; }

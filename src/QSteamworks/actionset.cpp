@@ -12,13 +12,3 @@ ActionSet::ActionSet(InputActionSetHandle_t handle, const QString &name, const Q
 }
 
 const QList<ActionSetLayer> &ActionSet::layers() const { return m_layers; }
-
-QVariantList ActionSet::qmlLayers() const {
-  QVariantList result;
-
-  foreach (auto &l, m_layers) {
-    result << QVariant::fromValue(l);
-  }
-
-  return result;
-}

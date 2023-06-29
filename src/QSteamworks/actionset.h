@@ -11,7 +11,7 @@ namespace QSteamworks {
 
 class ActionSet : public ActionSetLayer {
   Q_GADGET
-  Q_PROPERTY(QVariantList layers READ qmlLayers CONSTANT)
+  Q_PROPERTY(QList<QSteamworks::ActionSetLayer> layers READ layers CONSTANT)
 
 public:
   ActionSet() : ActionSetLayer(){};
@@ -20,7 +20,7 @@ public:
 
   const QList<ActionSetLayer> &layers() const;
 
-  QVariantList qmlLayers() const;
+  bool operator==(const ActionSet &other) const { return handle() == other.handle(); }
 
 private:
   QList<ActionSetLayer> m_layers;

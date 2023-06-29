@@ -29,7 +29,7 @@ public:
   bool operator==(const ActionSetLayer &other) const;
 
 private:
-  InputActionSetHandle_t m_handle;
+  InputActionSetHandle_t m_handle = 0;
   QString m_name;
 
 protected:
