@@ -40,7 +40,7 @@ Item {
             id: bar
             Layout.fillWidth: parent
 
-            currentIndex: 2
+            currentIndex: 3
 
             TabButton {
                 text: "Controller state"
@@ -52,6 +52,10 @@ Item {
 
             TabButton {
                 text: "IGA"
+            }
+
+            TabButton {
+                text: "Controllers"
             }
         }
 
@@ -75,11 +79,15 @@ Item {
                 }
             }
 
-            Debug.Console{
+            Debug.Console {
 
             }
 
             Debug.IGAView {
+
+            }
+
+            Debug.ControllersView {
 
             }
         }

@@ -25,12 +25,6 @@ Rectangle {
 
             Layout.fillWidth: parent
 
-            Label {
-                width: 200
-                height: 100
-                text: "Action set layers"
-            }
-
             Repeater {
                 model: steam_input.iga.actionSets
 
@@ -87,7 +81,6 @@ Rectangle {
 
                         highlight: Rectangle {
                             color: Material.primary
-                            visible: true
                         }
 
                         delegate: ItemDelegate {

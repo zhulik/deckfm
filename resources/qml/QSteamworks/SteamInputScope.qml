@@ -8,8 +8,8 @@ Item {
 
 
     // TODO empty actionStates if disabled, and rebind if enabled
-    property string actionSet: steam_input.actionSet
-    property string actionSetLayer: steam_input.actionSetLayer
+//    property string actionSet: steam_input.actionSet
+//    property string actionSetLayer: steam_input.actionSetLayer
     readonly property var actionStates: steam_input.actionStates
 
     property var pressHandlers: ({})
@@ -22,25 +22,25 @@ Item {
     signal releasedEvent(var event)
     signal analogEvent(var event)
 
-    Binding {
-        when: enabled && actionSet != ""
+//    Binding {
+//        when: enabled && actionSet != ""
 
-        target: steam_input
-        property: "actionSet"
-        value: actionSet
+//        target: steam_input
+//        property: "actionSet"
+//        value: actionSet
 
-        restoreMode: Binding.RestoreNone
-    }
+//        restoreMode: Binding.RestoreNone
+//    }
 
-    Binding {
-        when: enabled && actionSetLayer != ""
+//    Binding {
+//        when: enabled && actionSetLayer != ""
 
-        target: steam_input
-        property: "actionSetLayer"
-        value: actionSetLayer
+//        target: steam_input
+//        property: "actionSetLayer"
+//        value: actionSetLayer
 
-        restoreMode: Binding.RestoreNone
-    }
+//        restoreMode: Binding.RestoreNone
+//    }
 
     Connections {
         target: steam_input
