@@ -2,6 +2,10 @@
 #include <QTimer>
 
 #include "controller.h"
+#include "inputevent.h"
+#include "steam/isteaminput.h"
+
+#include "collections.h"
 
 using namespace QSteamworks;
 
@@ -9,7 +13,7 @@ Controller::Controller(InputHandle_t handle, const QString &name, const IGA &iga
     : QObject(parent), m_handle(handle), m_name(name), m_iga(iga),
       m_image(QDir::current().absoluteFilePath("./resources/images/controllers/%1.png").arg(name)) {
   QTimer *timer = new QTimer();
-  timer->start(200);
+  timer->start(500);
   connect(timer, &QTimer::timeout, this, [timer, this]() {
     timer->deleteLater();
     loadActions();
@@ -81,7 +85,38 @@ void Controller::loadActions() {
     m_actionSets[handle] = ActionSet(handle, actionSet.name(), getActions(handle, actionSet.actions()),
                                      getActionSetLayers(actionSet.layers()));
   }
-  emit actionsSetsChanged();
+  emit actionSetsChanged();
+}
+
+void Controller::showBindingPanel() const { SteamInput()->ShowBindingPanel(m_handle); }
+
+void Controller::activateActionSetLayer(const ActionSetLayer &layer) {
+  SteamInput()->ActivateActionSetLayer(m_handle, layer.handle());
+  emit activeActionSetLayersChanged();
+}
+
+void Controller::deactivateActionSetLayer(const ActionSetLayer &layer) {
+  SteamInput()->DeactivateActionSetLayer(m_handle, layer.handle());
+  emit activeActionSetLayersChanged();
+}
+
+void Controller::deactivateAllActionSetLayers() {
+  SteamInput()->DeactivateAllActionSetLayers(m_handle);
+  emit activeActionSetLayersChanged();
+}
+
+ActionSet Controller::actionSetByName(const QString &name) {
+  return findBy(m_actionSets.values(), [name](auto s) { return s.name() == name; });
+}
+
+void Controller::stopAnalogActionMomentum(const Action &action) {
+  SteamInput()->StopAnalogActionMomentum(m_handle, action.handle());
+}
+
+void Controller::triggerRepeatedHapticPulse(unsigned short usDurationMicroSec, unsigned short usOffMicroSec,
+                                            unsigned short unRepeat) {
+  SteamInput()->Legacy_TriggerRepeatedHapticPulse(m_handle, k_ESteamControllerPad_Left, usDurationMicroSec,
+                                                  usOffMicroSec, unRepeat, 0);
 }
 
 void Controller::setActionSet(const QSteamworks::ActionSet &newActionSet) {
@@ -91,12 +126,12 @@ void Controller::setActionSet(const QSteamworks::ActionSet &newActionSet) {
   m_actionSet = newActionSet;
   SteamInput()->ActivateActionSet(m_handle, m_actionSet.handle());
 
-  emit actionsSetChanged();
+  emit actionSetChanged();
 }
 
 QSteamworks::ActionSet Controller::actionSet() const { return m_actionSet; }
 
-void Controller::onActionEvent(SteamInputActionEvent_t *event) const {
+void Controller::onActionEvent(SteamInputActionEvent_t *event) {
   InputHandle_t actionHandle = 0;
   QString type;
   bool digitalState = false;
@@ -117,13 +152,61 @@ void Controller::onActionEvent(SteamInputActionEvent_t *event) const {
     analogY = event->analogAction.analogActionData.y;
   }
 
-  //  auto a = actionByHandle(actionHandle, event->eEventType == ESteamInputActionEventType_DigitalAction);
+  auto a = m_actionSet.actionByHandle(actionHandle, event->eEventType == ESteamInputActionEventType_DigitalAction);
 
-  //  Q_ASSERT(a.handle() != 0);
+  if (!a.handle()) {
+    return;
+  }
+  updateActionStates(a, digitalState, analogX, analogY);
 
-  //  updateActionStates(a, digitalState, analogX, analogY);
+  sendInputEvents(InputEvent(type, this, a, digitalState, analogX, analogY));
+}
 
-  //  auto iEvent = InputEvent(type, m_controllers[event->controllerHandle], a, digitalState, analogX, analogY);
+void Controller::sendInputEvents(const InputEvent &e) {
+  emit inputEvent(e);
 
-  //  sendInputEvents(iEvent);
+  if (!e.action().actionDefinition().isDigital()) {
+    emit analogEvent(e);
+    return;
+  }
+
+  if (e.digitalState()) {
+    emit pressedEvent(e);
+  } else {
+    emit releasedEvent(e);
+  }
+}
+
+void Controller::updateActionStates(const Action &action, bool digitalState, float analogX, float analogY) {
+  QVariant state;
+
+  if (action.actionDefinition().isDigital()) {
+    state = digitalState;
+  } else {
+    state = QVariantMap{{"x", analogX}, {"y", analogY}};
+  }
+
+  m_actionStates[action.actionDefinition().name()] = state;
+
+  emit actionStatesChanged();
+}
+
+QVariantMap Controller::actionStates() const { return m_actionStates; }
+
+QList<ActionSetLayer> Controller::activeActionSetLayers() const {
+  QVector<InputActionSetHandle_t> buf(STEAM_INPUT_MAX_ACTIVE_LAYERS);
+  auto n = SteamInput()->GetActiveActionSetLayers(m_handle, buf.data());
+  buf.resize(n);
+
+  QList<ActionSetLayer> result;
+
+  foreach (auto &handle, buf) {
+    auto l = findBy(m_actionSet.layers(), [handle](auto l) { return l.handle() == handle; });
+
+    if (l.handle()) {
+      result << l;
+    }
+  }
+
+  return result;
 }

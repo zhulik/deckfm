@@ -3,11 +3,14 @@
 #include <QObject>
 #include <QVariant>
 
+#include "qobjectdefs.h"
 #include "steam/steam_api.h"
 
 #include "action.h"
 
 namespace QSteamworks {
+
+using namespace QSteamInput;
 
 class ActionSetLayer {
   Q_GADGET
@@ -28,11 +31,16 @@ public:
 
   bool operator==(const ActionSetLayer &other) const;
 
-private:
+  Q_INVOKABLE
+  virtual QSteamworks::QSteamInput::Action actionByHandle(InputHandle_t handle, bool digital) const;
+
+  Q_INVOKABLE
+  virtual QSteamworks::QSteamInput::Action actionByName(const QString &name, bool digital) const;
+
+protected:
   InputActionSetHandle_t m_handle = 0;
   QString m_name;
 
-protected:
   QList<Action> m_actions;
 };
 } // namespace QSteamworks

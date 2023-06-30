@@ -9,11 +9,11 @@
 
 namespace QSteamworks {
 
-class QSteamAPI : public QObject {
+class SteamAPI : public QObject {
   Q_OBJECT
 public:
-  explicit QSteamAPI(QObject *parent = nullptr);
-  virtual ~QSteamAPI();
+  explicit SteamAPI(QObject *parent = nullptr);
+  virtual ~SteamAPI();
 
   Q_INVOKABLE
   void runCallbacks() const;

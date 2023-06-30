@@ -6,45 +6,60 @@ Item {
 
     property bool enabled: true
 
-
     // TODO empty actionStates if disabled, and rebind if enabled
-//    property string actionSet: steam_input.actionSet
-//    property string actionSetLayer: steam_input.actionSetLayer
-    readonly property var actionStates: steam_input.actionStates
+    property string actionSet
+    //    property string actionSetLayer: steam_input.actionSetLayer
+    property var actionStates: {
+        if (steam_input.lastController) {
+            steam_input.lastController.actionStates
+        } else {
+            undefined
+        }
+    }
 
     property var pressHandlers: ({})
     property var releaseHandlers: ({})
     property var analogHandlers: ({})
 
     signal inputEvent(var event)
-
     signal pressedEvent(var event)
     signal releasedEvent(var event)
     signal analogEvent(var event)
 
-//    Binding {
-//        when: enabled && actionSet != ""
+    Binding {
+        id: actionSetBinding
+        when: enabled && root.actionSet !== ""
 
-//        target: steam_input
-//        property: "actionSet"
-//        value: actionSet
+        target: steam_input.lastController
+        property: "actionSet"
+        value: {
+            if (steam_input.lastController) {
+                const v = steam_input.lastController.actionSetByName(root.actionSet)
+            } else {
+                ""
+            }
+        }
 
-//        restoreMode: Binding.RestoreNone
-//    }
+        restoreMode: Binding.RestoreNone
+    }
 
-//    Binding {
-//        when: enabled && actionSetLayer != ""
+    //    Binding {
+    //        when: enabled && actionSetLayer !== ""
 
-//        target: steam_input
-//        property: "actionSetLayer"
-//        value: actionSetLayer
+    //        target: steam_input.lastController
+    //        property: "actionSetLayer"
+    //        value: actionSetLayer
 
-//        restoreMode: Binding.RestoreNone
-//    }
+    //        restoreMode: Binding.RestoreNone
+    //    }
 
     Connections {
-        target: steam_input
+        target: steam_input.lastController
         enabled: root.enabled
+
+        function onActionSetsChanged() {
+            actionSetBinding.value = steam_input.lastController.actionSetByName(root.actionSet)
+        }
 
         function onPressedEvent(event) {
             root.pressedEvent(event)

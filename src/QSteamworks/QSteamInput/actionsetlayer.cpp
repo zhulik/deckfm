@@ -1,4 +1,5 @@
 #include "actionsetlayer.h"
+#include "collections.h"
 
 using namespace QSteamworks;
 
@@ -22,3 +23,15 @@ QVariantMap ActionSetLayer::qmlActions() const {
 }
 
 bool ActionSetLayer::operator==(const ActionSetLayer &other) const { return m_handle == other.m_handle; }
+
+Action ActionSetLayer::actionByHandle(InputHandle_t handle, bool digital) const {
+  return findBy(m_actions, [handle, digital](auto action) {
+    return action.handle() == handle && action.actionDefinition().isDigital() == digital;
+  });
+}
+
+Action ActionSetLayer::actionByName(const QString &name, bool digital) const {
+  return findBy(m_actions, [name, digital](auto action) {
+    return action.actionDefinition().name() == name && action.actionDefinition().isDigital() == digital;
+  });
+}

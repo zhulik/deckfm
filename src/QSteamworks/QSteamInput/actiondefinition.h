@@ -3,6 +3,7 @@
 #include <QObject>
 
 namespace QSteamworks {
+namespace QSteamInput {
 class ActionDefinition {
   Q_GADGET
   Q_PROPERTY(QString name READ name CONSTANT)
@@ -28,5 +29,6 @@ private:
   QString m_type;
   QString m_actionSet;
 };
+} // namespace QSteamInput
 } // namespace QSteamworks
-Q_DECLARE_METATYPE(QSteamworks::ActionDefinition)
+Q_DECLARE_METATYPE(QSteamworks::QSteamInput::ActionDefinition)

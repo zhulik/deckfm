@@ -3,24 +3,25 @@
 #include <QMap>
 #include <stdexcept>
 
-#include "actionsetdefinition.h"
-#include "actionsetlayer.h"
-#include "actionsetlayerdefinition.h"
-#include "controller.h"
+#include "QSteamInput/actionsetdefinition.h"
+#include "QSteamInput/actionsetlayer.h"
+#include "QSteamInput/actionsetlayerdefinition.h"
+#include "QSteamInput/controller.h"
 #include "qglobal.h"
 #include "qwindowdefs.h"
 #include "steam/isteaminput.h"
 #include "steam/steam_api.h"
 
 #include "errors.h"
-#include "qsteamapi.h"
-#include "qsteaminput.h"
+#include "steamapi.h"
+#include "steaminput.h"
 
-#include "vdfparser.h"
+#include "QSteamInput/vdfparser.h"
+#include "steam/steamtypes.h"
 
 using namespace QSteamworks;
 
-QSteamworks::QSteamInput *QSteamworks::QSteamInput::m_instance = nullptr;
+QSteamworks::SteamInput *QSteamworks::SteamInput::m_instance = nullptr;
 
 static const QMap<ESteamInputType, QString> controllerNames{
     {k_ESteamInputType_SteamController, "Steam"},
@@ -48,16 +49,16 @@ QString readFile(QString const &path) {
   return QTextStream(&f).readAll();
 }
 
-QSteamInput *QSteamInput::instance() { return m_instance; }
+QSteamworks::SteamInput *SteamInput::instance() { return m_instance; }
 
-QSteamInput::QSteamInput(QObject *parent) : QObject{parent} {
+SteamInput::SteamInput(QObject *parent) : QObject{parent} {
   if (m_instance != nullptr) {
     throw InitializationFailed("Steam input is already initialized");
   }
   qRegisterMetaType<QSteamworks::IGA>();
 
-  qRegisterMetaType<QSteamworks::ActionDefinition>();
-  qRegisterMetaType<QList<QSteamworks::ActionDefinition>>();
+  qRegisterMetaType<QSteamworks::QSteamInput::ActionDefinition>();
+  qRegisterMetaType<QList<QSteamworks::QSteamInput::ActionDefinition>>();
 
   qRegisterMetaType<QSteamworks::ActionSetDefinition>();
   qRegisterMetaType<QList<QSteamworks::ActionSetDefinition>>();
@@ -65,52 +66,27 @@ QSteamInput::QSteamInput(QObject *parent) : QObject{parent} {
   qRegisterMetaType<QSteamworks::ActionSetLayerDefinition>();
   qRegisterMetaType<QList<QSteamworks::ActionSetLayerDefinition>>();
 
-  qRegisterMetaType<QSteamworks::Action>();
+  qRegisterMetaType<QSteamworks::QSteamInput::Action>();
   qRegisterMetaType<QSteamworks::ActionSet>();
   qRegisterMetaType<QSteamworks::ActionSetLayer>();
   qRegisterMetaType<QSteamworks::InputEvent>();
 
   qRegisterMetaType<InputHandle_t>("InputHandle_t");
+  qRegisterMetaType<uint8>("uint8");
+  qRegisterMetaType<int8>("int8");
+
+  qRegisterMetaType<QList<QSteamworks::Controller *>>();
 
   m_instance = this;
 }
 
-QSteamInput::~QSteamInput() { SteamInput()->Shutdown(); }
+SteamInput::~SteamInput() { ::SteamInput()->Shutdown(); }
 
-void QSteamInput::runFrame() { SteamInput()->RunFrame(); }
+void SteamInput::runFrame() { ::SteamInput()->RunFrame(); }
 
-IGA QSteamInput::iga() const { return m_iga; }
+IGA SteamInput::iga() const { return m_iga; }
 
-void QSteamInput::updateActionStates(const Action &action, bool digitalState, float analogX, float analogY) {
-  QVariant state;
-
-  if (action.actionDefinition().isDigital()) {
-    state = digitalState;
-  } else {
-    state = QVariantMap{{"x", analogX}, {"y", analogY}};
-  }
-
-  m_actionStates[action.actionDefinition().name()] = state;
-
-  emit actionStatesChanged();
-}
-
-void QSteamworks::QSteamInput::sendInputEvents(InputEvent e) {
-  emit inputEvent(e);
-
-  if (!e.action().actionDefinition().isDigital()) {
-    emit analogEvent(e);
-    return;
-  }
-
-  if (e.digitalState()) {
-    emit pressedEvent(e);
-  } else {
-    emit releasedEvent(e);
-  }
-}
-
-void QSteamInput::onActionEvent(SteamInputActionEvent_t *event) {
+void SteamInput::onActionEvent(SteamInputActionEvent_t *event) {
   auto controller = m_controllers[event->controllerHandle];
   if (!controller) {
     return;
@@ -119,25 +95,34 @@ void QSteamInput::onActionEvent(SteamInputActionEvent_t *event) {
   controller->onActionEvent(event);
 }
 
-void QSteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb) {
+void SteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb) {
   auto handle = cb->m_ulConnectedDeviceHandle;
 
-  auto inputType = SteamInput()->GetInputTypeForHandle(handle);
+  auto inputType = ::SteamInput()->GetInputTypeForHandle(handle);
   auto name = controllerNames.value(inputType, "Unknown");
 
   auto controller = new Controller(handle, name, m_iga);
 
-  connect(this, &QSteamInput::configurationLoaded, controller, &Controller::loadActions);
+  connect(controller, &Controller::inputEvent, controller, [controller, this]() {
+    m_lastController = controller;
+    emit lastControllerChanged();
+  });
+  connect(this, &SteamInput::configurationLoaded, controller, &Controller::loadActions);
   controller->moveToThread(QGuiApplication::instance()->thread());
   controller->setParent(this);
 
   m_controllers[handle] = controller;
   emit controllersChanged();
 
+  if (m_controllers.count() == 1) { // First added controller
+    m_lastController = controller;
+    emit lastControllerChanged();
+  }
+
   qDebug() << "Controller connected:" << controller->name() << controller->handle();
 }
 
-void QSteamInput::onControllerDisconnected(SteamInputDeviceDisconnected_t *cb) {
+void SteamInput::onControllerDisconnected(SteamInputDeviceDisconnected_t *cb) {
   auto handle = cb->m_ulDisconnectedDeviceHandle;
 
   delete m_controllers[handle];
@@ -145,37 +130,41 @@ void QSteamInput::onControllerDisconnected(SteamInputDeviceDisconnected_t *cb) {
 
   emit controllersChanged();
 
+  if (m_lastController->handle() == handle) {
+    m_lastController = nullptr;
+    emit lastControllerChanged();
+  }
+
   qDebug() << "Controller disconnected:" << handle;
 }
 
-void QSteamInput::onConfigurationLoaded(SteamInputConfigurationLoaded_t *) {
-  auto cb = [](auto e) { QSteamInput::instance()->onActionEvent(e); };
+void SteamInput::onConfigurationLoaded(SteamInputConfigurationLoaded_t *) {
+  auto cb = [](auto e) { SteamInput::instance()->onActionEvent(e); };
 
-  SteamInput()->EnableActionEventCallbacks(cb);
+  ::SteamInput()->EnableActionEventCallbacks(cb);
 
   emit configurationLoaded();
   qDebug() << "Confuguration loaded";
 }
-const QVariantMap &QSteamInput::actionStates() const { return m_actionStates; }
 
-const QString &QSteamInput::igaPath() const { return m_igaPath; }
+const QString &SteamInput::igaPath() const { return m_igaPath; }
 
-void QSteamInput::setIgaPath(const QString &newIgaPath) {
+void SteamInput::setIgaPath(const QString &newIgaPath) {
   if (m_igaPath == newIgaPath)
     return;
 
   m_igaPath = newIgaPath;
   emit igaPathChanged();
 
-  if (SteamInput() == nullptr) {
+  if (::SteamInput() == nullptr) {
     throw InitializationFailed("Cannot initialize SteamInput: SteamAPI is not initialized.");
   }
 
-  if (!SteamInput()->Init(true)) {
+  if (!::SteamInput()->Init(true)) {
     throw InitializationFailed("Cannot initialize SteamInput: Init returned false.");
   }
 
-  if (!SteamInput()->SetInputActionManifestFilePath(m_igaPath.toLocal8Bit())) {
+  if (!::SteamInput()->SetInputActionManifestFilePath(m_igaPath.toLocal8Bit())) {
     throw InitializationFailed(QString("Cannot read IGA file: %1").arg(m_igaPath));
   }
 
@@ -183,27 +172,9 @@ void QSteamInput::setIgaPath(const QString &newIgaPath) {
   m_iga = IGA(VDFParser().parse(vdfContent));
   emit igaChanged();
 
-  SteamInput()->EnableDeviceCallbacks();
+  ::SteamInput()->EnableDeviceCallbacks();
 }
 
-// void QSteamInput::setActionSetLayer(const QString &newActionSetLayer) {
-//   if (m_actionSet.name() == "" || newActionSetLayer == "" || m_currentActionSetLayer.name() == newActionSetLayer) {
-//     return;
-//   }
+QList<Controller *> SteamInput::controllers() const { return m_controllers.values(); }
 
-//  SteamInput()->DeactivateAllActionSetLayers(m_currentController->handle());
-//  m_currentActionSetLayer = ActionSetLayer();
-//  emit actionSetLayerChanged();
-
-//  foreach (auto &layer, m_actionSet.layers()) {
-//    if (layer.name() == newActionSetLayer) {
-//      m_currentActionSetLayer = layer;
-//      SteamInput()->ActivateActionSetLayer(m_currentController->handle(), layer.handle());
-//      emit actionSetLayerChanged();
-//      return;
-//    }
-//  }
-//  throw std::runtime_error(QString("Cannot find action set layer %1").arg(newActionSetLayer).toLocal8Bit());
-//}
-
-QList<Controller *> QSteamInput::controllers() const { return m_controllers.values(); }
+QSteamworks::Controller *SteamInput::lastController() const { return m_lastController; }

@@ -10,7 +10,7 @@ namespace QSteamworks {
 class ActionSetDefinition {
   Q_GADGET
   Q_PROPERTY(QString name READ name CONSTANT)
-  Q_PROPERTY(QList<QSteamworks::ActionDefinition> actions READ actions CONSTANT)
+  Q_PROPERTY(QList<QSteamworks::QSteamInput::ActionDefinition> actions READ actions CONSTANT)
   Q_PROPERTY(QList<QSteamworks::ActionSetLayerDefinition> layers READ layers CONSTANT)
 
 public:

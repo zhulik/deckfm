@@ -4,16 +4,16 @@
 
 namespace QSteamworks {
 
-class QSteamAPI;
+class SteamAPI;
 
-class QSteamUtils : public QObject {
+class SteamUtils : public QObject {
   Q_OBJECT
 
   Q_PROPERTY(bool isSteamRunningOnSteamDeck READ isSteamRunningOnSteamDeck CONSTANT)
   Q_PROPERTY(bool isSteamInBigPictureMode READ isSteamInBigPictureMode CONSTANT)
 
 public:
-  explicit QSteamUtils(QObject *parent = nullptr);
+  explicit SteamUtils(QObject *parent = nullptr);
 
   bool isSteamRunningOnSteamDeck() const;
   bool isSteamInBigPictureMode() const;

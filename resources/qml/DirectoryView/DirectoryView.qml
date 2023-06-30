@@ -40,7 +40,7 @@ Item {
 
     Steamworks.SteamInputScope {
         enabled: parent.activeFocus
-//        actionSet: "deckfm"
+        actionSet: "deckfm"
 //        actionSetLayer: "file_manager"
 
         pressHandlers: {
@@ -53,8 +53,30 @@ Item {
             "file_manager_go_home": fs_model.goHome
         }
 
+        property double scrollPos: 0
+
         analogHandlers: {
-            "scroll": e => view.flick(e.analogX, e.analogY)
+            "scroll": e => {
+                if ((e.analogY <= 0 && view.atYEnd) ||
+                    (e.analogY >= 0 && view.atYBeginning)) {
+                    view.stopScrollMomentum()
+                    return
+                }
+
+                if (e.analogY >= 0 && view.atYBeginning) {
+                    view.stopScrollMomentum()
+                    return
+                }
+
+                scrollPos += Math.abs(e.analogY)
+
+                if (scrollPos > 70) {
+                    scrollPos = 0
+                   view.scrollHaptic()
+                }
+                view.contentY -= e.analogY
+                view.returnToBounds()
+            }
         }
     }
 
@@ -144,6 +166,47 @@ Item {
 
             ScrollBar.vertical: ScrollBar {}
 
+            onCurrentIndexChanged: view.scrollHaptic()
+
+            function stopScrollMomentum() {
+                if (!steam_input.lastController) {
+                    return
+                }
+
+                const a = steam_input.lastController.actionSet.actionByName("scroll", false)
+                steam_input.lastController.stopAnalogActionMomentum(a)
+            }
+
+            function stopScrollHaptic() {
+                if (!steam_input.lastController) {
+                    return
+                }
+
+                steam_input.lastController.triggerRepeatedHapticPulse(2900, 1200, 2)
+            }
+
+            function scrollHaptic() {
+                if (!steam_input.lastController) {
+                    return
+                }
+
+                steam_input.lastController.triggerRepeatedHapticPulse(500, 1, 1)
+            }
+
+            onAtYBeginningChanged: {
+                if (atYBeginning) {
+                    stopScrollMomentum()
+                    stopScrollHaptic()
+                }
+            }
+
+            onAtYEndChanged: {
+                if (atYEnd) {
+                    stopScrollMomentum()
+                    stopScrollHaptic()
+                }
+            }
+
             populate: Transition {
                 id: _transition
 
@@ -204,10 +267,6 @@ Item {
                             const y = fileHighlight.belowView ? view.contentY + view.cellHeight : view.contentY + view.height - view.cellHeight
                             view.currentIndex = view.indexAt(fileHighlight.x, y)
                         }
-
-//                        if (!view.moving) {
-//                            steam_input.stopAnalogActionMomentum("scroll")
-//                        }
                     }
                 }
             }
