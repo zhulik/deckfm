@@ -26,20 +26,6 @@ Item {
         opacity: 0.6
     }
 
-    Steamworks.SteamInputScope {
-        id: input
-        onInputEvent: {
-            const e = {
-                type: event.type,
-                digitalState: event.digitalState,
-                analogX: event.analogX,
-                analogY: event.analogY,
-                name: event.action.actionDefinition.name
-            }
-            lastEventLabel.text = JSON.stringify(e, null, 2)
-        }
-    }
-
     ColumnLayout {
         anchors.fill: parent
 
@@ -47,11 +33,7 @@ Item {
             id: bar
             Layout.fillWidth: parent
 
-            currentIndex: 3
-
-            TabButton {
-                text: "Controller state"
-            }
+            currentIndex: 2
 
             TabButton {
                 text: "Console"
@@ -70,22 +52,6 @@ Item {
             Layout.fillWidth: parent
 
             currentIndex: bar.currentIndex
-
-            ColumnLayout {
-
-                Label {
-                    text: `Action set: ${input.actionSet}`
-                }
-
-                Label {
-                    text: `Current layer: ${JSON.stringify(input.actionSetLayer)}`
-                }
-
-                Label {
-                    id: lastEventLabel
-                    font.pixelSize: 14
-                }
-            }
 
             Debug.ConsoleTab {
 
