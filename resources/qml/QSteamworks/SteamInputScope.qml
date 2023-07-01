@@ -6,9 +6,11 @@ Item {
 
     property bool enabled: true
 
-    // TODO empty actionStates if disabled, and rebind if enabled
     property string actionSet
-    //    property string actionSetLayer: steam_input.actionSetLayer
+
+    // List of strings. Layers found by name and applied in the order on appearing
+    property var actionSetLayers: []
+
     property var actionStates: {
         if (steam_input.lastController) {
             steam_input.lastController.actionStates
@@ -43,15 +45,26 @@ Item {
         restoreMode: Binding.RestoreBindingOrValue
     }
 
-    //    Binding {
-    //        when: enabled && actionSetLayer !== ""
+        Binding {
+            when: enabled
 
-    //        target: steam_input.lastController
-    //        property: "actionSetLayer"
-    //        value: actionSetLayer
+            target: steam_input.lastController
+            property: "activeActionSetLayers"
 
-    //        restoreMode: Binding.RestoreNone
-    //    }
+            value: {
+                if (steam_input.lastController) {
+                    const layers = actionSetLayers.map((layerName) => {
+                                             return steam_input.lastController.actionSet.layerByName(layerName)
+                                         })
+
+                    steam_input.lastController.activeActionSetLayers = layers
+                } else {
+                    ""
+                }
+            }
+
+            restoreMode: Binding.RestoreBindingOrValue
+        }
 
     Connections {
         target: steam_input.lastController

@@ -41,7 +41,7 @@ Item {
     Steamworks.SteamInputScope {
         enabled: parent.activeFocus
         actionSet: "deckfm"
-//        actionSetLayer: "file_manager"
+//        actionSetLayers: ["file_manager"]
 
         pressHandlers: {
             "down": view.moveCurrentIndexDown,

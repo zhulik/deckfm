@@ -211,3 +211,13 @@ QList<ActionSetLayer> Controller::activeActionSetLayers() const {
 
   return result;
 }
+
+void Controller::setActiveActionSetLayers(const QList<ActionSetLayer> &newActiveActionSetLayers) {
+  deactivateAllActionSetLayers();
+
+  foreach (auto &l, newActiveActionSetLayers) {
+    ::SteamInput()->ActivateActionSetLayer(m_handle, l.handle());
+  }
+
+  emit activeActionSetLayersChanged();
+}
