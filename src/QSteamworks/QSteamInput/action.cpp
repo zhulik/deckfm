@@ -1,16 +1,16 @@
 #include "action.h"
-#include "qglobal.h"
 
 using namespace QSteamworks;
+using namespace QSteamworks::QSteamInput;
 
-Action::Action(unsigned long long handle, ActionDefinition definition, const QString &localizedName,
+Action::Action(InputHandle_t handle, ActionDefinition definition, const QString &localizedName,
                const QStringList &origins, const QStringList &glyphs)
     : m_handle(handle), m_definition(definition), m_localizedName(localizedName), m_origins(origins), m_glyphs(glyphs) {
 }
 
 const ActionDefinition Action::actionDefinition() const { return m_definition; }
 
-unsigned long long Action::handle() const { return m_handle; }
+InputHandle_t Action::handle() const { return m_handle; }
 
 const QString &Action::localizedName() const { return m_localizedName; }
 

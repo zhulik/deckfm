@@ -29,7 +29,14 @@ Item {
     Steamworks.SteamInputScope {
         id: input
         onInputEvent: {
-            lastEventLabel.text = JSON.stringify(event, null, 2)
+            const e = {
+                type: event.type,
+                digitalState: event.digitalState,
+                analogX: event.analogX,
+                analogY: event.analogY,
+                name: event.action.actionDefinition.name
+            }
+            lastEventLabel.text = JSON.stringify(e, null, 2)
         }
     }
 
@@ -40,7 +47,7 @@ Item {
             id: bar
             Layout.fillWidth: parent
 
-            currentIndex: 2
+            currentIndex: 3
 
             TabButton {
                 text: "Controller state"
@@ -52,6 +59,10 @@ Item {
 
             TabButton {
                 text: "IGA"
+            }
+
+            TabButton {
+                text: "Controllers"
             }
         }
 
@@ -72,14 +83,19 @@ Item {
 
                 Label {
                     id: lastEventLabel
+                    font.pixelSize: 14
                 }
             }
 
-            Debug.Console{
+            Debug.ConsoleTab {
 
             }
 
-            Debug.IGAView {
+            Debug.IGATab {
+
+            }
+
+            Debug.ControllersTab {
 
             }
         }

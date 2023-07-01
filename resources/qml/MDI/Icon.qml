@@ -6,7 +6,11 @@ import "icons.js" as MdiFont
 Label {
     property string name
 
-    text: MdiFont.Icon[name]
+    text: if (name) {
+              MdiFont.Icon[name]
+          } else {
+              ""
+          }
 
     font.family: "Material Design Icons"
 

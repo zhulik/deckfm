@@ -6,12 +6,13 @@
 #include "actionsetlayerdefinition.h"
 
 namespace QSteamworks {
+namespace QSteamInput {
 
 class ActionSetDefinition {
   Q_GADGET
   Q_PROPERTY(QString name READ name CONSTANT)
-  Q_PROPERTY(QList<QSteamworks::ActionDefinition> actions READ actions CONSTANT)
-  Q_PROPERTY(QList<QSteamworks::ActionSetLayerDefinition> layers READ layers CONSTANT)
+  Q_PROPERTY(QList<QSteamworks::QSteamInput::ActionDefinition> actions READ actions CONSTANT)
+  Q_PROPERTY(QList<QSteamworks::QSteamInput::ActionSetLayerDefinition> layers READ layers CONSTANT)
 
 public:
   ActionSetDefinition(){};
@@ -29,5 +30,6 @@ private:
   QList<ActionDefinition> m_actions;
   QList<ActionSetLayerDefinition> m_layers;
 };
+} // namespace QSteamInput
 } // namespace QSteamworks
-Q_DECLARE_METATYPE(QSteamworks::ActionSetDefinition)
+Q_DECLARE_METATYPE(QSteamworks::QSteamInput::ActionSetDefinition)

@@ -1,11 +1,10 @@
-#include <QDebug>
-
+#include "iga.h"
 #include "actiondefinition.h"
 #include "actionsetdefinition.h"
 #include "actionsetlayerdefinition.h"
-#include "iga.h"
 
 using namespace QSteamworks;
+using namespace QSteamworks::QSteamInput;
 
 static const QMap<QString, bool> actionTypes{{"Button", true}, {"StickPadGyro", false}, {"AnalogTrigger", false}};
 

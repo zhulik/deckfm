@@ -5,10 +5,11 @@
 #include "actionsetdefinition.h"
 
 namespace QSteamworks {
+namespace QSteamInput {
 
 class IGA {
   Q_GADGET
-  Q_PROPERTY(QList<QSteamworks::ActionSetDefinition> actionSets READ actionSets CONSTANT)
+  Q_PROPERTY(QList<QSteamworks::QSteamInput::ActionSetDefinition> actionSets READ actionSets CONSTANT)
 
 public:
   IGA(){};
@@ -19,6 +20,7 @@ public:
 private:
   QList<ActionSetDefinition> m_actionSets;
 };
+} // namespace QSteamInput
 }; // namespace QSteamworks
 
-Q_DECLARE_METATYPE(QSteamworks::IGA)
+Q_DECLARE_METATYPE(QSteamworks::QSteamInput::IGA)

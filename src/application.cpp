@@ -12,9 +12,9 @@
 #include "fshelpers.h"
 
 #include "QSteamworks/errors.h"
-#include "QSteamworks/qsteamapi.h"
-#include "QSteamworks/qsteaminput.h"
-#include "QSteamworks/qsteamutils.h"
+#include "QSteamworks/steamapi.h"
+#include "QSteamworks/steaminput.h"
+#include "QSteamworks/steamutils.h"
 
 Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
   setOrganizationName("zhulik");
@@ -25,14 +25,14 @@ Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
 
   qmlRegisterType<FolderListModel>("DeckFM", 1, 0, "FolderListModel");
 
-  qmlRegisterType<QSteamworks::QSteamUtils>("Steamworks", 1, 0, "SteamUtils");
-  qmlRegisterType<QSteamworks::QSteamInput>("Steamworks", 1, 0, "SteamInput");
+  qmlRegisterType<QSteamworks::SteamUtils>("Steamworks", 1, 0, "SteamUtils");
+  qmlRegisterType<QSteamworks::SteamInput>("Steamworks", 1, 0, "SteamInput");
   qmlRegisterSingletonInstance("DeckFM", 1, 0, "FSHelpers", new FSHelpers());
 
   m_engine = new QQmlApplicationEngine();
 
   try {
-    m_steamworks = new QSteamworks::QSteamAPI(m_engine);
+    m_steamworks = new QSteamworks::SteamAPI(m_engine);
   } catch (QSteamworks::InitializationFailed &e) {
     qDebug() << "\n" << e.what() << "\n";
   }
