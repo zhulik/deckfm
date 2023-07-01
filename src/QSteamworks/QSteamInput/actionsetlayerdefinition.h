@@ -5,8 +5,7 @@
 #include "actiondefinition.h"
 
 namespace QSteamworks {
-
-using namespace QSteamInput;
+namespace QSteamInput {
 
 class ActionSetLayerDefinition {
   Q_GADGET
@@ -25,6 +24,7 @@ private:
   QString m_name;
   QList<ActionDefinition> m_actions;
 };
+} // namespace QSteamInput
 } // namespace QSteamworks
 
-Q_DECLARE_METATYPE(QSteamworks::ActionSetLayerDefinition)
+Q_DECLARE_METATYPE(QSteamworks::QSteamInput::ActionSetLayerDefinition)

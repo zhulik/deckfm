@@ -10,9 +10,11 @@
 
 namespace QSteamworks {
 
+namespace QSteamInput {
+
 class ActionSet : public ActionSetLayer {
   Q_GADGET
-  Q_PROPERTY(QList<QSteamworks::ActionSetLayer> layers READ layers CONSTANT)
+  Q_PROPERTY(QList<QSteamworks::QSteamInput::ActionSetLayer> layers READ layers CONSTANT)
 
 public:
   ActionSet() : ActionSetLayer() {}
@@ -32,5 +34,6 @@ public:
 private:
   QList<ActionSetLayer> m_layers;
 };
+} // namespace QSteamInput
 } // namespace QSteamworks
-Q_DECLARE_METATYPE(QSteamworks::ActionSet)
+Q_DECLARE_METATYPE(QSteamworks::QSteamInput::ActionSet)

@@ -20,6 +20,7 @@
 #include "steam/steamtypes.h"
 
 using namespace QSteamworks;
+using namespace QSteamworks::QSteamInput;
 
 QSteamworks::SteamInput *QSteamworks::SteamInput::m_instance = nullptr;
 
@@ -55,27 +56,27 @@ SteamInput::SteamInput(QObject *parent) : QObject{parent} {
   if (m_instance != nullptr) {
     throw InitializationFailed("Steam input is already initialized");
   }
-  qRegisterMetaType<QSteamworks::IGA>();
+  qRegisterMetaType<QSteamworks::QSteamInput::IGA>();
 
   qRegisterMetaType<QSteamworks::QSteamInput::ActionDefinition>();
   qRegisterMetaType<QList<QSteamworks::QSteamInput::ActionDefinition>>();
 
-  qRegisterMetaType<QSteamworks::ActionSetDefinition>();
-  qRegisterMetaType<QList<QSteamworks::ActionSetDefinition>>();
+  qRegisterMetaType<QSteamworks::QSteamInput::ActionSetDefinition>();
+  qRegisterMetaType<QList<QSteamworks::QSteamInput::ActionSetDefinition>>();
 
-  qRegisterMetaType<QSteamworks::ActionSetLayerDefinition>();
-  qRegisterMetaType<QList<QSteamworks::ActionSetLayerDefinition>>();
+  qRegisterMetaType<QSteamworks::QSteamInput::ActionSetLayerDefinition>();
+  qRegisterMetaType<QList<QSteamworks::QSteamInput::ActionSetLayerDefinition>>();
 
   qRegisterMetaType<QSteamworks::QSteamInput::Action>();
-  qRegisterMetaType<QSteamworks::ActionSet>();
-  qRegisterMetaType<QSteamworks::ActionSetLayer>();
-  qRegisterMetaType<QSteamworks::InputEvent>();
+  qRegisterMetaType<QSteamworks::QSteamInput::ActionSet>();
+  qRegisterMetaType<QSteamworks::QSteamInput::ActionSetLayer>();
+  qRegisterMetaType<QSteamworks::QSteamInput::InputEvent>();
 
   qRegisterMetaType<InputHandle_t>("InputHandle_t");
   qRegisterMetaType<uint8>("uint8");
   qRegisterMetaType<int8>("int8");
 
-  qRegisterMetaType<QList<QSteamworks::Controller *>>();
+  qRegisterMetaType<QList<QSteamworks::QSteamInput::Controller *>>();
 
   m_instance = this;
 }
@@ -177,4 +178,4 @@ void SteamInput::setIgaPath(const QString &newIgaPath) {
 
 QList<Controller *> SteamInput::controllers() const { return m_controllers.values(); }
 
-QSteamworks::Controller *SteamInput::lastController() const { return m_lastController; }
+QSteamworks::QSteamInput::Controller *SteamInput::lastController() const { return m_lastController; }

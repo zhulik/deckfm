@@ -9,8 +9,7 @@
 #include "action.h"
 
 namespace QSteamworks {
-
-using namespace QSteamInput;
+namespace QSteamInput {
 
 class ActionSetLayer {
   Q_GADGET
@@ -43,5 +42,6 @@ protected:
 
   QList<Action> m_actions;
 };
+} // namespace QSteamInput
 } // namespace QSteamworks
-Q_DECLARE_METATYPE(QSteamworks::ActionSetLayer)
+Q_DECLARE_METATYPE(QSteamworks::QSteamInput::ActionSetLayer)

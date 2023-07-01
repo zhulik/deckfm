@@ -4,6 +4,7 @@
 #include "actionsetlayerdefinition.h"
 
 using namespace QSteamworks;
+using namespace QSteamworks::QSteamInput;
 
 static const QMap<QString, bool> actionTypes{{"Button", true}, {"StickPadGyro", false}, {"AnalogTrigger", false}};
 

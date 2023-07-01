@@ -8,6 +8,7 @@
 #include "collections.h"
 
 using namespace QSteamworks;
+using namespace QSteamworks::QSteamInput;
 
 Controller::Controller(InputHandle_t handle, const QString &name, const IGA &iga, QObject *parent)
     : QObject(parent), m_handle(handle), m_name(name), m_iga(iga),
@@ -41,24 +42,24 @@ QList<Action> Controller::getActions(InputActionSetHandle_t actionSetHandle,
     QString localizedName;
 
     if (action.isDigital()) {
-      handle = SteamInput()->GetDigitalActionHandle(action.name().toLocal8Bit());
+      handle = ::SteamInput()->GetDigitalActionHandle(action.name().toLocal8Bit());
       Q_ASSERT(handle != 0);
 
-      n = SteamInput()->GetDigitalActionOrigins(m_handle, actionSetHandle, handle, originsBuf.data());
+      n = ::SteamInput()->GetDigitalActionOrigins(m_handle, actionSetHandle, handle, originsBuf.data());
 
-      localizedName = SteamInput()->GetStringForDigitalActionName(handle);
+      localizedName = ::SteamInput()->GetStringForDigitalActionName(handle);
     } else {
-      handle = SteamInput()->GetAnalogActionHandle(action.name().toLocal8Bit());
+      handle = ::SteamInput()->GetAnalogActionHandle(action.name().toLocal8Bit());
       Q_ASSERT(handle != 0);
 
-      n = SteamInput()->GetAnalogActionOrigins(m_handle, actionSetHandle, handle, originsBuf.data());
-      localizedName = SteamInput()->GetStringForAnalogActionName(handle);
+      n = ::SteamInput()->GetAnalogActionOrigins(m_handle, actionSetHandle, handle, originsBuf.data());
+      localizedName = ::SteamInput()->GetStringForAnalogActionName(handle);
     }
     originsBuf.resize(n);
 
     foreach (auto &origin, originsBuf) {
-      origins << SteamInput()->GetStringForActionOrigin(origin);
-      glyphs << SteamInput()->GetGlyphSVGForActionOrigin(origin, 0);
+      origins << ::SteamInput()->GetStringForActionOrigin(origin);
+      glyphs << ::SteamInput()->GetGlyphSVGForActionOrigin(origin, 0);
     }
 
     result << Action(handle, action, localizedName, origins, glyphs);
@@ -69,18 +70,18 @@ QList<Action> Controller::getActions(InputActionSetHandle_t actionSetHandle,
 QList<ActionSetLayer> Controller::getActionSetLayers(const QList<ActionSetLayerDefinition> &definitions) const {
   QList<ActionSetLayer> result;
   foreach (auto &definition, definitions) {
-    auto handle = SteamInput()->GetActionSetHandle(definition.name().toLocal8Bit());
+    auto handle = ::SteamInput()->GetActionSetHandle(definition.name().toLocal8Bit());
     result << ActionSetLayer(handle, definition.name(), getActions(handle, definition.actions()));
   }
   return result;
 }
 
-QList<QSteamworks::ActionSet> Controller::actionSets() const { return m_actionSets.values(); }
+QList<QSteamworks::QSteamInput::ActionSet> Controller::actionSets() const { return m_actionSets.values(); }
 
 void Controller::loadActions() {
   m_actionSets.clear();
   foreach (auto &actionSet, m_iga.actionSets()) {
-    auto handle = SteamInput()->GetActionSetHandle(actionSet.name().toLocal8Bit());
+    auto handle = ::SteamInput()->GetActionSetHandle(actionSet.name().toLocal8Bit());
     Q_ASSERT(handle != 0);
     m_actionSets[handle] = ActionSet(handle, actionSet.name(), getActions(handle, actionSet.actions()),
                                      getActionSetLayers(actionSet.layers()));
@@ -88,20 +89,20 @@ void Controller::loadActions() {
   emit actionSetsChanged();
 }
 
-void Controller::showBindingPanel() const { SteamInput()->ShowBindingPanel(m_handle); }
+void Controller::showBindingPanel() const { ::SteamInput()->ShowBindingPanel(m_handle); }
 
 void Controller::activateActionSetLayer(const ActionSetLayer &layer) {
-  SteamInput()->ActivateActionSetLayer(m_handle, layer.handle());
+  ::SteamInput()->ActivateActionSetLayer(m_handle, layer.handle());
   emit activeActionSetLayersChanged();
 }
 
 void Controller::deactivateActionSetLayer(const ActionSetLayer &layer) {
-  SteamInput()->DeactivateActionSetLayer(m_handle, layer.handle());
+  ::SteamInput()->DeactivateActionSetLayer(m_handle, layer.handle());
   emit activeActionSetLayersChanged();
 }
 
 void Controller::deactivateAllActionSetLayers() {
-  SteamInput()->DeactivateAllActionSetLayers(m_handle);
+  ::SteamInput()->DeactivateAllActionSetLayers(m_handle);
   emit activeActionSetLayersChanged();
 }
 
@@ -110,26 +111,26 @@ ActionSet Controller::actionSetByName(const QString &name) {
 }
 
 void Controller::stopAnalogActionMomentum(const Action &action) {
-  SteamInput()->StopAnalogActionMomentum(m_handle, action.handle());
+  ::SteamInput()->StopAnalogActionMomentum(m_handle, action.handle());
 }
 
 void Controller::triggerRepeatedHapticPulse(unsigned short usDurationMicroSec, unsigned short usOffMicroSec,
                                             unsigned short unRepeat) {
-  SteamInput()->Legacy_TriggerRepeatedHapticPulse(m_handle, k_ESteamControllerPad_Left, usDurationMicroSec,
-                                                  usOffMicroSec, unRepeat, 0);
+  ::SteamInput()->Legacy_TriggerRepeatedHapticPulse(m_handle, k_ESteamControllerPad_Left, usDurationMicroSec,
+                                                    usOffMicroSec, unRepeat, 0);
 }
 
-void Controller::setActionSet(const QSteamworks::ActionSet &newActionSet) {
+void Controller::setActionSet(const QSteamworks::QSteamInput::ActionSet &newActionSet) {
   if (m_actionSet == newActionSet) {
     return;
   }
   m_actionSet = newActionSet;
-  SteamInput()->ActivateActionSet(m_handle, m_actionSet.handle());
+  ::SteamInput()->ActivateActionSet(m_handle, m_actionSet.handle());
 
   emit actionSetChanged();
 }
 
-QSteamworks::ActionSet Controller::actionSet() const { return m_actionSet; }
+QSteamworks::QSteamInput::ActionSet Controller::actionSet() const { return m_actionSet; }
 
 void Controller::onActionEvent(SteamInputActionEvent_t *event) {
   InputHandle_t actionHandle = 0;
@@ -195,7 +196,7 @@ QVariantMap Controller::actionStates() const { return m_actionStates; }
 
 QList<ActionSetLayer> Controller::activeActionSetLayers() const {
   QVector<InputActionSetHandle_t> buf(STEAM_INPUT_MAX_ACTIVE_LAYERS);
-  auto n = SteamInput()->GetActiveActionSetLayers(m_handle, buf.data());
+  auto n = ::SteamInput()->GetActiveActionSetLayers(m_handle, buf.data());
   buf.resize(n);
 
   QList<ActionSetLayer> result;

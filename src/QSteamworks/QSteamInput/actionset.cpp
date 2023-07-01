@@ -4,6 +4,7 @@
 #include "collections.h"
 
 using namespace QSteamworks;
+using namespace QSteamworks::QSteamInput;
 
 ActionSet::ActionSet(InputActionSetHandle_t handle, const QString &name, const QList<Action> &actions,
                      const QList<ActionSetLayer> &layers)

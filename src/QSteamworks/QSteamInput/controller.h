@@ -11,17 +11,21 @@
 #include "steam/isteamcontroller.h"
 #include "steam/steam_api.h"
 
+#include "QSteamworks/steaminput.h"
+
 namespace QSteamworks {
+namespace QSteamInput {
+
 class Controller : public QObject {
   Q_OBJECT
   Q_PROPERTY(InputHandle_t handle READ handle CONSTANT)
   Q_PROPERTY(QString name READ name CONSTANT)
   Q_PROPERTY(QString image READ image CONSTANT)
-  Q_PROPERTY(QList<QSteamworks::ActionSet> actionSets READ actionSets NOTIFY actionSetsChanged)
-  Q_PROPERTY(QSteamworks::ActionSet actionSet READ actionSet WRITE setActionSet NOTIFY actionSetChanged)
+  Q_PROPERTY(QList<QSteamworks::QSteamInput::ActionSet> actionSets READ actionSets NOTIFY actionSetsChanged)
+  Q_PROPERTY(QSteamworks::QSteamInput::ActionSet actionSet READ actionSet WRITE setActionSet NOTIFY actionSetChanged)
   Q_PROPERTY(QVariantMap actionStates READ actionStates NOTIFY actionStatesChanged)
 
-  Q_PROPERTY(QList<QSteamworks::ActionSetLayer> activeActionSetLayers READ activeActionSetLayers NOTIFY
+  Q_PROPERTY(QList<QSteamworks::QSteamInput::ActionSetLayer> activeActionSetLayers READ activeActionSetLayers NOTIFY
                  activeActionSetLayersChanged)
 
 public:
@@ -30,14 +34,14 @@ public:
   InputHandle_t handle() const;
   const QString &name() const;
   const QString &image() const;
-  QList<QSteamworks::ActionSet> actionSets() const;
+  QList<QSteamworks::QSteamInput::ActionSet> actionSets() const;
 
-  QSteamworks::ActionSet actionSet() const;
-  void setActionSet(const QSteamworks::ActionSet &newActionSet);
+  QSteamworks::QSteamInput::ActionSet actionSet() const;
+  void setActionSet(const QSteamworks::QSteamInput::ActionSet &newActionSet);
 
   QVariantMap actionStates() const;
 
-  QList<QSteamworks::ActionSetLayer> activeActionSetLayers() const;
+  QList<QSteamworks::QSteamInput::ActionSetLayer> activeActionSetLayers() const;
 
   Q_INVOKABLE
   void loadActions();
@@ -46,16 +50,16 @@ public:
   void showBindingPanel() const;
 
   Q_INVOKABLE
-  void activateActionSetLayer(const QSteamworks::ActionSetLayer &layer);
+  void activateActionSetLayer(const QSteamworks::QSteamInput::ActionSetLayer &layer);
 
   Q_INVOKABLE
-  void deactivateActionSetLayer(const QSteamworks::ActionSetLayer &layer);
+  void deactivateActionSetLayer(const QSteamworks::QSteamInput::ActionSetLayer &layer);
 
   Q_INVOKABLE
   void deactivateAllActionSetLayers();
 
   Q_INVOKABLE
-  QSteamworks::ActionSet actionSetByName(const QString &);
+  QSteamworks::QSteamInput::ActionSet actionSetByName(const QString &);
 
   Q_INVOKABLE
   void stopAnalogActionMomentum(const QSteamworks::QSteamInput::Action &);
@@ -69,10 +73,10 @@ signals:
   void actionSetsChanged();
   void actionSetChanged();
 
-  void inputEvent(const QSteamworks::InputEvent &event);
-  void analogEvent(const QSteamworks::InputEvent &event);
-  void pressedEvent(const QSteamworks::InputEvent &event);
-  void releasedEvent(const QSteamworks::InputEvent &event);
+  void inputEvent(const QSteamworks::QSteamInput::InputEvent &event);
+  void analogEvent(const QSteamworks::QSteamInput::InputEvent &event);
+  void pressedEvent(const QSteamworks::QSteamInput::InputEvent &event);
+  void releasedEvent(const QSteamworks::QSteamInput::InputEvent &event);
 
   void actionStatesChanged();
   void activeActionSetLayersChanged();
@@ -84,7 +88,7 @@ private:
   QMap<ControllerActionSetHandle_t, ActionSet> m_actionSets;
   IGA m_iga;
   QVariantMap m_actionStates;
-  QSteamworks::ActionSet m_actionSet;
+  QSteamworks::QSteamInput::ActionSet m_actionSet;
 
   void sendInputEvents(const InputEvent &e);
 
@@ -92,8 +96,8 @@ private:
   QList<ActionSetLayer> getActionSetLayers(const QList<ActionSetLayerDefinition> &definitions) const;
   void updateActionStates(const Action &action, bool digitalState, float analogX, float analogY);
 
-  friend class SteamInput;
+  friend class QSteamworks::SteamInput;
   void onActionEvent(SteamInputActionEvent_t *event);
 };
-
+} // namespace QSteamInput
 } // namespace QSteamworks

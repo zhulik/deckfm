@@ -5,8 +5,7 @@
 #include "action.h"
 
 namespace QSteamworks {
-
-using namespace QSteamInput;
+namespace QSteamInput {
 
 class Controller;
 
@@ -14,7 +13,7 @@ class InputEvent {
   Q_GADGET
   Q_PROPERTY(QString type READ type CONSTANT)
 
-  Q_PROPERTY(QSteamworks::Controller *controller READ controller CONSTANT)
+  Q_PROPERTY(QSteamworks::QSteamInput::Controller *controller READ controller CONSTANT)
   Q_PROPERTY(QSteamworks::QSteamInput::Action action READ action CONSTANT)
 
   Q_PROPERTY(bool digitalState READ digitalState CONSTANT)
@@ -44,5 +43,6 @@ private:
   float m_analogX = 0;
   float m_analogY = 0;
 };
+} // namespace QSteamInput
 } // namespace QSteamworks
-Q_DECLARE_METATYPE(QSteamworks::InputEvent)
+Q_DECLARE_METATYPE(QSteamworks::QSteamInput::InputEvent)

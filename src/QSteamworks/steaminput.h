@@ -12,17 +12,14 @@
 
 namespace QSteamworks {
 
-class SteamAPI;
-class Controller;
-
 class SteamInput : public QObject {
   Q_OBJECT
 
-  Q_PROPERTY(QSteamworks::IGA iga READ iga NOTIFY igaChanged)
-  Q_PROPERTY(QList<QSteamworks::Controller *> controllers READ controllers NOTIFY controllersChanged)
+  Q_PROPERTY(QSteamworks::QSteamInput::IGA iga READ iga NOTIFY igaChanged)
+  Q_PROPERTY(QList<QSteamworks::QSteamInput::Controller *> controllers READ controllers NOTIFY controllersChanged)
   Q_PROPERTY(QString igaPath READ igaPath WRITE setIgaPath NOTIFY igaPathChanged)
 
-  Q_PROPERTY(QSteamworks::Controller *lastController READ lastController NOTIFY lastControllerChanged)
+  Q_PROPERTY(QSteamworks::QSteamInput::Controller *lastController READ lastController NOTIFY lastControllerChanged)
 
   STEAM_CALLBACK(SteamInput, onControllerConnected, SteamInputDeviceConnected_t);
   STEAM_CALLBACK(SteamInput, onControllerDisconnected, SteamInputDeviceDisconnected_t);
@@ -35,14 +32,14 @@ public:
   Q_INVOKABLE
   void runFrame();
 
-  IGA iga() const;
+  QSteamInput::IGA iga() const;
 
   const QString &igaPath() const;
   void setIgaPath(const QString &newIgaPath);
 
-  QList<QSteamworks::Controller *> controllers() const;
+  QList<QSteamworks::QSteamInput::Controller *> controllers() const;
 
-  QSteamworks::Controller *lastController() const;
+  QSteamworks::QSteamInput::Controller *lastController() const;
 
 signals:
   void configurationLoaded();
@@ -54,11 +51,11 @@ signals:
   void lastControllerChanged();
 
 private:
-  IGA m_iga;
-  QMap<InputHandle_t, QSteamworks::Controller *> m_controllers;
+  QSteamInput::IGA m_iga;
+  QMap<InputHandle_t, QSteamworks::QSteamInput::Controller *> m_controllers;
   static SteamInput *m_instance;
   QString m_igaPath;
-  Controller *m_lastController = nullptr;
+  QSteamInput::Controller *m_lastController = nullptr;
 
   static SteamInput *instance();
   void onActionEvent(SteamInputActionEvent_t *event);

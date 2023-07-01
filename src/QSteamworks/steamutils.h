@@ -4,8 +4,6 @@
 
 namespace QSteamworks {
 
-class SteamAPI;
-
 class SteamUtils : public QObject {
   Q_OBJECT
 

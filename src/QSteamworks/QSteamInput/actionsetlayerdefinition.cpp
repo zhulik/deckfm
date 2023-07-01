@@ -1,6 +1,7 @@
 #include "actionsetlayerdefinition.h"
 
 using namespace QSteamworks;
+using namespace QSteamworks::QSteamInput;
 
 ActionSetLayerDefinition::ActionSetLayerDefinition(const QString &name, const QList<ActionDefinition> &actions)
     : m_name(name), m_actions(actions) {}
