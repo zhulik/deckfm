@@ -40,7 +40,7 @@ Item {
             }
         }
 
-        restoreMode: Binding.RestoreNone
+        restoreMode: Binding.RestoreBindingOrValue
     }
 
     //    Binding {
