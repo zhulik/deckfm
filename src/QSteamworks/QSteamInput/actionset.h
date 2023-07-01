@@ -29,10 +29,7 @@ public:
   virtual Action actionByHandle(InputHandle_t handle, bool digital) const override;
 
   Q_INVOKABLE
-  virtual QSteamworks::QSteamInput::Action actionByName(const QString &name, bool digital) const override;
-
-  Q_INVOKABLE
-  virtual QSteamworks::QSteamInput::ActionSetLayer layerByName(const QString &name) const;
+  virtual QSteamworks::QSteamInput::Action actionByName(const QString &name, bool digital) const;
 
 private:
   QList<ActionSetLayer> m_layers;

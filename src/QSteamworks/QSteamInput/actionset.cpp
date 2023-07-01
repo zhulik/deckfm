@@ -44,7 +44,3 @@ Action ActionSet::actionByName(const QString &name, bool digital) const {
   }
   return Action();
 }
-
-ActionSetLayer ActionSet::layerByName(const QString &name) const {
-  return findBy(m_layers, [name](auto l) { return l.name() == name; });
-}

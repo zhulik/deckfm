@@ -209,11 +209,11 @@ Rectangle {
                             width: layersView.width
                             height: 50
 
-                            onDoubleClicked:if (controllersView.selectedController.activeActionSetLayers.findIndex(x=>x.handle === modelData.handle) >= 0) {
-                                                controllersView.selectedController.deactivateActionSetLayer(modelData)
-                                            } else {
-                                                controllersView.selectedController.activateActionSetLayer(modelData)
-                                            }
+                            onDoubleClicked: if (controllersView.selectedController.activeActionSetLayers.includes(modelData)) {
+                                                 controllersView.selectedController.deactivateActionSetLayer(modelData)
+                                             } else {
+                                                 controllersView.selectedController.activateActionSetLayer(modelData)
+                                             }
 
                             RowLayout {
                                 anchors.fill: parent
@@ -237,9 +237,9 @@ Rectangle {
 
                                     font.pointSize: 15
 
-                                    text: controllersView.selectedController.activeActionSetLayers.findIndex(x=>x.handle === modelData.handle)
+                                    text: controllersView.selectedController.activeActionSetLayers.findIndex(x=>x === modelData)
 
-                                    //                                    visible: text != "-1"
+                                    visible: text != "-1"
                                 }
                             }
                         }
