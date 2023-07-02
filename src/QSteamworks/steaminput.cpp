@@ -105,8 +105,10 @@ void SteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb) {
   auto controller = new Controller(handle, name, m_iga);
 
   connect(controller, &Controller::inputEvent, controller, [controller, this]() {
-    m_lastController = controller;
-    emit lastControllerChanged();
+    if (m_lastController != controller) {
+      m_lastController = controller;
+      emit lastControllerChanged();
+    }
   });
   connect(this, &SteamInput::configurationLoaded, controller, &Controller::loadActions);
   controller->moveToThread(QGuiApplication::instance()->thread());
