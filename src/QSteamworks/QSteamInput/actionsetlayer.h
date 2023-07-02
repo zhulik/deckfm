@@ -28,8 +28,6 @@ public:
 
   QVariantMap qmlActions() const;
 
-  bool operator==(const ActionSetLayer &other) const;
-
   Q_INVOKABLE
   virtual QSteamworks::QSteamInput::Action actionByHandle(InputHandle_t handle, bool digital) const;
 
