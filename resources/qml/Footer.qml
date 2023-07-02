@@ -17,10 +17,10 @@ ToolBar {
     }
 
     RowLayout {
-        spacing: 10
+        spacing: 20
         anchors.fill: parent
         anchors.leftMargin: 10
-        anchors.rightMargin: 11
+        anchors.rightMargin: 10
 
         Item {
             Layout.fillWidth: parent
