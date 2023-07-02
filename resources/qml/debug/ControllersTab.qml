@@ -7,7 +7,7 @@ import QtQuick.Controls.Material 2.12
 import "../../../resources/qml/models" as Models
 import "../../../resources/qml/MDI" as MDI
 
-import "./ControllersViewComponents" as Components
+import "./ControllersTabComponents" as Components
 
 Rectangle {
     id: root
