@@ -29,10 +29,20 @@ ToolBar {
             Layout.fillWidth: parent
         }
 
-        FPSCounter {
+        FPSCounter {}
+
+        ToolSeparator {}
+
+        MDI.Button {
+            iconName: "bug"
+            Layout.alignment: Qt.AlignRight
+            onClicked: {
+                console.log(qmlEngine)
+            }
         }
 
         ToolSeparator {}
+
 
         MDI.Button {
             iconName: "windowClose"
