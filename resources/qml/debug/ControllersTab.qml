@@ -29,67 +29,9 @@ Rectangle {
         ColumnLayout {
             Layout.fillHeight: parent
 
-            RowLayout {
+            Components.VibrationSpoiler {
                 Layout.fillWidth: parent
 
-                ColumnLayout {
-                    Layout.fillWidth: parent
-
-                    RowLayout {
-                        Slider {
-                            id: usDurationMicroSecSlider
-                            Layout.fillWidth: parent
-
-                            from: 1
-                            to: 65535
-                            value: 2900
-                            stepSize: 10
-                        }
-
-                        Label {
-                            text: usDurationMicroSecSlider.value
-                        }
-                    }
-
-                    RowLayout {
-                        Slider {
-                            id: usOffMicroSecSlider
-
-                            Layout.fillWidth: parent
-                            from: 1
-                            to: 65535
-                            stepSize: 10
-                            value: 1200
-                        }
-
-                        Label {
-                            text: usOffMicroSecSlider.value
-                        }
-                    }
-
-                    RowLayout {
-                        Slider {
-                            id: unRepeatSlider
-
-                            Layout.fillWidth: parent
-                            from: 1
-                            to: 100
-                            value: 4
-                        }
-
-                        Label {
-                            text: unRepeatSlider.value
-                        }
-                    }
-                }
-
-                MDI.Button {
-                    iconName: "vibrate"
-
-                    onClicked: {
-                        steam_input.lastController.triggerRepeatedHapticPulse(usDurationMicroSecSlider.value, usOffMicroSecSlider.value, unRepeatSlider.value)
-                    }
-                }
             }
 
             TabView {
