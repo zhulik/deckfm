@@ -2,50 +2,55 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
-import "../../../../resources/qml/MDI" as MDI
+import "../../MDI" as MDI
+import "../../" as Core
 
-RowLayout {
-    Layout.fillWidth: parent
+Core.Spoiler {
+    text: "Vibration"
+    collapsed: true
 
-    ColumnLayout {
-        Layout.fillWidth: parent
+    RowLayout {
 
-        LabeledSlider {
-            id: usDurationMicroSecSlider
+        ColumnLayout {
             Layout.fillWidth: parent
 
-            from: 1
-            to: 65535
-            value: 2900
-            stepSize: 10
+            LabeledSlider {
+                id: usDurationMicroSecSlider
+                Layout.fillWidth: parent
+
+                from: 1
+                to: 65535
+                value: 2900
+                stepSize: 10
+            }
+
+            LabeledSlider {
+                id: usOffMicroSecSlider
+
+                Layout.fillWidth: parent
+                from: 1
+                to: 65535
+                stepSize: 10
+                value: 1200
+            }
+
+
+            LabeledSlider {
+                id: unRepeatSlider
+
+                Layout.fillWidth: parent
+                from: 1
+                to: 100
+                value: 4
+            }
         }
 
-        LabeledSlider {
-            id: usOffMicroSecSlider
+        MDI.Button {
+            iconName: "vibrate"
 
-            Layout.fillWidth: parent
-            from: 1
-            to: 65535
-            stepSize: 10
-            value: 1200
-        }
-
-
-        LabeledSlider {
-            id: unRepeatSlider
-
-            Layout.fillWidth: parent
-            from: 1
-            to: 100
-            value: 4
-        }
-    }
-
-    MDI.Button {
-        iconName: "vibrate"
-
-        onClicked: {
-            steam_input.lastController.triggerRepeatedHapticPulse(usDurationMicroSecSlider.value, usOffMicroSecSlider.value, unRepeatSlider.value)
+            onClicked: {
+                steam_input.lastController.triggerRepeatedHapticPulse(usDurationMicroSecSlider.value, usOffMicroSecSlider.value, unRepeatSlider.value)
+            }
         }
     }
 }
