@@ -11,6 +11,8 @@
 #include "folderlistmodel.h"
 #include "fshelpers.h"
 
+#include "QSteamworks/QSteamInput/qmlsteaminputcontrol.h"
+#include "QSteamworks/QSteamInput/qmlsteaminputscope.h"
 #include "QSteamworks/errors.h"
 #include "QSteamworks/steamapi.h"
 #include "QSteamworks/steaminput.h"
@@ -22,14 +24,17 @@ Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
 
   QFontDatabase::addApplicationFont("resources/fonts/materialdesignicons-webfont.ttf");
   QQuickStyle::setStyle("Material");
+  m_engine = new QQmlApplicationEngine();
 
   qmlRegisterType<FolderListModel>("DeckFM", 1, 0, "FolderListModel");
 
-  qmlRegisterType<QSteamworks::SteamUtils>("Steamworks", 1, 0, "SteamUtils");
-  qmlRegisterType<QSteamworks::SteamInput>("Steamworks", 1, 0, "SteamInput");
+  // TODO: move to an init function in QSteamworks
+  QSteamworks::registerTypes();
+
   qmlRegisterSingletonInstance("DeckFM", 1, 0, "FSHelpers", new FSHelpers());
 
-  m_engine = new QQmlApplicationEngine();
+  m_engine->rootContext()->setContextProperty("qApp", this);
+  m_engine->rootContext()->setContextProperty("qmlEngine", m_engine);
 
   try {
     m_steamworks = new QSteamworks::SteamAPI(m_engine);

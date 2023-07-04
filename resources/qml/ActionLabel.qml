@@ -16,9 +16,6 @@ RowLayout {
 
     Steamworks.ActionText {
         Layout.fillHeight: parent
-        verticalAlignment: Text.AlignVCenter
-
-        font.pointSize: root.height - 4
 
         name: root.name
     }

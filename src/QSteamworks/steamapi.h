@@ -9,6 +9,8 @@
 
 namespace QSteamworks {
 
+void registerTypes();
+
 class SteamAPI : public QObject {
   Q_OBJECT
 public:

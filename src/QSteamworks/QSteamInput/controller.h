@@ -25,8 +25,8 @@ class Controller : public QObject {
   Q_PROPERTY(QSteamworks::QSteamInput::ActionSet actionSet READ actionSet WRITE setActionSet NOTIFY actionSetChanged)
   Q_PROPERTY(QVariantMap actionStates READ actionStates NOTIFY actionStatesChanged)
 
-  Q_PROPERTY(QList<QSteamworks::QSteamInput::ActionSetLayer> activeActionSetLayers READ activeActionSetLayers NOTIFY
-                 activeActionSetLayersChanged)
+  Q_PROPERTY(QList<QSteamworks::QSteamInput::ActionSetLayer> activeActionSetLayers READ activeActionSetLayers WRITE
+                 setActiveActionSetLayers NOTIFY activeActionSetLayersChanged)
 
 public:
   Controller(InputHandle_t, const QString &, const IGA &, QObject *parent = nullptr);
@@ -69,14 +69,13 @@ public:
   void triggerRepeatedHapticPulse(unsigned short usDurationMicroSec, unsigned short usOffMicroSec,
                                   unsigned short unRepeat);
 
+  void setActiveActionSetLayers(const QList<QSteamworks::QSteamInput::ActionSetLayer> &newActiveActionSetLayers);
+
 signals:
   void actionSetsChanged();
   void actionSetChanged();
 
   void inputEvent(const QSteamworks::QSteamInput::InputEvent &event);
-  void analogEvent(const QSteamworks::QSteamInput::InputEvent &event);
-  void pressedEvent(const QSteamworks::QSteamInput::InputEvent &event);
-  void releasedEvent(const QSteamworks::QSteamInput::InputEvent &event);
 
   void actionStatesChanged();
   void activeActionSetLayersChanged();
@@ -89,8 +88,6 @@ private:
   IGA m_iga;
   QVariantMap m_actionStates;
   QSteamworks::QSteamInput::ActionSet m_actionSet;
-
-  void sendInputEvents(const InputEvent &e);
 
   QList<Action> getActions(InputActionSetHandle_t actionSetHandle, const QList<ActionDefinition> &actions) const;
   QList<ActionSetLayer> getActionSetLayers(const QList<ActionSetLayerDefinition> &definitions) const;

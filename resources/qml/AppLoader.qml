@@ -34,8 +34,9 @@ Item {
             }
 
             root.loaded()
-
-            item.onClosed.connect(root.close)
+            if (item.onClosed) {
+                item.onClosed.connect(root.close)
+            }
         }
     }
 

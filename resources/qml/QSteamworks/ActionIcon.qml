@@ -5,7 +5,13 @@ Image {
     property string name
     width: height
 
-
     fillMode: Image.PreserveAspectFit
-//    source: steam_input.currentActionSet.actions[name].glyphs[0]
+    source: if (steam_input.lastController
+                    && steam_input.lastController.actionSet
+                    && steam_input.lastController.actionSet.actions[name]) {
+                steam_input.lastController.actionSet.actions[name].glyphs[0]
+                        || ""
+            } else {
+                ""
+            }
 }

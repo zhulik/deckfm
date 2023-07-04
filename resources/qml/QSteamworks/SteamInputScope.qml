@@ -1,91 +1,104 @@
-import QtQuick 2.15
-import QtQml 2.15
+//import QtQuick 2.15
+//import QtQml 2.15
 
-Item {
-    id: root
+//Item {
+//    id: root
 
-    property bool enabled: true
+//    property bool enabled: true
 
-    // TODO empty actionStates if disabled, and rebind if enabled
-    property string actionSet
-    //    property string actionSetLayer: steam_input.actionSetLayer
-    property var actionStates: {
-        if (steam_input.lastController) {
-            steam_input.lastController.actionStates
-        } else {
-            undefined
-        }
-    }
+//    property string actionSet
 
-    property var pressHandlers: ({})
-    property var releaseHandlers: ({})
-    property var analogHandlers: ({})
+//    // List of strings. Layers found by name and applied in the order on appearing
+//    property var actionSetLayers: []
 
-    signal inputEvent(var event)
-    signal pressedEvent(var event)
-    signal releasedEvent(var event)
-    signal analogEvent(var event)
+//    property var actionStates: {
+//        if (steam_input.lastController) {
+//            steam_input.lastController.actionStates
+//        } else {
+//            undefined
+//        }
+//    }
 
-    Binding {
-        id: actionSetBinding
-        when: enabled && root.actionSet !== ""
+//    property var pressHandlers: ({})
+//    property var releaseHandlers: ({})
+//    property var analogHandlers: ({})
 
-        target: steam_input.lastController
-        property: "actionSet"
-        value: {
-            if (steam_input.lastController) {
-                const v = steam_input.lastController.actionSetByName(root.actionSet)
-            } else {
-                ""
-            }
-        }
+//    signal inputEvent(var event)
+//    signal pressedEvent(var event)
+//    signal releasedEvent(var event)
+//    signal analogEvent(var event)
 
-        restoreMode: Binding.RestoreNone
-    }
+//    Binding {
+//        id: actionSetBinding
+//        when: enabled && root.actionSet !== ""
 
-    //    Binding {
-    //        when: enabled && actionSetLayer !== ""
+//        target: steam_input.lastController
+//        property: "actionSet"
+//        value: {
+//            if (steam_input.lastController) {
+//                const v = steam_input.lastController.actionSetByName(root.actionSet)
+//            } else {
+//                ""
+//            }
+//        }
 
-    //        target: steam_input.lastController
-    //        property: "actionSetLayer"
-    //        value: actionSetLayer
+//        restoreMode: Binding.RestoreBindingOrValue
+//    }
 
-    //        restoreMode: Binding.RestoreNone
-    //    }
+//        Binding {
+//            when: enabled
 
-    Connections {
-        target: steam_input.lastController
-        enabled: root.enabled
+//            target: steam_input.lastController
+//            property: "activeActionSetLayers"
 
-        function onActionSetsChanged() {
-            actionSetBinding.value = steam_input.lastController.actionSetByName(root.actionSet)
-        }
+//            value: {
+//                if (steam_input.lastController) {
+//                    const layers = actionSetLayers.map((layerName) => {
+//                                             return steam_input.lastController.actionSet.layerByName(layerName)
+//                                         })
 
-        function onPressedEvent(event) {
-            root.pressedEvent(event)
-            sendInputEvent(pressHandlers, event)
-        }
+//                    steam_input.lastController.activeActionSetLayers = layers
+//                } else {
+//                    ""
+//                }
+//            }
 
-        function onReleasedEvent(event) {
-            root.releasedEvent(event)
-            sendInputEvent(releaseHandlers, event)
-        }
+//            restoreMode: Binding.RestoreBindingOrValue
+//        }
 
-        function onAnalogEvent(event) {
-            root.analogEvent(event)
-            sendInputEvent(analogHandlers, event)
-        }
+//    Connections {
+//        target: steam_input.lastController
+//        enabled: root.enabled
 
-        function onInputEvent(event) {
-            root.inputEvent(event)
-        }
+//        function onActionSetsChanged() {
+//            actionSetBinding.value = steam_input.lastController.actionSetByName(root.actionSet)
+//        }
 
-        function sendInputEvent(handlers, event) {
-            const handler = handlers[event.action.actionDefinition.name]
+//        function onPressedEvent(event) {
+//            root.pressedEvent(event)
+//            sendInputEvent(pressHandlers, event)
+//        }
 
-            if (handler) {
-                handler(event)
-            }
-        }
-    }
-}
+//        function onReleasedEvent(event) {
+//            root.releasedEvent(event)
+//            sendInputEvent(releaseHandlers, event)
+//        }
+
+//        function onAnalogEvent(event) {
+//            root.analogEvent(event)
+//            sendInputEvent(analogHandlers, event)
+//        }
+
+//        function onInputEvent(event) {
+//            root.inputEvent(event)
+//        }
+
+//        function sendInputEvent(handlers, event) {
+//            const handler = handlers[event.action.actionDefinition.name]
+
+//            if (handler) {
+//                handler(event)
+//            }
+//        }
+//    }
+//}
