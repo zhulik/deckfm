@@ -165,13 +165,13 @@ void Controller::onActionEvent(SteamInputActionEvent_t *event) {
 void Controller::updateActionStates(const Action &action, bool digitalState, float analogX, float analogY) {
   QVariant state;
 
-  if (action.actionDefinition().isDigital()) {
+  if (action.digital()) {
     state = digitalState;
   } else {
     state = QVariantMap{{"x", analogX}, {"y", analogY}};
   }
 
-  m_actionStates[action.actionDefinition().name()] = state;
+  m_actionStates[action.name()] = state;
 
   emit actionStatesChanged();
 }

@@ -13,6 +13,7 @@ class InputEvent {
   Q_GADGET
 
   Q_PROPERTY(QSteamworks::QSteamInput::Controller *controller READ controller CONSTANT)
+  Q_PROPERTY(QString actionName READ actionName CONSTANT)
 
   Q_PROPERTY(bool digital READ digital CONSTANT)
 
@@ -28,6 +29,7 @@ public:
 
   Controller *controller() const;
 
+  const QString &actionName() const;
   Action action() const;
 
   bool digitalState() const;

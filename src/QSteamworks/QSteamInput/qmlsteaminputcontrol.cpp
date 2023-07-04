@@ -116,13 +116,13 @@ void QMLSteamInputControl::setScope(QMLSteamInputScope *scope) {
 
 QJSValue QMLSteamInputControl::handlerFor(const InputEvent &e) const {
   if (!e.digital()) {
-    return m_analogHandlers.property(e.action().actionDefinition().name());
+    return m_analogHandlers.property(e.actionName());
   }
 
   if (e.digitalState()) {
-    return m_pressHandlers.property(e.action().actionDefinition().name());
+    return m_pressHandlers.property(e.actionName());
   } else {
-    return m_releaseHandlers.property(e.action().actionDefinition().name());
+    return m_releaseHandlers.property(e.actionName());
   }
 }
 

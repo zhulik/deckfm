@@ -12,7 +12,7 @@ Label {
                                          }
 
     text: try {
-              activeControl.controller.actionSet.actions[name].localizedName
+              steam_input.lastController.actionSet.actions[name].localizedName
           } catch (e) {
               ""
           }

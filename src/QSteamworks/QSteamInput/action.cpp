@@ -12,6 +12,10 @@ const ActionDefinition Action::actionDefinition() const { return m_definition; }
 
 InputHandle_t Action::handle() const { return m_handle; }
 
+const QString &Action::name() const { return m_definition.name(); }
+
+bool Action::digital() const { return m_definition.isDigital(); }
+
 const QString &Action::localizedName() const { return m_localizedName; }
 
 const QStringList &Action::glyphs() const { return m_glyphs; }
