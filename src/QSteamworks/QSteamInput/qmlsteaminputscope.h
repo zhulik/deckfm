@@ -13,8 +13,8 @@ class QMLSteamInputScope : public QQuickItem {
   Q_OBJECT
   QML_ELEMENT
 
-  Q_PROPERTY(QList<QMLSteamInputControl *> activeControls READ activeControls WRITE setActiveControls NOTIFY
-                 activeControlsChanged)
+  Q_PROPERTY(QList<QSteamworks::QSteamInput::QMLSteamInputControl *> activeControls READ activeControls WRITE
+                 setActiveControls NOTIFY activeControlsChanged)
 
 public:
   QList<QMLSteamInputControl *> activeControls() const;

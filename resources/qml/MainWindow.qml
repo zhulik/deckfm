@@ -91,6 +91,8 @@ ApplicationWindow {
     }
 
     SteamInputScope {
+        id: steam_input_scope
+
         anchors.fill: parent
 
         SteamInputControl {

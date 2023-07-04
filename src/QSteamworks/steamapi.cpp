@@ -56,4 +56,6 @@ void QSteamworks::registerTypes() {
 
   qRegisterMetaType<QSteamworks::QSteamInput::Controller *>();
   qRegisterMetaType<QList<QSteamworks::QSteamInput::Controller *>>();
+
+  qRegisterMetaType<QList<QSteamworks::QSteamInput::QMLSteamInputControl *>>();
 }
