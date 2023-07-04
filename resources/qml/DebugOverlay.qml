@@ -29,7 +29,7 @@ Item {
         enabled: visible
 
         actionSet: "deckfm"
-        actionSetLayers: []
+        actionSetLayers: [""]
     }
 
     Rectangle {

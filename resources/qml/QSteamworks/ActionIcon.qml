@@ -15,7 +15,7 @@ Image {
                                          }
 
     source: try {
-                activeControl.controller.actionSet.actions[name].glyphs[0]
+                activeControl.controller.actionSet.actions[name].glyphs[0] || ""
             } catch (e) {
                 ""
             }

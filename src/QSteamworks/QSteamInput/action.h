@@ -11,6 +11,8 @@ namespace QSteamInput {
 class Action {
   Q_GADGET
   Q_PROPERTY(InputHandle_t handle READ handle CONSTANT)
+  Q_PROPERTY(QString name READ name CONSTANT)
+  Q_PROPERTY(bool digital READ digital CONSTANT)
   Q_PROPERTY(const QSteamworks::QSteamInput::ActionDefinition actionDefinition READ actionDefinition CONSTANT)
   Q_PROPERTY(QString localizedName READ localizedName CONSTANT)
   Q_PROPERTY(QStringList glyphs READ glyphs CONSTANT)
@@ -23,6 +25,8 @@ public:
 
   const QSteamworks::QSteamInput::ActionDefinition actionDefinition() const;
   InputHandle_t handle() const;
+  const QString &name() const;
+  bool digital() const;
   const QString &localizedName() const;
   const QStringList &glyphs() const;
   const QStringList &origins() const;
