@@ -40,6 +40,7 @@ Item {
     }
 
     SteamInputControl {
+        id: inputControl
         objectName: "DirectoryView"
         controller: steam_input.lastController
 
@@ -174,30 +175,29 @@ Item {
             onCurrentIndexChanged: view.scrollHaptic()
 
             function stopScrollMomentum() {
-                if (!steam_input.lastController) {
+                if (!inputControl.controller) {
                     return
                 }
 
-                const a = steam_input.lastController.actionSet.actionByName(
-                            "scroll", false)
-                steam_input.lastController.stopAnalogActionMomentum(a)
+                const a = inputControl.controller.actionSet.actions["scroll"]
+                inputControl.controller.stopAnalogActionMomentum(a)
             }
 
             function stopScrollHaptic() {
-                if (!steam_input.lastController) {
+                if (!inputControl.controller) {
                     return
                 }
 
-                steam_input.lastController.triggerRepeatedHapticPulse(2900,
-                                                                      1200, 2)
+                inputControl.controller.triggerRepeatedHapticPulse(2900, 1200,
+                                                                   2)
             }
 
             function scrollHaptic() {
-                if (!steam_input.lastController) {
+                if (!inputControl.controller) {
                     return
                 }
 
-                steam_input.lastController.triggerRepeatedHapticPulse(500, 1, 1)
+                inputControl.controller.triggerRepeatedHapticPulse(500, 1, 1)
             }
 
             onAtYBeginningChanged: {
