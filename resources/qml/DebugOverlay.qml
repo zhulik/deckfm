@@ -22,16 +22,6 @@ Item {
         root.visible = !root.visible
     }
 
-    SteamInputControl {
-        objectName: "DebugOverlayInput"
-        controller: steam_input.lastController
-
-        enabled: visible
-
-        actionSet: "deckfm"
-        actionSetLayers: []
-    }
-
     Rectangle {
         anchors.fill: parent
         color: "black"

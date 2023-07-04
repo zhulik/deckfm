@@ -83,24 +83,24 @@ void SteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb) {
 
   auto controller = new Controller(handle, name, m_iga);
 
-  connect(controller, &Controller::inputEvent, controller, [controller, this](auto e) {
+  connect(controller, &Controller::userInteracted, controller, [controller, this]() {
     if (m_lastController != controller) {
       m_lastController = controller;
       emit lastControllerChanged();
     }
-    emit inputEvent(e);
   });
+
+  connect(controller, &Controller::inputEvent, this, &SteamInput::inputEvent);
   connect(this, &SteamInput::configurationLoaded, controller, &Controller::loadActions);
+
   controller->moveToThread(QGuiApplication::instance()->thread());
   controller->setParent(this);
 
   m_controllers[handle] = controller;
   emit controllersChanged();
 
-  if (m_controllers.count() == 1) { // First added controller
-    m_lastController = controller;
-    emit lastControllerChanged();
-  }
+  m_lastController = controller;
+  emit lastControllerChanged();
 
   qDebug() << "Controller connected:" << controller->name() << controller->handle();
 }

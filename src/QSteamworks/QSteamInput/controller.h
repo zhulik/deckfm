@@ -75,6 +75,7 @@ signals:
   void actionSetsChanged();
   void actionSetChanged();
 
+  void userInteracted();
   void inputEvent(const QSteamworks::QSteamInput::InputEvent &event);
 
   void actionStatesChanged();

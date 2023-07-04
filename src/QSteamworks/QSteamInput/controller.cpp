@@ -140,6 +140,8 @@ void Controller::onActionEvent(SteamInputActionEvent_t *event) {
 
   auto digital = event->eEventType == ESteamInputActionEventType_DigitalAction;
 
+  emit userInteracted();
+
   if (digital) {
     actionHandle = event->digitalAction.actionHandle;
 
