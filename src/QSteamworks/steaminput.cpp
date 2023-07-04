@@ -7,6 +7,7 @@
 #include "QSteamInput/actionsetlayer.h"
 #include "QSteamInput/actionsetlayerdefinition.h"
 #include "QSteamInput/controller.h"
+#include "QSteamInput/qmlsteaminputcontrol.h"
 #include "qglobal.h"
 #include "qwindowdefs.h"
 #include "steam/isteaminput.h"
@@ -56,28 +57,6 @@ SteamInput::SteamInput(QObject *parent) : QObject{parent} {
   if (m_instance != nullptr) {
     throw InitializationFailed("Steam input is already initialized");
   }
-  qRegisterMetaType<QSteamworks::QSteamInput::IGA>();
-
-  qRegisterMetaType<QSteamworks::QSteamInput::ActionDefinition>();
-  qRegisterMetaType<QList<QSteamworks::QSteamInput::ActionDefinition>>();
-
-  qRegisterMetaType<QSteamworks::QSteamInput::ActionSetDefinition>();
-  qRegisterMetaType<QList<QSteamworks::QSteamInput::ActionSetDefinition>>();
-
-  qRegisterMetaType<QSteamworks::QSteamInput::ActionSetLayerDefinition>();
-  qRegisterMetaType<QList<QSteamworks::QSteamInput::ActionSetLayerDefinition>>();
-
-  qRegisterMetaType<QSteamworks::QSteamInput::Action>();
-  qRegisterMetaType<QSteamworks::QSteamInput::ActionSet>();
-  qRegisterMetaType<QSteamworks::QSteamInput::ActionSetLayer>();
-  qRegisterMetaType<QSteamworks::QSteamInput::InputEvent>();
-
-  qRegisterMetaType<InputHandle_t>("InputHandle_t");
-  qRegisterMetaType<uint8>("uint8");
-  qRegisterMetaType<int8>("int8");
-
-  qRegisterMetaType<QList<QSteamworks::QSteamInput::Controller *>>();
-
   m_instance = this;
 }
 
@@ -104,9 +83,12 @@ void SteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb) {
 
   auto controller = new Controller(handle, name, m_iga);
 
-  connect(controller, &Controller::inputEvent, controller, [controller, this]() {
-    m_lastController = controller;
-    emit lastControllerChanged();
+  connect(controller, &Controller::inputEvent, controller, [controller, this](auto e) {
+    if (m_lastController != controller) {
+      m_lastController = controller;
+      emit lastControllerChanged();
+    }
+    emit inputEvent(e);
   });
   connect(this, &SteamInput::configurationLoaded, controller, &Controller::loadActions);
   controller->moveToThread(QGuiApplication::instance()->thread());

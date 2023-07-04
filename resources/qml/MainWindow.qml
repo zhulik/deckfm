@@ -6,6 +6,7 @@ import Qt.labs.settings 1.0
 import QtQuick.Controls.Material 2.12
 
 import Steamworks 1.0
+import Steamworks.SteamInput 1.0
 
 import "./DirectoryView" as DirView
 
@@ -32,6 +33,20 @@ ApplicationWindow {
     width: 1280
     height: 720
 
+    header: Header {
+        id: header
+        onMenuClicked: drawer.visible = !drawer.visible
+        onLogoClicked: globalMenu.popup()
+        onExitClicked: mainWindow.close()
+
+        visible: stackView.depth == 1
+    }
+
+    footer: Footer {
+        visible: stackView.currentItem.showFooter
+        hintActions: stackView.currentItem.hintActions
+    }
+
     SteamUtils {
         id: steamUtils
     }
@@ -44,15 +59,6 @@ ApplicationWindow {
 
             url.slice(6, url.length)
         }
-    }
-
-    header: Header {
-        id: header
-        onMenuClicked: drawer.visible = !drawer.visible
-        onLogoClicked: globalMenu.popup()
-        onExitClicked: mainWindow.close()
-
-        visible: stackView.depth == 1
     }
 
     Shortcut {
@@ -84,57 +90,62 @@ ApplicationWindow {
         onActivated: Qt.quit()
     }
 
-    Steamworks.SteamInputScope {
-        pressHandlers: {
-            "debug": debugOverlay.toggle,
-        }
-    }
-
-    Drawer {
-        id: drawer
-        y: header.height
-        width: Math.max(parent.width * 0.3, 450)
-        height: parent.height - header.height - footer.height
-    }
-
-    footer: Footer {
-        visible: stackView.currentItem.showFooter
-        hintActions: stackView.currentItem.hintActions
-    }
-
-    StackView {
-        id: stackView
-        focus: true
+    SteamInputScope {
+        id: steam_input_scope
 
         anchors.fill: parent
 
-        initialItem: directoryView
+        SteamInputControl {
+            objectName: "global"
+            global: true
 
-        DirView.DirectoryView {
-            id: directoryView
+            controller: steam_input.lastController
 
-            onFileOpened: JS.openFile(path)
+            pressHandlers: {
+                "debug": debugOverlay.toggle
+            }
         }
-    }
+        Drawer {
+            id: drawer
+            y: header.height
+            width: Math.max(parent.width * 0.3, 450)
+            height: parent.height - header.height - footer.height
+        }
 
-    GlobalMenu {
-        id: globalMenu
+        StackView {
+            id: stackView
+            focus: true
 
-        onExitClicked: mainWindow.close()
-    }
+            anchors.fill: parent
 
-    DebugOverlay {
-        id: debugOverlay
-        visible: true
+            initialItem: directoryView
 
-        x: 0
-        y: 0
-        width: parent.width - x
-        height: parent.height - y
-    }
+            DirView.DirectoryView {
+                id: directoryView
 
-    Settings {
-        property alias path: directoryView.path
+                onFileOpened: JS.openFile(path)
+            }
+        }
+
+        GlobalMenu {
+            id: globalMenu
+
+            onExitClicked: mainWindow.close()
+        }
+
+        DebugOverlay {
+            id: debugOverlay
+            visible: false
+
+            x: 0
+            y: 0
+            width: parent.width - x
+            height: parent.height - y
+        }
+
+        Settings {
+            property alias path: directoryView.path
+        }
     }
 
     onOpenFileChanged: JS.openFile(openFile)

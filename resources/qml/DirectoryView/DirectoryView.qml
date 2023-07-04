@@ -6,6 +6,7 @@ import Qt.labs.platform 1.1
 import QtQuick.Controls.Material 2.12
 
 import DeckFM 1.0
+import Steamworks.SteamInput 1.0
 
 import "../MDI" as MDI
 import ".." as Core
@@ -38,10 +39,14 @@ Item {
         root.fileOpened(item.path)
     }
 
-    Steamworks.SteamInputScope {
-        enabled: parent.activeFocus
+    SteamInputControl {
+        objectName: "DirectoryView"
+        controller: steam_input.lastController
+
+        enabled: visible
+
         actionSet: "deckfm"
-//        actionSetLayer: "file_manager"
+        actionSetLayers: ["file_manager"]
 
         pressHandlers: {
             "down": view.moveCurrentIndexDown,
@@ -57,8 +62,8 @@ Item {
 
         analogHandlers: {
             "scroll": e => {
-                if ((e.analogY <= 0 && view.atYEnd) ||
-                    (e.analogY >= 0 && view.atYBeginning)) {
+                if ((e.analogY <= 0 && view.atYEnd) || (e.analogY >= 0
+                                                        && view.atYBeginning)) {
                     view.stopScrollMomentum()
                     return
                 }
@@ -72,7 +77,7 @@ Item {
 
                 if (scrollPos > 70) {
                     scrollPos = 0
-                   view.scrollHaptic()
+                    view.scrollHaptic()
                 }
                 view.contentY -= e.analogY
                 view.returnToBounds()
@@ -173,7 +178,8 @@ Item {
                     return
                 }
 
-                const a = steam_input.lastController.actionSet.actionByName("scroll", false)
+                const a = steam_input.lastController.actionSet.actionByName(
+                            "scroll", false)
                 steam_input.lastController.stopAnalogActionMomentum(a)
             }
 
@@ -182,7 +188,8 @@ Item {
                     return
                 }
 
-                steam_input.lastController.triggerRepeatedHapticPulse(2900, 1200, 2)
+                steam_input.lastController.triggerRepeatedHapticPulse(2900,
+                                                                      1200, 2)
             }
 
             function scrollHaptic() {

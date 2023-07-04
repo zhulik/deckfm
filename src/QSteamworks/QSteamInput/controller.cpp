@@ -15,7 +15,7 @@ Controller::Controller(InputHandle_t handle, const QString &name, const IGA &iga
       m_image(QDir::current().absoluteFilePath("./resources/images/controllers/%1.png").arg(name)) {
   QTimer *timer = new QTimer();
   timer->start(500);
-  connect(timer, &QTimer::timeout, this, [timer, this]() {
+  connect(timer, &QTimer::timeout, timer, [timer, this]() {
     timer->deleteLater();
     loadActions();
   });
@@ -134,18 +134,17 @@ QSteamworks::QSteamInput::ActionSet Controller::actionSet() const { return m_act
 
 void Controller::onActionEvent(SteamInputActionEvent_t *event) {
   InputHandle_t actionHandle = 0;
-  QString type;
   bool digitalState = false;
   float analogX = 0;
   float analogY = 0;
 
-  if (event->eEventType == ESteamInputActionEventType_DigitalAction) {
-    type = "digital";
+  auto digital = event->eEventType == ESteamInputActionEventType_DigitalAction;
+
+  if (digital) {
     actionHandle = event->digitalAction.actionHandle;
 
     digitalState = event->digitalAction.digitalActionData.bState;
   } else {
-    type = "analog";
     actionHandle = event->analogAction.actionHandle;
 
     // TODO: add support for event->analogAction.analogActionData.eMode
@@ -160,22 +159,7 @@ void Controller::onActionEvent(SteamInputActionEvent_t *event) {
   }
   updateActionStates(a, digitalState, analogX, analogY);
 
-  sendInputEvents(InputEvent(type, this, a, digitalState, analogX, analogY));
-}
-
-void Controller::sendInputEvents(const InputEvent &e) {
-  emit inputEvent(e);
-
-  if (!e.action().actionDefinition().isDigital()) {
-    emit analogEvent(e);
-    return;
-  }
-
-  if (e.digitalState()) {
-    emit pressedEvent(e);
-  } else {
-    emit releasedEvent(e);
-  }
+  emit inputEvent(InputEvent(this, a, digitalState, analogX, analogY));
 }
 
 void Controller::updateActionStates(const Action &action, bool digitalState, float analogX, float analogY) {
@@ -210,4 +194,14 @@ QList<ActionSetLayer> Controller::activeActionSetLayers() const {
   }
 
   return result;
+}
+
+void Controller::setActiveActionSetLayers(const QList<ActionSetLayer> &newActiveActionSetLayers) {
+  deactivateAllActionSetLayers();
+
+  foreach (auto &l, newActiveActionSetLayers) {
+    ::SteamInput()->ActivateActionSetLayer(m_handle, l.handle());
+  }
+
+  emit activeActionSetLayersChanged();
 }

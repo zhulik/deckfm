@@ -4,5 +4,16 @@ import QtQuick.Controls 2.15
 Label {
     property string name
 
-//    text: steam_input.currentActionSet.actions[name].localizedName
+    readonly property var activeControl: try {
+                                             steam_input_scope.activeControls.find(
+                                                         x => !x.global)
+                                         } catch (e) {
+                                             null
+                                         }
+
+    text: try {
+              activeControl.controller.actionSet.actions[name].localizedName
+          } catch (e) {
+              ""
+          }
 }
