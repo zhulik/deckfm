@@ -76,7 +76,7 @@ Item {
 
                 scrollPos += Math.abs(e.analogY)
 
-                if (scrollPos > 70) {
+                if (scrollPos >= view.cellHeight) {
                     scrollPos = 0
                     view.scrollHaptic()
                 }
@@ -240,8 +240,8 @@ Item {
             add: _transition
 
             delegate: FileDelegate {
-                width: view.cellWidth - 5
-                height: view.cellHeight - 5
+                width: view.cellWidth
+                height: view.cellHeight
 
                 onClicked: {
                     root.cdIndex(index)
