@@ -37,17 +37,19 @@ void QMLSteamInputControl::setController(Controller *newController) {
 
   m_controller = newController;
 
-  if (m_controller->actionSets().isEmpty()) {
-    // Wait for actionSets to load
-    QEventLoop wait;
+  if (m_controller) {
+    if (m_controller->actionSets().isEmpty()) {
+      // Wait for actionSets to load
+      QEventLoop wait;
 
-    connect(m_controller, &Controller::actionSetsChanged, &wait, &QEventLoop::quit);
+      connect(m_controller, &Controller::actionSetsChanged, &wait, &QEventLoop::quit);
 
-    wait.exec();
-  }
+      wait.exec();
+    }
 
-  if (!m_actionSet.isEmpty()) {
-    m_controller->setActionSet(m_controller->actionSetByName(m_actionSet));
+    if (!m_actionSet.isEmpty()) {
+      m_controller->setActionSet(m_controller->actionSetByName(m_actionSet));
+    }
   }
 
   activateActionSetLayers();
