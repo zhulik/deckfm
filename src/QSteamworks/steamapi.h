@@ -1,11 +1,8 @@
 #pragma once
 
-#include "qobjectdefs.h"
 #include <QObject>
-#include <stdexcept>
 
-#include <exception>
-#include <stdexcept>
+#include "steam/isteamfriends.h"
 
 namespace QSteamworks {
 
@@ -13,6 +10,9 @@ void registerTypes();
 
 class SteamAPI : public QObject {
   Q_OBJECT
+
+  STEAM_CALLBACK(SteamAPI, onGameOverlayActivated, GameOverlayActivated_t);
+
 public:
   explicit SteamAPI(QObject *parent = nullptr);
   virtual ~SteamAPI();
@@ -20,5 +20,9 @@ public:
   Q_INVOKABLE
   void runCallbacks() const;
   bool RestartAppIfNecessary() const;
+
+signals:
+  void overlayOpened();
+  void overlayClosed();
 };
 } // namespace QSteamworks

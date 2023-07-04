@@ -6,14 +6,9 @@
 #include "QSteamInput/qmlsteaminputscope.h"
 #include "QSteamworks/QSteamInput/controller.h"
 #include "QSteamworks/QSteamInput/qmlsteaminputscope.h"
-#include "QSteamworks/steaminput.h"
-#include "qjsvalue.h"
-#include "qqmlengine.h"
-#include "qquickitem.h"
 
 #include <stdexcept>
 
-using namespace QSteamworks;
 using namespace QSteamworks::QSteamInput;
 
 QMLSteamInputControl::QMLSteamInputControl(QQuickItem *parent) : QQuickItem(parent) {
@@ -36,24 +31,16 @@ void QMLSteamInputControl::setController(Controller *newController) {
     return;
 
   m_controller = newController;
+  emit controllerChanged();
 
-  if (m_controller) {
-    if (m_controller->actionSets().isEmpty()) {
-      // Wait for actionSets to load
-      QEventLoop wait;
+  if (!m_controller)
+    return;
 
-      connect(m_controller, &Controller::actionSetsChanged, &wait, &QEventLoop::quit);
-
-      wait.exec();
-    }
-
-    if (!m_actionSet.isEmpty()) {
-      m_controller->setActionSet(m_controller->actionSetByName(m_actionSet));
-    }
+  if (!m_actionSet.isEmpty()) {
+    m_controller->setActionSet(m_controller->actionSetByName(m_actionSet));
   }
 
   activateActionSetLayers();
-  emit controllerChanged();
 }
 
 QString QMLSteamInputControl::actionSet() const { return m_actionSet; }
@@ -80,7 +67,7 @@ QStringList QMLSteamInputControl::actionSetLayers() const { return m_actionSetLa
 
 void QMLSteamInputControl::setActionSetLayers(const QStringList &newActionSetLayers) {
   if (m_global) {
-    qWarning() << "Global SteamInputControl cannot define apply action set layers.";
+    qWarning() << "Global SteamInputControl cannot define set layers.";
     return;
   }
 

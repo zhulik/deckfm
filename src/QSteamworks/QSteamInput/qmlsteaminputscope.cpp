@@ -1,10 +1,7 @@
 #include "qmlsteaminputscope.h"
 #include "QSteamInput/qmlsteaminputcontrol.h"
-#include "qdebug.h"
-#include "qquickitem.h"
 #include "steaminput.h"
 
-using namespace QSteamworks;
 using namespace QSteamworks::QSteamInput;
 
 void QMLSteamInputScope::addControl(QMLSteamInputControl *control) {

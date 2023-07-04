@@ -1,6 +1,5 @@
 #include "inputevent.h"
 
-using namespace QSteamworks;
 using namespace QSteamworks::QSteamInput;
 
 InputEvent::InputEvent(Controller *controller, const Action &action, bool digitalState, float analogX, float analogY)

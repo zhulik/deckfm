@@ -6,8 +6,11 @@ import "../../MDI" as MDI
 import "../../" as Core
 
 Core.Spoiler {
+    id: root
     text: "Vibration"
     collapsed: true
+
+    property var controller
 
     RowLayout {
 
@@ -34,7 +37,6 @@ Core.Spoiler {
                 value: 1200
             }
 
-
             LabeledSlider {
                 id: unRepeatSlider
 
@@ -42,6 +44,7 @@ Core.Spoiler {
                 from: 1
                 to: 100
                 value: 4
+                stepSize: 1
             }
         }
 
@@ -49,7 +52,9 @@ Core.Spoiler {
             iconName: "vibrate"
 
             onClicked: {
-                steam_input.lastController.triggerRepeatedHapticPulse(usDurationMicroSecSlider.value, usOffMicroSecSlider.value, unRepeatSlider.value)
+                root.controller.triggerRepeatedHapticPulse(
+                            usDurationMicroSecSlider.value,
+                            usOffMicroSecSlider.value, unRepeatSlider.value)
             }
         }
     }

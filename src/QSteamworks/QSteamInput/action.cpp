@@ -1,6 +1,5 @@
 #include "action.h"
 
-using namespace QSteamworks;
 using namespace QSteamworks::QSteamInput;
 
 Action::Action(InputHandle_t handle, ActionDefinition definition, const QString &localizedName,

@@ -29,8 +29,16 @@ Rectangle {
         ColumnLayout {
             Layout.fillHeight: parent
 
-            Components.VibrationSpoiler {
+            Components.HapticsSpoiler {
                 Layout.fillWidth: parent
+
+                visible: try {
+                             controllersView.selectedController.name === "Steam"
+                         } catch (e) {
+                             false
+                         }
+
+                controller: controllersView.selectedController
             }
 
             TabView {

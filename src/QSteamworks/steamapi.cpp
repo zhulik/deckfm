@@ -59,3 +59,7 @@ void QSteamworks::registerTypes() {
 
   qRegisterMetaType<QList<QSteamworks::QSteamInput::QMLSteamInputControl *>>();
 }
+
+void SteamAPI::onGameOverlayActivated(GameOverlayActivated_t *pCallback) {
+  emit pCallback->m_bActive ? overlayOpened() : overlayClosed();
+}

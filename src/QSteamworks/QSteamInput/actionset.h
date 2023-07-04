@@ -3,9 +3,6 @@
 #include <QObject>
 #include <QVariant>
 
-#include "qobjectdefs.h"
-#include "steam/steam_api.h"
-
 #include "actionsetlayer.h"
 
 namespace QSteamworks {

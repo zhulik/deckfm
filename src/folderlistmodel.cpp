@@ -1,12 +1,9 @@
+#include "folderlistmodel.h"
+
 #include <QDir>
+#include <QLocale>
 #include <QMimeDatabase>
 #include <QStandardPaths>
-#include <stdexcept>
-
-#include "folderlistmodel.h"
-#include "qabstractitemmodel.h"
-#include "qfileinfo.h"
-#include "qnamespace.h"
 
 static QMap<QString, QString> extensionIcons{{"qml", "application"}};
 

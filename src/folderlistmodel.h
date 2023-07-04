@@ -1,7 +1,5 @@
 #pragma once
 
-#include "qobjectdefs.h"
-#include "qqml.h"
 #include <QAbstractListModel>
 
 enum FileType { Directory, File };

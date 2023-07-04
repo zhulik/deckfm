@@ -4,10 +4,6 @@
 
 #include "QSteamInput/iga.h"
 
-#include "qglobal.h"
-#include "qobjectdefs.h"
-#include "steam/steam_api.h"
-
 #include "QSteamInput/inputevent.h"
 
 namespace QSteamworks {
@@ -41,6 +37,7 @@ public:
   QList<QSteamInput::Controller *> controllers() const;
 
   QSteamInput::Controller *lastController() const;
+  void setLastController(QSteamInput::Controller *);
 
 signals:
   void configurationLoaded();

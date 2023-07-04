@@ -13,7 +13,6 @@ class Application : public QGuiApplication {
 
 public:
   explicit Application(int &argc, char **argv);
-  virtual ~Application();
 
 private:
   QQmlApplicationEngine *m_engine;

@@ -7,18 +7,12 @@
 
 #include "collections.h"
 
-using namespace QSteamworks;
 using namespace QSteamworks::QSteamInput;
 
 Controller::Controller(InputHandle_t handle, const QString &name, const IGA &iga, QObject *parent)
     : QObject(parent), m_handle(handle), m_name(name), m_iga(iga),
       m_image(QDir::current().absoluteFilePath("./resources/images/controllers/%1.png").arg(name)) {
-  QTimer *timer = new QTimer();
-  timer->start(500);
-  connect(timer, &QTimer::timeout, timer, [timer, this]() {
-    timer->deleteLater();
-    loadActions();
-  });
+  QTimer::singleShot(200, this, &Controller::loadActions);
 }
 
 InputHandle_t Controller::handle() const { return m_handle; }
@@ -86,6 +80,8 @@ void Controller::loadActions() {
     m_actionSets[handle] = ActionSet(handle, actionSet.name(), getActions(handle, actionSet.actions()),
                                      getActionSetLayers(actionSet.layers()));
   }
+
+  qDebug() << QString("Controller %1(%2): actions loaded").arg(m_name).arg(m_handle);
   emit actionSetsChanged();
 }
 
@@ -139,6 +135,8 @@ void Controller::onActionEvent(SteamInputActionEvent_t *event) {
   float analogY = 0;
 
   auto digital = event->eEventType == ESteamInputActionEventType_DigitalAction;
+
+  emit userInteracted();
 
   if (digital) {
     actionHandle = event->digitalAction.actionHandle;

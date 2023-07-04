@@ -1,7 +1,6 @@
 #include "actionsetlayer.h"
 #include "collections.h"
 
-using namespace QSteamworks;
 using namespace QSteamworks::QSteamInput;
 
 ActionSetLayer::ActionSetLayer() {}

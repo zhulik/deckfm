@@ -3,7 +3,6 @@
 #include <QObject>
 #include <QQuickItem>
 
-#include "QSteamworks/QSteamInput/actionsetlayer.h"
 #include "QSteamworks/QSteamInput/inputevent.h"
 
 namespace QSteamworks {

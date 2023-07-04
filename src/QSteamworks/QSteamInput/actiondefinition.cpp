@@ -1,6 +1,5 @@
 #include "actiondefinition.h"
 
-using namespace QSteamworks;
 using namespace QSteamworks::QSteamInput;
 
 ActionDefinition::ActionDefinition(const QString &name, const QString &type, const QString &actionSet, bool isDigital)
