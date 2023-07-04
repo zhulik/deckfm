@@ -113,7 +113,7 @@ void SteamInput::onControllerDisconnected(SteamInputDeviceDisconnected_t *cb) {
 
   emit controllersChanged();
 
-  if (m_lastController->handle() == handle) {
+  if (m_lastController && m_lastController->handle() == handle) {
     m_lastController = nullptr;
     emit lastControllerChanged();
   }
