@@ -21,11 +21,14 @@ public:
 
       if (cache != nullptr) {
         auto data = cache->withCache(imageCacheId(id, requestedSize), [id, requestedSize]() {
+          QByteArray ba;
           QImage image(id); // TODO: add support for network sources
+          if (image.isNull()) {
+            return ba;
+          }
           if (!image.isNull()) {
             image = image.scaled(requestedSize, Qt::KeepAspectRatio);
           }
-          QByteArray ba;
           QBuffer buffer(&ba);
           buffer.open(QIODevice::WriteOnly);
           Q_ASSERT(image.save(&buffer, "png"));
@@ -33,7 +36,7 @@ public:
           return ba;
         });
 
-        Q_ASSERT(result.loadFromData(data));
+        result.loadFromData(data);
       } else {
         QImage image(id); // TODO: add support for network sources
         if (!image.isNull()) {
