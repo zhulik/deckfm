@@ -5,7 +5,6 @@
 #include <QtConcurrent/QtConcurrent>
 
 #include "abstractcache.h"
-#include "qglobal.h"
 
 class AsyncImageResponse : public QQuickImageResponse {
 public:

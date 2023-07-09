@@ -1,10 +1,6 @@
 #include "diskcache.h"
-#include "qcryptographichash.h"
-#include "qfileinfo.h"
-#include "qglobal.h"
-#include "qstandardpaths.h"
 
-#include <QDebug>
+#include <QCryptographicHash>
 #include <QStandardPaths>
 
 DiskCache::DiskCache(QObject *parent) : AbstractCache{parent} {
