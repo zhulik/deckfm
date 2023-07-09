@@ -38,6 +38,7 @@ void DiskCache::set(const QString &key, const QByteArray &data) {
 
   file.write(data);
   file.close();
+  emit cacheUpdated();
 }
 
 bool DiskCache::exists(const QString &key) const { return m_root.exists(keyToPath(key).filePath()); }

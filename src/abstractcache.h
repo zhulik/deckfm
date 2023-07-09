@@ -15,4 +15,5 @@ public:
   QByteArray withCache(const QString &, std::function<QByteArray()>);
 
 signals:
+  void cacheUpdated();
 };

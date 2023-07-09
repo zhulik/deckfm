@@ -21,10 +21,8 @@ Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
   QFontDatabase::addApplicationFont("resources/fonts/materialdesignicons-webfont.ttf");
   QQuickStyle::setStyle("Material");
 
-  m_cacheThumbnailImageProvider = new CacheThumbnailImageProvider();
-  m_cacheThumbnailImageProvider->setCache(new DiskCache(this));
-  m_engine = new QQmlApplicationEngine(this);
-
+  auto cacheThumbnailImageProvider = new CacheThumbnailImageProvider();
+  cacheThumbnailImageProvider->setCache(new DiskCache(this));
   m_engine = new QQmlApplicationEngine(this);
 
   qmlRegisterType<FolderListModel>("DeckFM", 1, 0, "FolderListModel");
@@ -44,7 +42,7 @@ Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
   m_engine->rootContext()->setContextProperty("qmlEngine", m_engine);
   m_engine->rootContext()->setContextProperty("steamAPI", m_steamworks);
 
-  m_engine->addImageProvider("cache_thumbnail", m_cacheThumbnailImageProvider);
+  m_engine->addImageProvider("cache_thumbnail", cacheThumbnailImageProvider);
 
   if (m_steamworks != nullptr) {
     auto callbackTimer = new QTimer(this);
@@ -68,5 +66,3 @@ Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
 
   m_engine->load("resources/qml/MainWindow.qml");
 }
-
-Application::~Application() { delete m_cacheThumbnailImageProvider; }
