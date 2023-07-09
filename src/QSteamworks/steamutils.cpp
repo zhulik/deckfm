@@ -1,6 +1,4 @@
-#include "steam/steam_api.h"
-
-#include "steamapi.h"
+#include "steam/isteamutils.h"
 
 #include "steamutils.h"
 

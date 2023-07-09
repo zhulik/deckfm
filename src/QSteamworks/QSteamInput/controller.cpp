@@ -7,18 +7,12 @@
 
 #include "collections.h"
 
-using namespace QSteamworks;
 using namespace QSteamworks::QSteamInput;
 
 Controller::Controller(InputHandle_t handle, const QString &name, const IGA &iga, QObject *parent)
     : QObject(parent), m_handle(handle), m_name(name), m_iga(iga),
       m_image(QDir::current().absoluteFilePath("./resources/images/controllers/%1.png").arg(name)) {
-  QTimer *timer = new QTimer();
-  timer->start(500);
-  connect(timer, &QTimer::timeout, this, [timer, this]() {
-    timer->deleteLater();
-    loadActions();
-  });
+  QTimer::singleShot(200, this, &Controller::loadActions);
 }
 
 InputHandle_t Controller::handle() const { return m_handle; }
@@ -86,6 +80,8 @@ void Controller::loadActions() {
     m_actionSets[handle] = ActionSet(handle, actionSet.name(), getActions(handle, actionSet.actions()),
                                      getActionSetLayers(actionSet.layers()));
   }
+
+  qDebug() << QString("Controller %1(%2): actions loaded").arg(m_name).arg(m_handle);
   emit actionSetsChanged();
 }
 
@@ -134,18 +130,19 @@ QSteamworks::QSteamInput::ActionSet Controller::actionSet() const { return m_act
 
 void Controller::onActionEvent(SteamInputActionEvent_t *event) {
   InputHandle_t actionHandle = 0;
-  QString type;
   bool digitalState = false;
   float analogX = 0;
   float analogY = 0;
 
-  if (event->eEventType == ESteamInputActionEventType_DigitalAction) {
-    type = "digital";
+  auto digital = event->eEventType == ESteamInputActionEventType_DigitalAction;
+
+  emit userInteracted();
+
+  if (digital) {
     actionHandle = event->digitalAction.actionHandle;
 
     digitalState = event->digitalAction.digitalActionData.bState;
   } else {
-    type = "analog";
     actionHandle = event->analogAction.actionHandle;
 
     // TODO: add support for event->analogAction.analogActionData.eMode
@@ -160,34 +157,19 @@ void Controller::onActionEvent(SteamInputActionEvent_t *event) {
   }
   updateActionStates(a, digitalState, analogX, analogY);
 
-  sendInputEvents(InputEvent(type, this, a, digitalState, analogX, analogY));
-}
-
-void Controller::sendInputEvents(const InputEvent &e) {
-  emit inputEvent(e);
-
-  if (!e.action().actionDefinition().isDigital()) {
-    emit analogEvent(e);
-    return;
-  }
-
-  if (e.digitalState()) {
-    emit pressedEvent(e);
-  } else {
-    emit releasedEvent(e);
-  }
+  emit inputEvent(InputEvent(this, a, digitalState, analogX, analogY));
 }
 
 void Controller::updateActionStates(const Action &action, bool digitalState, float analogX, float analogY) {
   QVariant state;
 
-  if (action.actionDefinition().isDigital()) {
+  if (action.digital()) {
     state = digitalState;
   } else {
     state = QVariantMap{{"x", analogX}, {"y", analogY}};
   }
 
-  m_actionStates[action.actionDefinition().name()] = state;
+  m_actionStates[action.name()] = state;
 
   emit actionStatesChanged();
 }

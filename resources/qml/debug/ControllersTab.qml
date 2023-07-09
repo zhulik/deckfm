@@ -29,9 +29,16 @@ Rectangle {
         ColumnLayout {
             Layout.fillHeight: parent
 
-            Components.VibrationSpoiler {
+            Components.HapticsSpoiler {
                 Layout.fillWidth: parent
 
+                visible: try {
+                             controllersView.selectedController.name === "Steam"
+                         } catch (e) {
+                             false
+                         }
+
+                controller: controllersView.selectedController
             }
 
             TabView {
@@ -49,7 +56,8 @@ Rectangle {
                 tabDelegate: TabButton {
                     text: modelData.name
 
-                    onDoubleClicked: controllersView.selectedController.actionSet = actionSetsTabView.selectedItem
+                    onDoubleClicked: controllersView.selectedController.actionSet
+                                     = actionSetsTabView.selectedItem
                 }
 
                 delegate: RowLayout {
@@ -84,13 +92,13 @@ Rectangle {
                                     width: height
                                     height: parent.height
                                     scale: {
-                                        if (!actionDefinition.isDigital) {
-                                            return 1;
+                                        if (!digital) {
+                                            return 1
                                         }
 
-                                        const r = controllersView.selectedController.actionStates[actionDefinition.name]
+                                        const r = controllersView.selectedController.actionStates[name]
                                         if (typeof r === 'undefined') {
-                                            return 1;
+                                            return 1
                                         } else {
                                             r ? 0.8 : 1
                                         }
@@ -116,11 +124,11 @@ Rectangle {
                                     height: parent.height
 
                                     text: {
-                                        if (actionDefinition.isDigital) {
-                                            return "";
+                                        if (digital) {
+                                            return ""
                                         }
 
-                                        const r = controllersView.selectedController.actionStates[actionDefinition.name]
+                                        const r = controllersView.selectedController.actionStates[name]
                                         typeof r === 'undefined' ? "" : `x: ${r.x}\ny: ${r.y}`
                                     }
                                 }
@@ -151,11 +159,14 @@ Rectangle {
                             width: layersView.width
                             height: 50
 
-                            onDoubleClicked:if (controllersView.selectedController.activeActionSetLayers.findIndex(x=>x.handle === modelData.handle) >= 0) {
-                                                controllersView.selectedController.deactivateActionSetLayer(modelData)
-                                            } else {
-                                                controllersView.selectedController.activateActionSetLayer(modelData)
-                                            }
+                            onDoubleClicked: if (controllersView.selectedController.activeActionSetLayers.findIndex(
+                                                         x => x.handle === modelData.handle) >= 0) {
+                                                 controllersView.selectedController.deactivateActionSetLayer(
+                                                             modelData)
+                                             } else {
+                                                 controllersView.selectedController.activateActionSetLayer(
+                                                             modelData)
+                                             }
 
                             RowLayout {
                                 anchors.fill: parent
@@ -179,9 +190,10 @@ Rectangle {
 
                                     font.pointSize: 15
 
-                                    text: controllersView.selectedController.activeActionSetLayers.findIndex(x=>x.handle === modelData.handle)
+                                    text: controllersView.selectedController.activeActionSetLayers.findIndex(
+                                              x => x.handle === modelData.handle)
 
-                                    //                                    visible: text != "-1"
+                                    visible: text != "-1"
                                 }
                             }
                         }

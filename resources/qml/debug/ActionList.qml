@@ -2,7 +2,7 @@ import QtQuick 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.12
 
-import "../../../resources/qml/models" as Models
+import "../models" as Models
 
 ListView {
     id: root

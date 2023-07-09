@@ -4,16 +4,18 @@ import QtQuick.Layouts 1.15
 
 import "QSteamworks" as Steamworks
 
+import Steamworks.SteamInput 1.0
+
 import "debug" as Debug
 
 Item {
     id: root
 
-    signal closed()
+    signal closed
 
     property var deckfmSettings: ({
-                                      showCloseButton: false,
-                                      showFooter: false
+                                      "showCloseButton": false,
+                                      "showFooter": false
                                   })
 
     function toggle() {
@@ -53,17 +55,11 @@ Item {
 
             currentIndex: bar.currentIndex
 
-            Debug.ConsoleTab {
+            Debug.ConsoleTab {}
 
-            }
+            Debug.IGATab {}
 
-            Debug.IGATab {
-
-            }
-
-            Debug.ControllersTab {
-
-            }
+            Debug.ControllersTab {}
         }
     }
 }

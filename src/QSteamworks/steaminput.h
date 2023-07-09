@@ -4,10 +4,6 @@
 
 #include "QSteamInput/iga.h"
 
-#include "qglobal.h"
-#include "qobjectdefs.h"
-#include "steam/steam_api.h"
-
 #include "QSteamInput/inputevent.h"
 
 namespace QSteamworks {
@@ -28,6 +24,7 @@ class SteamInput : public QObject {
 public:
   explicit SteamInput(QObject *parent = nullptr);
   virtual ~SteamInput();
+  static SteamInput *instance();
 
   Q_INVOKABLE
   void runFrame();
@@ -37,27 +34,26 @@ public:
   const QString &igaPath() const;
   void setIgaPath(const QString &newIgaPath);
 
-  QList<QSteamworks::QSteamInput::Controller *> controllers() const;
+  QList<QSteamInput::Controller *> controllers() const;
 
-  QSteamworks::QSteamInput::Controller *lastController() const;
+  QSteamInput::Controller *lastController() const;
+  void setLastController(QSteamInput::Controller *);
 
 signals:
   void configurationLoaded();
   void igaChanged();
   void igaPathChanged();
-
   void controllersChanged();
-
   void lastControllerChanged();
+  void inputEvent(const QSteamworks::QSteamInput::InputEvent &event);
 
 private:
   QSteamInput::IGA m_iga;
-  QMap<InputHandle_t, QSteamworks::QSteamInput::Controller *> m_controllers;
+  QMap<InputHandle_t, QSteamInput::Controller *> m_controllers;
   static SteamInput *m_instance;
   QString m_igaPath;
   QSteamInput::Controller *m_lastController = nullptr;
 
-  static SteamInput *instance();
   void onActionEvent(SteamInputActionEvent_t *event);
 };
 } // namespace QSteamworks

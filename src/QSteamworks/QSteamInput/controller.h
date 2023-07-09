@@ -7,9 +7,7 @@
 #include "actionsetlayer.h"
 #include "iga.h"
 #include "inputevent.h"
-#include "qobjectdefs.h"
 #include "steam/isteamcontroller.h"
-#include "steam/steam_api.h"
 
 #include "QSteamworks/steaminput.h"
 
@@ -75,10 +73,8 @@ signals:
   void actionSetsChanged();
   void actionSetChanged();
 
+  void userInteracted();
   void inputEvent(const QSteamworks::QSteamInput::InputEvent &event);
-  void analogEvent(const QSteamworks::QSteamInput::InputEvent &event);
-  void pressedEvent(const QSteamworks::QSteamInput::InputEvent &event);
-  void releasedEvent(const QSteamworks::QSteamInput::InputEvent &event);
 
   void actionStatesChanged();
   void activeActionSetLayersChanged();
@@ -91,8 +87,6 @@ private:
   IGA m_iga;
   QVariantMap m_actionStates;
   QSteamworks::QSteamInput::ActionSet m_actionSet;
-
-  void sendInputEvents(const InputEvent &e);
 
   QList<Action> getActions(InputActionSetHandle_t actionSetHandle, const QList<ActionDefinition> &actions) const;
   QList<ActionSetLayer> getActionSetLayers(const QList<ActionSetLayerDefinition> &definitions) const;

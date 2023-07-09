@@ -1,6 +1,5 @@
 #pragma once
 
-#include "qobjectdefs.h"
 #include <QObject>
 
 class FSHelpers : public QObject {
@@ -13,6 +12,4 @@ public:
 
   Q_INVOKABLE
   QString fileName(const QUrl &url) const;
-
-signals:
 };

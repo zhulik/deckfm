@@ -3,21 +3,13 @@
 #include <QMap>
 #include <stdexcept>
 
-#include "QSteamInput/actionsetdefinition.h"
-#include "QSteamInput/actionsetlayer.h"
-#include "QSteamInput/actionsetlayerdefinition.h"
 #include "QSteamInput/controller.h"
-#include "qglobal.h"
-#include "qwindowdefs.h"
 #include "steam/isteaminput.h"
-#include "steam/steam_api.h"
 
 #include "errors.h"
-#include "steamapi.h"
 #include "steaminput.h"
 
 #include "QSteamInput/vdfparser.h"
-#include "steam/steamtypes.h"
 
 using namespace QSteamworks;
 using namespace QSteamworks::QSteamInput;
@@ -56,29 +48,11 @@ SteamInput::SteamInput(QObject *parent) : QObject{parent} {
   if (m_instance != nullptr) {
     throw InitializationFailed("Steam input is already initialized");
   }
-  qRegisterMetaType<QSteamworks::QSteamInput::IGA>();
-
-  qRegisterMetaType<QSteamworks::QSteamInput::ActionDefinition>();
-  qRegisterMetaType<QList<QSteamworks::QSteamInput::ActionDefinition>>();
-
-  qRegisterMetaType<QSteamworks::QSteamInput::ActionSetDefinition>();
-  qRegisterMetaType<QList<QSteamworks::QSteamInput::ActionSetDefinition>>();
-
-  qRegisterMetaType<QSteamworks::QSteamInput::ActionSetLayerDefinition>();
-  qRegisterMetaType<QList<QSteamworks::QSteamInput::ActionSetLayerDefinition>>();
-
-  qRegisterMetaType<QSteamworks::QSteamInput::Action>();
-  qRegisterMetaType<QSteamworks::QSteamInput::ActionSet>();
-  qRegisterMetaType<QSteamworks::QSteamInput::ActionSetLayer>();
-  qRegisterMetaType<QSteamworks::QSteamInput::InputEvent>();
-
-  qRegisterMetaType<InputHandle_t>("InputHandle_t");
-  qRegisterMetaType<uint8>("uint8");
-  qRegisterMetaType<int8>("int8");
-
-  qRegisterMetaType<QList<QSteamworks::QSteamInput::Controller *>>();
-
   m_instance = this;
+
+  auto cb = [](auto e) { SteamInput::instance()->onActionEvent(e); };
+
+  ::SteamInput()->EnableActionEventCallbacks(cb);
 }
 
 SteamInput::~SteamInput() { ::SteamInput()->Shutdown(); }
@@ -102,25 +76,22 @@ void SteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb) {
   auto inputType = ::SteamInput()->GetInputTypeForHandle(handle);
   auto name = controllerNames.value(inputType, "Unknown");
 
-  auto controller = new Controller(handle, name, m_iga);
+  auto controller = new Controller(handle, name, m_iga, this);
 
-  connect(controller, &Controller::inputEvent, controller, [controller, this]() {
-    if (m_lastController != controller) {
-      m_lastController = controller;
-      emit lastControllerChanged();
-    }
-  });
+  connect(controller, &Controller::userInteracted, controller, [controller, this]() { setLastController(controller); });
+
+  connect(controller, &Controller::inputEvent, this, &SteamInput::inputEvent);
   connect(this, &SteamInput::configurationLoaded, controller, &Controller::loadActions);
+
   controller->moveToThread(QGuiApplication::instance()->thread());
   controller->setParent(this);
 
-  m_controllers[handle] = controller;
-  emit controllersChanged();
+  connect(controller, &Controller::actionSetsChanged, [controller, this]() {
+    m_controllers[controller->handle()] = controller;
+    emit controllersChanged();
 
-  if (m_controllers.count() == 1) { // First added controller
-    m_lastController = controller;
-    emit lastControllerChanged();
-  }
+    setLastController(controller);
+  });
 
   qDebug() << "Controller connected:" << controller->name() << controller->handle();
 }
@@ -128,24 +99,21 @@ void SteamInput::onControllerConnected(SteamInputDeviceConnected_t *cb) {
 void SteamInput::onControllerDisconnected(SteamInputDeviceDisconnected_t *cb) {
   auto handle = cb->m_ulDisconnectedDeviceHandle;
 
-  delete m_controllers[handle];
+  auto deletedController = m_controllers[handle];
   m_controllers.remove(handle);
 
   emit controllersChanged();
 
-  if (m_lastController->handle() == handle) {
-    m_lastController = nullptr;
-    emit lastControllerChanged();
+  if (m_lastController && m_lastController->handle() == handle) {
+    setLastController(m_controllers.count() > 0 ? m_controllers.last() : nullptr);
   }
+
+  delete deletedController;
 
   qDebug() << "Controller disconnected:" << handle;
 }
 
 void SteamInput::onConfigurationLoaded(SteamInputConfigurationLoaded_t *) {
-  auto cb = [](auto e) { SteamInput::instance()->onActionEvent(e); };
-
-  ::SteamInput()->EnableActionEventCallbacks(cb);
-
   emit configurationLoaded();
   qDebug() << "Confuguration loaded";
 }
@@ -181,3 +149,11 @@ void SteamInput::setIgaPath(const QString &newIgaPath) {
 QList<Controller *> SteamInput::controllers() const { return m_controllers.values(); }
 
 QSteamworks::QSteamInput::Controller *SteamInput::lastController() const { return m_lastController; }
+
+void SteamInput::setLastController(QSteamInput::Controller *newController) {
+  if (m_lastController == newController)
+    return;
+
+  m_lastController = newController;
+  emit lastControllerChanged();
+}

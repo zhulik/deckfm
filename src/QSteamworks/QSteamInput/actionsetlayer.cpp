@@ -1,7 +1,6 @@
 #include "actionsetlayer.h"
 #include "collections.h"
 
-using namespace QSteamworks;
 using namespace QSteamworks::QSteamInput;
 
 ActionSetLayer::ActionSetLayer() {}
@@ -16,23 +15,20 @@ const QString &ActionSetLayer::name() const { return m_name; }
 const QList<Action> ActionSetLayer::actions() const { return m_actions; }
 
 QVariantMap ActionSetLayer::qmlActions() const {
-
   // TODO: map
   QVariantMap result;
   foreach (auto &action, m_actions) {
-    result[action.actionDefinition().name()] = QVariant::fromValue(action);
+    result[action.name()] = QVariant::fromValue(action);
   }
   return result;
 }
 
 Action ActionSetLayer::actionByHandle(InputHandle_t handle, bool digital) const {
-  return findBy(m_actions, [handle, digital](auto action) {
-    return action.handle() == handle && action.actionDefinition().isDigital() == digital;
-  });
+  return findBy(m_actions,
+                [handle, digital](auto action) { return action.handle() == handle && action.digital() == digital; });
 }
 
 Action ActionSetLayer::actionByName(const QString &name, bool digital) const {
-  return findBy(m_actions, [name, digital](auto action) {
-    return action.actionDefinition().name() == name && action.actionDefinition().isDigital() == digital;
-  });
+  return findBy(m_actions,
+                [name, digital](auto action) { return action.name() == name && action.digital() == digital; });
 }

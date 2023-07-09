@@ -11,11 +11,13 @@ class Controller;
 
 class InputEvent {
   Q_GADGET
-  Q_PROPERTY(QString type READ type CONSTANT)
 
   Q_PROPERTY(QSteamworks::QSteamInput::Controller *controller READ controller CONSTANT)
-  Q_PROPERTY(QSteamworks::QSteamInput::Action action READ action CONSTANT)
+  Q_PROPERTY(QString actionName READ actionName CONSTANT)
 
+  Q_PROPERTY(bool digital READ digital CONSTANT)
+
+  Q_PROPERTY(QSteamworks::QSteamInput::Action action READ action CONSTANT)
   Q_PROPERTY(bool digitalState READ digitalState CONSTANT)
   Q_PROPERTY(float analogX READ analogX CONSTANT)
   Q_PROPERTY(float analogY READ analogY CONSTANT)
@@ -23,21 +25,21 @@ class InputEvent {
 public:
   InputEvent() {}
 
-  InputEvent(const QString &type, Controller *controller, const Action &action, bool digitalState, float analogX,
-             float analogY);
+  InputEvent(Controller *controller, const Action &action, bool digitalState, float analogX, float analogY);
 
-  const QString &type() const;
   Controller *controller() const;
 
+  const QString &actionName() const;
   Action action() const;
 
   bool digitalState() const;
   float analogX() const;
   float analogY() const;
 
+  bool digital() const;
+
 private:
-  QString m_type;
-  Controller *m_controller;
+  Controller *m_controller = nullptr;
   Action m_action;
   bool m_digitalState = false;
   float m_analogX = 0;

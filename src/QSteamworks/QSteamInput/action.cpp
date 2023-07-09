@@ -1,6 +1,5 @@
 #include "action.h"
 
-using namespace QSteamworks;
 using namespace QSteamworks::QSteamInput;
 
 Action::Action(InputHandle_t handle, ActionDefinition definition, const QString &localizedName,
@@ -11,6 +10,10 @@ Action::Action(InputHandle_t handle, ActionDefinition definition, const QString 
 const ActionDefinition Action::actionDefinition() const { return m_definition; }
 
 InputHandle_t Action::handle() const { return m_handle; }
+
+const QString &Action::name() const { return m_definition.name(); }
+
+bool Action::digital() const { return m_definition.isDigital(); }
 
 const QString &Action::localizedName() const { return m_localizedName; }
 

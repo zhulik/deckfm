@@ -5,7 +5,18 @@ Image {
     property string name
     width: height
 
-
     fillMode: Image.PreserveAspectFit
-    source: steam_input.lastController.actionSet.actions[name].glyphs[0]
+
+    readonly property var activeControl: try {
+                                             steam_input_scope.activeControls.find(
+                                                         x => !x.global)
+                                         } catch (e) {
+                                             null
+                                         }
+
+    source: try {
+                activeControl.controller.actionSet.actions[name].glyphs[0] || ""
+            } catch (e) {
+                ""
+            }
 }

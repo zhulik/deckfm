@@ -6,6 +6,7 @@ import Qt.labs.platform 1.1
 import QtQuick.Controls.Material 2.12
 
 import DeckFM 1.0
+import Steamworks.SteamInput 1.0
 
 import "../MDI" as MDI
 import ".." as Core
@@ -38,8 +39,13 @@ Item {
         root.fileOpened(item.path)
     }
 
-    Steamworks.SteamInputScope {
-        enabled: parent.activeFocus
+    SteamInputControl {
+        id: inputControl
+        objectName: "DirectoryView"
+        controller: steam_input.lastController
+
+        enabled: visible
+
         actionSet: "deckfm"
         actionSetLayers: ["file_manager"]
 
@@ -57,8 +63,8 @@ Item {
 
         analogHandlers: {
             "scroll": e => {
-                if ((e.analogY <= 0 && view.atYEnd) ||
-                    (e.analogY >= 0 && view.atYBeginning)) {
+                if ((e.analogY <= 0 && view.atYEnd) || (e.analogY >= 0
+                                                        && view.atYBeginning)) {
                     view.stopScrollMomentum()
                     return
                 }
@@ -70,9 +76,9 @@ Item {
 
                 scrollPos += Math.abs(e.analogY)
 
-                if (scrollPos > 70) {
+                if (scrollPos >= view.cellHeight) {
                     scrollPos = 0
-                   view.scrollHaptic()
+                    view.scrollHaptic()
                 }
                 view.contentY -= e.analogY
                 view.returnToBounds()
@@ -169,28 +175,29 @@ Item {
             onCurrentIndexChanged: view.scrollHaptic()
 
             function stopScrollMomentum() {
-                if (!steam_input.lastController) {
+                if (!inputControl.controller) {
                     return
                 }
 
-                const a = steam_input.lastController.actionSet.actionByName("scroll", false)
-                steam_input.lastController.stopAnalogActionMomentum(a)
+                const a = inputControl.controller.actionSet.actions["scroll"]
+                inputControl.controller.stopAnalogActionMomentum(a)
             }
 
             function stopScrollHaptic() {
-                if (!steam_input.lastController) {
+                if (!inputControl.controller) {
                     return
                 }
 
-                steam_input.lastController.triggerRepeatedHapticPulse(2900, 1200, 2)
+                inputControl.controller.triggerRepeatedHapticPulse(2900, 1200,
+                                                                   2)
             }
 
             function scrollHaptic() {
-                if (!steam_input.lastController) {
+                if (!inputControl.controller) {
                     return
                 }
 
-                steam_input.lastController.triggerRepeatedHapticPulse(500, 1, 1)
+                inputControl.controller.triggerRepeatedHapticPulse(500, 1, 1)
             }
 
             onAtYBeginningChanged: {
@@ -233,8 +240,8 @@ Item {
             add: _transition
 
             delegate: FileDelegate {
-                width: view.cellWidth - 5
-                height: view.cellHeight - 5
+                width: view.cellWidth
+                height: view.cellHeight
 
                 onClicked: {
                     root.cdIndex(index)
