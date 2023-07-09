@@ -3,8 +3,6 @@ import QtQuick 2.15
 import "../MDI" as MDI
 import ".." as Core
 
-import QtQuick.Layouts 1.15
-
 Item {
     id: root
 
@@ -25,6 +23,7 @@ Item {
     Core.AsyncImage {
         anchors.fill: parent
         source: path
+        cached: true
         visible: root.isImage
     }
 }

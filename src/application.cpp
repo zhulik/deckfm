@@ -6,6 +6,7 @@
 #include <QtQuickControls2/QQuickStyle>
 
 #include "application.h"
+#include "cachethumbnailimageprovider.h"
 #include "folderlistmodel.h"
 #include "fshelpers.h"
 
@@ -38,6 +39,8 @@ Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
   m_engine->rootContext()->setContextProperty("qApp", this);
   m_engine->rootContext()->setContextProperty("qmlEngine", m_engine);
   m_engine->rootContext()->setContextProperty("steamAPI", m_steamworks);
+
+  m_engine->addImageProvider("cache_thumbnail", new CacheThumbnailImageProvider());
 
   if (m_steamworks != nullptr) {
     auto callbackTimer = new QTimer(this);
