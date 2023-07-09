@@ -21,9 +21,9 @@ Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
   QFontDatabase::addApplicationFont("resources/fonts/materialdesignicons-webfont.ttf");
   QQuickStyle::setStyle("Material");
 
+  m_engine = new QQmlApplicationEngine();
   auto cacheThumbnailImageProvider = new CacheThumbnailImageProvider();
-  cacheThumbnailImageProvider->setCache(new DiskCache(this));
-  m_engine = new QQmlApplicationEngine(this);
+  cacheThumbnailImageProvider->setCache(new DiskCache(m_engine));
 
   qmlRegisterType<FolderListModel>("DeckFM", 1, 0, "FolderListModel");
 
@@ -33,19 +33,18 @@ Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
   qmlRegisterSingletonInstance("DeckFM", 1, 0, "FSHelpers", new FSHelpers());
 
   try {
-    m_steamworks = new QSteamworks::SteamAPI(this);
+    m_steamworks = new QSteamworks::SteamAPI(m_engine);
   } catch (QSteamworks::InitializationFailed &e) {
     qDebug() << "\n" << e.what() << "\n";
   }
 
-  m_engine->rootContext()->setContextProperty("qApp", this);
   m_engine->rootContext()->setContextProperty("qmlEngine", m_engine);
   m_engine->rootContext()->setContextProperty("steamAPI", m_steamworks);
 
   m_engine->addImageProvider("cache_thumbnail", cacheThumbnailImageProvider);
 
   if (m_steamworks != nullptr) {
-    auto callbackTimer = new QTimer(this);
+    auto callbackTimer = new QTimer(m_engine);
     connect(callbackTimer, &QTimer::timeout, m_steamworks, &QSteamworks::SteamAPI::runCallbacks);
     callbackTimer->start(16);
   }
@@ -56,8 +55,6 @@ Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
     }
 
     auto mainWindow = (QQuickWindow *)m_engine->rootObjects().at(0);
-    connect(mainWindow, &QQuickWindow::activeFocusItemChanged,
-            [mainWindow, this]() { m_activeFocusItem = mainWindow->activeFocusItem(); });
 
     if (arguments().count() > 1) {
       mainWindow->setProperty("openFile", arguments().at(1));
@@ -66,3 +63,5 @@ Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
 
   m_engine->load("resources/qml/MainWindow.qml");
 }
+
+Application::~Application() { delete m_engine; }
