@@ -4,18 +4,37 @@
 #include <QQuickImageResponse>
 #include <QtConcurrent/QtConcurrent>
 
-#include "qfuturewatcher.h"
+#include "abstractcache.h"
+#include "qglobal.h"
 
 class AsyncImageResponse : public QQuickImageResponse {
 public:
-  AsyncImageResponse(const QString &id, const QSize &requestedSize) {
+  AsyncImageResponse(const QString &id, const QSize &requestedSize, AbstractCache *cache) {
     auto watcher = new QFutureWatcher<QImage>();
-    auto f = QtConcurrent::run([id, requestedSize, this]() {
+
+    auto f = QtConcurrent::run([id, requestedSize, this, cache]() {
+      QImage result;
+
       if (requestedSize.isEmpty()) {
-        return QImage();
+        return result;
       }
-      QImage image(id); // TODO: add support for network sources
-      return image.scaled(requestedSize, Qt::KeepAspectRatio);
+
+      if (cache != nullptr) {
+        auto data = cache->withCache(imageCacheId(id, requestedSize), [id, requestedSize]() {
+          QImage image(id); // TODO: add support for network sources
+          if (!image.isNull()) {
+            image = image.scaled(requestedSize, Qt::KeepAspectRatio);
+          }
+          return QByteArray::fromRawData((const char *)image.bits(), image.sizeInBytes());
+        });
+        Q_ASSERT(result.loadFromData(data));
+      } else {
+        QImage image(id); // TODO: add support for network sources
+        if (!image.isNull()) {
+          result = image.scaled(requestedSize, Qt::KeepAspectRatio);
+        }
+      }
+      return result;
     });
 
     connect(watcher, &QFutureWatcher<QImage>::finished, watcher, [this, f, watcher]() {
@@ -31,9 +50,18 @@ public:
     return QQuickTextureFactory::textureFactoryForImage(m_image);
   }
 
+private:
   QImage m_image;
+
+  QString imageCacheId(const QString &id, const QSize &size) const {
+    return QString("%1.%2x%3").arg(id).arg(size.width()).arg(size.height());
+  }
 };
 
 QQuickImageResponse *CacheThumbnailImageProvider::requestImageResponse(const QString &id, const QSize &requestedSize) {
-  return new AsyncImageResponse(id, requestedSize);
+  return new AsyncImageResponse(id, requestedSize, m_cache);
 }
+
+AbstractCache *CacheThumbnailImageProvider::cache() const { return m_cache; }
+
+void CacheThumbnailImageProvider::setCache(AbstractCache *newCache) { m_cache = newCache; }
