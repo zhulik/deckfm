@@ -7,6 +7,7 @@
 
 #include "application.h"
 #include "cachethumbnailimageprovider.h"
+#include "diskcache.h"
 #include "folderlistmodel.h"
 #include "fshelpers.h"
 
@@ -19,7 +20,10 @@ Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
 
   QFontDatabase::addApplicationFont("resources/fonts/materialdesignicons-webfont.ttf");
   QQuickStyle::setStyle("Material");
-  m_engine = new QQmlApplicationEngine();
+
+  m_cacheThumbnailImageProvider = new CacheThumbnailImageProvider();
+  m_cacheThumbnailImageProvider->setCache(new DiskCache(this));
+  m_engine = new QQmlApplicationEngine(this);
 
   m_engine = new QQmlApplicationEngine(this);
 
@@ -40,7 +44,7 @@ Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
   m_engine->rootContext()->setContextProperty("qmlEngine", m_engine);
   m_engine->rootContext()->setContextProperty("steamAPI", m_steamworks);
 
-  m_engine->addImageProvider("cache_thumbnail", new CacheThumbnailImageProvider());
+  m_engine->addImageProvider("cache_thumbnail", m_cacheThumbnailImageProvider);
 
   if (m_steamworks != nullptr) {
     auto callbackTimer = new QTimer(this);
@@ -48,7 +52,7 @@ Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
     callbackTimer->start(16);
   }
 
-  connect(m_engine, &QQmlApplicationEngine::objectCreated, [this](auto obj) {
+  connect(m_engine, &QQmlApplicationEngine::objectCreated, m_engine, [this](auto obj) {
     if (obj == nullptr) {
       throw std::runtime_error("Cannot load qml.");
     }
@@ -64,3 +68,5 @@ Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
 
   m_engine->load("resources/qml/MainWindow.qml");
 }
+
+Application::~Application() { delete m_cacheThumbnailImageProvider; }

@@ -25,8 +25,14 @@ public:
           if (!image.isNull()) {
             image = image.scaled(requestedSize, Qt::KeepAspectRatio);
           }
-          return QByteArray::fromRawData((const char *)image.bits(), image.sizeInBytes());
+          QByteArray ba;
+          QBuffer buffer(&ba);
+          buffer.open(QIODevice::WriteOnly);
+          Q_ASSERT(image.save(&buffer, "png"));
+          qDebug() << ba.size();
+          return ba;
         });
+
         Q_ASSERT(result.loadFromData(data));
       } else {
         QImage image(id); // TODO: add support for network sources
@@ -54,7 +60,7 @@ private:
   QImage m_image;
 
   QString imageCacheId(const QString &id, const QSize &size) const {
-    return QString("%1.%2x%3").arg(id).arg(size.width()).arg(size.height());
+    return QString("%1//%2x%3").arg(id).arg(size.width()).arg(size.height());
   }
 };
 
