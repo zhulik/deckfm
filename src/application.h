@@ -9,13 +9,15 @@ namespace QSteamworks {
 class SteamAPI;
 }
 
+class CacheThumbnailImageProvider;
+
 class Application : public QGuiApplication {
 
 public:
   explicit Application(int &argc, char **argv);
+  virtual ~Application() override;
 
 private:
-  QQmlApplicationEngine *m_engine;
-  QQuickItem *m_activeFocusItem = nullptr;
+  QQmlApplicationEngine *m_engine = nullptr;
   QSteamworks::SteamAPI *m_steamworks = nullptr;
 };

@@ -15,9 +15,13 @@ ItemDelegate {
         anchors.margins: 5
         spacing: 5
 
-        MDI.Icon {
-            name: fileIcon
+        FileIcon {
             Layout.fillHeight: parent
+            Layout.preferredWidth: 50
+
+            name: fileIcon
+            mime: fileMime
+            path: filePath
         }
 
         ColumnLayout {
@@ -32,23 +36,21 @@ ItemDelegate {
 
             RowLayout {
 
-            Label {
-                text: fileSizeString
-                Layout.fillWidth: parent
-                color: Material.accent
-                font.pointSize: 8
-            }
+                Label {
+                    text: fileSizeString
+                    Layout.fillWidth: parent
+                    color: Material.accent
+                    font.pointSize: 8
+                }
 
-            Label {
-                text: fileMime
-                elide: Text.ElideMiddle
-                color: Material.accent
-                Layout.alignment: Qt.AlignVCenter
-                font.pointSize: 8
-            }
+                Label {
+                    text: fileMime
+                    elide: Text.ElideMiddle
+                    color: Material.accent
+                    Layout.alignment: Qt.AlignVCenter
+                    font.pointSize: 8
+                }
             }
         }
-
-
     }
 }
