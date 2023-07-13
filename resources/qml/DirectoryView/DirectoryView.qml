@@ -27,92 +27,19 @@ Item {
         id: fs_model
         showHidden: showHiddenSwitch.position === 1.0
         onModelReset: view.currentIndex = 0
-    }
 
-    function cdIndex(index) {
-        const item = fs_model.get(index)
+        function cdIndex(index) {
+            const item = fs_model.get(index)
 
-        if (item.isDir) {
-            fs_model.path = item.path
-            return
-        }
-        root.fileOpened(item.path)
-    }
-
-    SteamInputControl {
-        id: inputControl
-        objectName: "DirectoryView"
-        controller: steam_input.lastController
-
-        enabled: visible
-
-        actionSet: "deckfm"
-        actionSetLayers: ["file_manager"]
-
-        pressHandlers: {
-            "down": view.moveCurrentIndexDown,
-            "up": view.moveCurrentIndexUp,
-            "left": view.moveCurrentIndexLeft,
-            "right": view.moveCurrentIndexRight,
-            "file_manager_open": () => root.cdIndex(view.currentIndex),
-            "file_manager_go_back": fs_model.goUp,
-            "file_manager_go_home": fs_model.goHome
-        }
-
-        property double scrollPos: 0
-
-        analogHandlers: {
-            "scroll": e => {
-                if ((e.analogY <= 0 && view.atYEnd) || (e.analogY >= 0
-                                                        && view.atYBeginning)) {
-                    view.stopScrollMomentum()
-                    return
-                }
-
-                if (e.analogY >= 0 && view.atYBeginning) {
-                    view.stopScrollMomentum()
-                    return
-                }
-
-                scrollPos += Math.abs(e.analogY)
-
-                if (scrollPos >= view.cellHeight) {
-                    scrollPos = 0
-                    view.scrollHaptic()
-                }
-                view.contentY -= e.analogY
-                view.returnToBounds()
+            if (item.isDir) {
+                fs_model.path = item.path
+                return
             }
+            root.fileOpened(item.path)
         }
     }
 
-    Keys.onPressed: {
-        event.accepted = true
-
-        switch (event.key) {
-        case Qt.Key_Return:
-            root.cdIndex(view.currentIndex)
-            break
-        case Qt.Key_Escape:
-            fs_model.goUp()
-            break
-        case Qt.Key_Home:
-            fs_model.goHome()
-            break
-        case Qt.Key_Up:
-            view.moveCurrentIndexUp()
-            break
-        case Qt.Key_Down:
-            view.moveCurrentIndexDown()
-            break
-        case Qt.Key_Left:
-            view.moveCurrentIndexLeft()
-            break
-        case Qt.Key_Right:
-            view.moveCurrentIndexRight()
-            break
-        }
-    }
+    onActiveFocusChanged: view.forceActiveFocus()
 
     ColumnLayout {
         anchors.fill: parent
@@ -155,7 +82,7 @@ Item {
             }
         }
 
-        GridView {
+        Core.SteamInputScrollableGridView {
             id: view
 
             model: fs_model
@@ -165,116 +92,38 @@ Item {
 
             cellWidth: Math.max(parent.width / 4, 300)
             cellHeight: 70
-            clip: true
-            keyNavigationWraps: false
 
-            boundsBehavior: Flickable.StopAtBounds
+            actionSetLayers: ["file_manager"]
 
-            ScrollBar.vertical: ScrollBar {}
-
-            onCurrentIndexChanged: view.scrollHaptic()
-
-            function stopScrollMomentum() {
-                if (!inputControl.controller) {
-                    return
-                }
-
-                const a = inputControl.controller.actionSet.actions["scroll"]
-                inputControl.controller.stopAnalogActionMomentum(a)
+            pressHandlers: {
+                "file_manager_open": () => fs_model.cdIndex(view.currentIndex),
+                "file_manager_go_back": fs_model.goUp,
+                "file_manager_go_home": fs_model.goHome
             }
-
-            function stopScrollHaptic() {
-                if (!inputControl.controller) {
-                    return
-                }
-
-                inputControl.controller.triggerRepeatedHapticPulse(2900, 1200,
-                                                                   2)
-            }
-
-            function scrollHaptic() {
-                if (!inputControl.controller) {
-                    return
-                }
-
-                inputControl.controller.triggerRepeatedHapticPulse(500, 1, 1)
-            }
-
-            onAtYBeginningChanged: {
-                if (atYBeginning) {
-                    stopScrollMomentum()
-                    stopScrollHaptic()
-                }
-            }
-
-            onAtYEndChanged: {
-                if (atYEnd) {
-                    stopScrollMomentum()
-                    stopScrollHaptic()
-                }
-            }
-
-            populate: Transition {
-                id: _transition
-
-                SequentialAnimation {
-                    PropertyAction {
-                        property: "opacity"
-                        value: 0.0
-                    }
-
-                    PauseAnimation {
-                        duration: 10 * _transition.ViewTransition.index
-                    }
-
-                    NumberAnimation {
-                        property: "opacity"
-                        from: 0.0
-                        to: 1.0
-                        duration: 200
-                        easing.type: Easing.InOutQuad
-                    }
-                }
-            }
-
-            add: _transition
 
             delegate: FileDelegate {
                 width: view.cellWidth
                 height: view.cellHeight
 
                 onClicked: {
-                    root.cdIndex(index)
+                    fs_model.cdIndex(index)
                 }
             }
 
-            highlight: Rectangle {
-                id: fileHighlight
-
-                color: Material.primary
-                visible: root.activeFocus
-
-                readonly property bool belowView: {
-                    (-view.contentY + fileHighlight.y) < 0
-                }
-
-                readonly property bool aboveView: {
-                    (-view.contentY + fileHighlight.y) > view.height - view.cellHeight
-                }
-
-                readonly property bool inView: {
-                    !belowView && !aboveView
-                }
-
-                Connections {
-                    target: view
-
-                    function onMovingChanged() {
-                        if (!view.moving && !fileHighlight.inView) {
-                            const y = fileHighlight.belowView ? view.contentY + view.cellHeight : view.contentY + view.height - view.cellHeight
-                            view.currentIndex = view.indexAt(fileHighlight.x, y)
-                        }
-                    }
+            Keys.onPressed: {
+                switch (event.key) {
+                case Qt.Key_Return:
+                    event.accepted = true
+                    fs_model.cdIndex(view.currentIndex)
+                    break
+                case Qt.Key_Escape:
+                    event.accepted = true
+                    fs_model.goUp()
+                    break
+                case Qt.Key_Home:
+                    event.accepted = true
+                    fs_model.goHome()
+                    break
                 }
             }
         }

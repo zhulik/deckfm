@@ -97,7 +97,6 @@ ApplicationWindow {
         anchors.fill: parent
 
         SteamInputControl {
-            objectName: "global"
             global: true
 
             controller: steam_input.lastController
@@ -106,6 +105,7 @@ ApplicationWindow {
                 "debug": debugOverlay.toggle
             }
         }
+
         Drawer {
             id: drawer
             y: header.height
@@ -125,7 +125,9 @@ ApplicationWindow {
                 id: directoryView
 
                 onFileOpened: JS.openFile(path)
+                visible: stackView.currentItem == directoryView
             }
+
             GamesView.GamesView {
                 id: gamesView
             }
