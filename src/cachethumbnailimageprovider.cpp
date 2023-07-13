@@ -1,5 +1,7 @@
 #include "cachethumbnailimageprovider.h"
 
+#include <algorithm>
+
 #include <QFutureWatcher>
 #include <QQuickImageResponse>
 #include <QtConcurrent/QtConcurrent>
@@ -14,6 +16,7 @@ public:
   AsyncImageResponse(const QString &id, const QSize &requestedSize, AbstractCache *cache)
       : m_id(id), m_requestedSize(requestedSize) {
     auto watcher = new QFutureWatcher<void>(this);
+
     connect(watcher, &QFutureWatcher<void>::finished, this, &AsyncImageResponse::finished);
     connect(watcher, &QFutureWatcher<void>::finished, watcher, &QFileSystemWatcher::deleteLater);
 
@@ -23,7 +26,7 @@ public:
         return;
       }
 
-      auto data = cache->withCache(imageCacheId(m_id, requestedSize), [this]() {
+      auto data = cache->withCache(imageCacheId(), [this]() {
         auto pair = fetchImage();
         m_image = pair.first;
         auto skipCache = pair.second;
@@ -56,18 +59,40 @@ private:
   QSize m_requestedSize;
   QImage m_image;
 
-  QString imageCacheId(const QString &id, const QSize &size) const {
-    return QString("%1//%2x%3").arg(id).arg(size.width()).arg(size.height());
+  QString imageCacheId() const {
+    auto size = findBestSize();
+    return QString("%1//%2x%3").arg(m_id).arg(size.width()).arg(size.height());
   }
 
   QPair<QImage, bool> fetchImage() const {
     QImage image(m_id); // TODO: add support for network sources
     auto skipCache = false;
 
-    if (!image.isNull() && !m_requestedSize.isNull()) {
-      image = image.scaled(m_requestedSize, Qt::KeepAspectRatio);
+    auto size = findBestSize();
+
+    if (image.width() < size.width() || image.height() < size.height()) {
+      size = image.size();
+    }
+
+    if (!image.isNull() && !size.isNull()) {
+      image = image.scaled(size, Qt::KeepAspectRatio);
     }
     return QPair{image, skipCache};
+  }
+
+  QSize findBestSize() const {
+    if (m_requestedSize.isNull()) {
+      return m_requestedSize;
+    }
+    auto bestSize = ThumbnailSizebase;
+
+    auto requestedSize = std::max(m_requestedSize.width(), m_requestedSize.height());
+
+    while (bestSize < requestedSize) {
+      bestSize *= 2;
+    }
+
+    return QSize(bestSize, bestSize);
   }
 };
 
