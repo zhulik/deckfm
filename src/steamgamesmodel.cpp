@@ -32,13 +32,15 @@ QVariant SteamGamesModel::data(const QModelIndex &index, int role) const {
     return game.id;
   case Name:
     return game.name;
+  case LibraryImagePath:
+    return game.libraryImagePath;
   default:
     return QVariant();
   }
 }
 
 QHash<int, QByteArray> SteamGamesModel::roleNames() const {
-  return QHash<int, QByteArray>{{SteamGamesModel::Id, "id"}, {SteamGamesModel::Name, "name"}};
+  return QHash<int, QByteArray>{{Id, "id"}, {Name, "name"}, {LibraryImagePath, "libraryImagePath"}};
 }
 
 void SteamGamesModel::refresh() {
@@ -58,7 +60,8 @@ void SteamGamesModel::refresh() {
     foreach (auto gameId, folderObj["apps"].toObject().keys()) {
       auto id = gameId.toUInt();
       auto manifest = parser.parse(readFile(dir.absoluteFilePath(QString("appmanifest_%1.acf").arg(gameId))));
-      m_games[id] = SteamGame{id, manifest["AppState"].toObject()["name"].toString()};
+      m_games[id] = SteamGame{id, manifest["AppState"].toObject()["name"].toString(),
+                              m_root.absoluteFilePath(QString("appcache/librarycache/%1_library_600x900.jpg").arg(id))};
     }
   }
   endResetModel();

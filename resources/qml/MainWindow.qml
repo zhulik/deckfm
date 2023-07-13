@@ -9,6 +9,7 @@ import Steamworks 1.0
 import Steamworks.SteamInput 1.0
 
 import "./DirectoryView" as DirView
+import "./GamesView" as GamesView
 
 import "MainWindow.js" as JS
 
@@ -90,8 +91,6 @@ ApplicationWindow {
         onActivated: Qt.quit()
     }
 
-    SteamGamesModel {}
-
     SteamInputScope {
         id: steam_input_scope
 
@@ -120,12 +119,15 @@ ApplicationWindow {
 
             anchors.fill: parent
 
-            initialItem: directoryView
+            initialItem: gamesView
 
-            DirView.DirectoryView {
-                id: directoryView
+            //            DirView.DirectoryView {
+            //                id: directoryView
 
-                onFileOpened: JS.openFile(path)
+            //                onFileOpened: JS.openFile(path)
+            //            }
+            GamesView.GamesView {
+                id: gamesView
             }
         }
 
@@ -145,9 +147,9 @@ ApplicationWindow {
             height: parent.height - y
         }
 
-        Settings {
-            property alias path: directoryView.path
-        }
+        //        Settings {
+        //            property alias path: directoryView.path
+        //        }
     }
 
     onOpenFileChanged: JS.openFile(openFile)

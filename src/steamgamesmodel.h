@@ -7,12 +7,13 @@
 struct SteamGame {
   uint id = -1;
   QString name;
+  QString libraryImagePath;
 };
 
 class SteamGamesModel : public QAbstractListModel {
   Q_OBJECT
 public:
-  enum Role { Id = Qt::UserRole, Name };
+  enum Role { Id = Qt::UserRole, Name, LibraryImagePath };
 
   explicit SteamGamesModel(QObject *parent = nullptr);
 

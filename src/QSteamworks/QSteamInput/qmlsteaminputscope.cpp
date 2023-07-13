@@ -53,7 +53,11 @@ void QMLSteamInputScope::rebuildInputStack() {
     i++;
   }
 
-  setActiveControls(stack.last() + globals);
+  if (stack.count() > 0) {
+    setActiveControls(stack.last() + globals);
+  } else {
+    setActiveControls(globals);
+  }
 }
 
 QList<QSteamworks::QSteamInput::QMLSteamInputControl *> QMLSteamInputScope::activeControls() const {
