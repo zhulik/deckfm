@@ -6,6 +6,7 @@
 #include <QtQuickControls2/QQuickStyle>
 
 #include "application.h"
+#include "cachednetworkaccessmanager.h"
 #include "cachethumbnailimageprovider.h"
 #include "diskcache.h"
 #include "folderlistmodel.h"
@@ -13,6 +14,7 @@
 
 #include "QSteamworks/errors.h"
 #include "QSteamworks/steamapi.h"
+#include "qnetworkaccessmanager.h"
 
 Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
   setOrganizationName("zhulik");
@@ -42,6 +44,7 @@ Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
   m_engine->rootContext()->setContextProperty("steamAPI", m_steamworks);
 
   m_engine->addImageProvider("cache_thumbnail", cacheThumbnailImageProvider);
+  m_engine->setNetworkAccessManagerFactory(new CachedNetworkAccessManagerFactory());
 
   if (m_steamworks != nullptr) {
     auto callbackTimer = new QTimer(m_engine);
