@@ -36,7 +36,7 @@ ApplicationWindow {
 
     header: Header {
         id: header
-        onMenuClicked: drawer.visible = !drawer.visible
+        onMenuClicked: navigationDrawer.visible = !navigationDrawer.visible
         onLogoClicked: globalMenu.popup()
         onExitClicked: mainWindow.close()
 
@@ -70,21 +70,6 @@ ApplicationWindow {
     }
 
     Shortcut {
-        sequence: "F2"
-
-        context: Qt.ApplicationShortcut
-
-        onActivated: drawer.visible = !drawer.visible
-    }
-
-    Shortcut {
-        sequence: "F3"
-        context: Qt.ApplicationShortcut
-
-        onActivated: debugOverlay.toggle()
-    }
-
-    Shortcut {
         sequence: "F4"
         context: Qt.ApplicationShortcut
 
@@ -99,18 +84,21 @@ ApplicationWindow {
         SteamInputControl {
             global: true
 
+            objectName: "global"
+
             controller: steam_input.lastController
 
             pressHandlers: {
-                "debug": debugOverlay.toggle
+                "debug": () => debugOverlay.visible = !debugOverlay.visible,
+                "select": () => navigationDrawer.visible = !navigationDrawer.visible
             }
         }
 
-        Drawer {
-            id: drawer
+        NavigationDrawer {
+            id: navigationDrawer
             y: header.height
             width: Math.max(parent.width * 0.3, 450)
-            height: parent.height - header.height - footer.height
+            height: stackView.height
         }
 
         StackView {
@@ -128,9 +116,9 @@ ApplicationWindow {
                 visible: stackView.currentItem == directoryView
             }
 
-            GamesView.GamesView {
-                id: gamesView
-            }
+            //            GamesView.GamesView {
+            //                id: gamesView
+            //            }
         }
 
         GlobalMenu {

@@ -7,6 +7,8 @@ import QtQuick.Controls.Material 2.12
 import "../../../resources/qml/models" as Models
 import "../../../resources/qml/MDI" as MDI
 
+import ".." as Core
+
 Rectangle {
     id: root
 
@@ -14,7 +16,7 @@ Rectangle {
 
     opacity: 1
 
-    TabView {
+    Core.TabView {
         id: actionSetsTabView
         anchors.fill: parent
 
@@ -95,7 +97,6 @@ Rectangle {
                     text: "Actions of selected layer"
                 }
             }
-
         }
     }
 }
