@@ -15,6 +15,7 @@
 #include "QSteamworks/errors.h"
 #include "QSteamworks/steamapi.h"
 #include "qnetworkaccessmanager.h"
+#include "steamgamesmodel.h"
 
 Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
   setOrganizationName("zhulik");
@@ -28,6 +29,7 @@ Application::Application(int &argc, char **argv) : QGuiApplication{argc, argv} {
   cacheThumbnailImageProvider->setCache(new DiskCache(m_engine));
 
   qmlRegisterType<FolderListModel>("DeckFM", 1, 0, "FolderListModel");
+  qmlRegisterType<SteamGamesModel>("DeckFM", 1, 0, "SteamGamesModel");
 
   // TODO: move to an init function in QSteamworks
   QSteamworks::registerTypes();

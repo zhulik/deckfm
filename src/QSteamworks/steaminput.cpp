@@ -32,7 +32,7 @@ static const QMap<ESteamInputType, QString> controllerNames{
     {k_ESteamInputType_SwitchProController, "Switch Pro"},
     {k_ESteamInputType_MobileTouch, "Mobile Touch"}};
 
-QString readFile(QString const &path) {
+static QString readFile(QString const &path) {
   QFile f(path);
 
   if (!f.open(QFile::ReadOnly | QFile::Text)) {

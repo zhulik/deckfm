@@ -90,6 +90,8 @@ ApplicationWindow {
         onActivated: Qt.quit()
     }
 
+    SteamGamesModel {}
+
     SteamInputScope {
         id: steam_input_scope
 
