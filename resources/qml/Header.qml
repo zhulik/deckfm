@@ -37,12 +37,24 @@ ToolBar {
             iconName: "bug"
             Layout.alignment: Qt.AlignRight
             onClicked: {
-                console.log(qmlEngine)
+                var http = new XMLHttpRequest()
+                http.open("GET", "https://google.com")
+
+                http.onreadystatechange = function () {
+                    // Call a function when the state changes.
+                    if (http.readyState == 4) {
+                        if (http.status == 200) {
+                            console.log("ok")
+                        } else {
+                            console.log("error: " + http.status)
+                        }
+                    }
+                }
+                http.send()
             }
         }
 
         ToolSeparator {}
-
 
         MDI.Button {
             iconName: "windowClose"
