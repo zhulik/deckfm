@@ -25,6 +25,9 @@ QByteArray DiskCache::get(const QString &key) const {
 }
 
 void DiskCache::set(const QString &key, const QByteArray &data) {
+  if (data.isEmpty()) {
+    return;
+  }
   auto info = keyToPath(key);
   Q_ASSERT(m_root.mkpath(info.path()));
 
