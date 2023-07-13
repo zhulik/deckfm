@@ -9,6 +9,7 @@ import Steamworks 1.0
 import Steamworks.SteamInput 1.0
 
 import "./DirectoryView" as DirView
+import "./GamesView" as GamesView
 
 import "MainWindow.js" as JS
 
@@ -124,6 +125,9 @@ ApplicationWindow {
                 id: directoryView
 
                 onFileOpened: JS.openFile(path)
+            }
+            GamesView.GamesView {
+                id: gamesView
             }
         }
 
