@@ -119,13 +119,13 @@ ApplicationWindow {
 
             anchors.fill: parent
 
-            initialItem: gamesView
+            initialItem: directoryView
 
-            //            DirView.DirectoryView {
-            //                id: directoryView
+            DirView.DirectoryView {
+                id: directoryView
 
-            //                onFileOpened: JS.openFile(path)
-            //            }
+                onFileOpened: JS.openFile(path)
+            }
             GamesView.GamesView {
                 id: gamesView
             }
@@ -147,9 +147,9 @@ ApplicationWindow {
             height: parent.height - y
         }
 
-        //        Settings {
-        //            property alias path: directoryView.path
-        //        }
+        Settings {
+            property alias path: directoryView.path
+        }
     }
 
     onOpenFileChanged: JS.openFile(openFile)
