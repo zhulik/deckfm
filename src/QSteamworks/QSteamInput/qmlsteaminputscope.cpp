@@ -1,6 +1,7 @@
 #include "qmlsteaminputscope.h"
 #include "QSteamInput/qmlsteaminputcontrol.h"
 #include "steaminput.h"
+#include <algorithm>
 
 using namespace QSteamworks::QSteamInput;
 
@@ -25,13 +26,15 @@ static QList<QPair<long int, QMLSteamInputControl *>> buildStack(QObject *root, 
 
   if (auto control = qobject_cast<QMLSteamInputControl *>(root)) {
     if (control->isEnabled()) {
-      stack << QPair{level, control};
+      stack << QPair{level + control->z(), control};
     }
   }
 
   foreach (auto child, root->children()) {
     stack += buildStack(child, level + 1);
   }
+
+  std::sort(stack.begin(), stack.end(), [](auto a, auto b) { return b.first > a.first; });
 
   return stack;
 }

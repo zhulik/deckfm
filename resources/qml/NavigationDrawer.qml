@@ -22,6 +22,8 @@ Drawer {
     SteamInputControl {
         objectName: "NavigationDrawer"
         actionSetLayers: ["tab_navigation"]
+
+        z: 100
         pressHandlers: {
             "tab_navigation_top_left": () => console.log("!!!"),
             "tab_navigation_top_right": () => console.log("!!!")
