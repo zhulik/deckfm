@@ -16,8 +16,12 @@ void QMLSteamInputScope::addControl(QMLSteamInputControl *control) {
   rebuildInputStack();
 }
 
-static QList<QPair<long int, QMLSteamInputControl *>> buildStack(QQuickItem *root, long int level = 0) {
+static QList<QPair<long int, QMLSteamInputControl *>> buildStack(QObject *root, long int level = 0) {
   QList<QPair<long int, QMLSteamInputControl *>> stack;
+
+  if (root == nullptr) {
+    return stack;
+  }
 
   if (auto control = qobject_cast<QMLSteamInputControl *>(root)) {
     if (control->isEnabled()) {
@@ -26,10 +30,7 @@ static QList<QPair<long int, QMLSteamInputControl *>> buildStack(QQuickItem *roo
   }
 
   foreach (auto child, root->children()) {
-    auto item = qobject_cast<QQuickItem *>(child);
-    if (item) {
-      stack += buildStack(qobject_cast<QQuickItem *>(child), level + 1);
-    }
+    stack += buildStack(child, level + 1);
   }
 
   return stack;

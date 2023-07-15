@@ -88,6 +88,8 @@ GridView {
     SteamInputControl {
         id: inputControl
 
+        objectName: "GridView"
+
         pressHandlers: Object.assign({
                                          "down": root.moveCurrentIndexDown,
                                          "up": root.moveCurrentIndexUp,
