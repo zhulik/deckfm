@@ -39,8 +39,6 @@ ApplicationWindow {
         onMenuClicked: navigationDrawer.visible = !navigationDrawer.visible
         onLogoClicked: globalMenu.popup()
         onExitClicked: mainWindow.close()
-
-        visible: swipeView.depth == 1
     }
 
     footer: Footer {
