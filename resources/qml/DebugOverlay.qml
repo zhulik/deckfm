@@ -18,8 +18,11 @@ Item {
                                       "showFooter": false
                                   })
 
-    function toggle() {
-        root.visible = !root.visible
+    Shortcut {
+        sequence: "F3"
+        context: Qt.ApplicationShortcut
+
+        onActivated: visible = !visible
     }
 
     Rectangle {

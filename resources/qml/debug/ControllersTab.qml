@@ -8,6 +8,7 @@ import "../../../resources/qml/models" as Models
 import "../../../resources/qml/MDI" as MDI
 
 import "./ControllersTabComponents" as Components
+import ".." as Core
 
 Rectangle {
     id: root
@@ -41,7 +42,7 @@ Rectangle {
                 controller: controllersView.selectedController
             }
 
-            TabView {
+            Core.TabView {
                 id: actionSetsTabView
                 Layout.preferredWidth: root.width / 3 * 2
                 Layout.fillHeight: parent

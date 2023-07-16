@@ -11,19 +11,6 @@
 
 using namespace QSteamworks::QSteamInput;
 
-QMLSteamInputControl::QMLSteamInputControl(QQuickItem *parent) : QQuickItem(parent) {
-  connect(this, &QMLSteamInputControl::enabledChanged, [this]() {
-    if (!isEnabled() || !m_controller)
-      return;
-
-    if (!m_actionSet.isEmpty()) {
-      m_controller->setActionSet(m_controller->actionSetByName(m_actionSet));
-    }
-
-    activateActionSetLayers();
-  });
-}
-
 Controller *QMLSteamInputControl::controller() const { return m_controller; }
 
 void QMLSteamInputControl::setController(Controller *newController) {
@@ -36,11 +23,7 @@ void QMLSteamInputControl::setController(Controller *newController) {
   if (!m_controller)
     return;
 
-  if (!m_actionSet.isEmpty()) {
-    m_controller->setActionSet(m_controller->actionSetByName(m_actionSet));
-  }
-
-  activateActionSetLayers();
+  applyActionSetAndLayers(); // TODO: fixme
 }
 
 QString QMLSteamInputControl::actionSet() const { return m_actionSet; }
@@ -179,4 +162,15 @@ void QMLSteamInputControl::setglobal(bool newGlobal) {
     return;
   m_global = newGlobal;
   emit globalChanged();
+}
+
+void QMLSteamInputControl::applyActionSetAndLayers() {
+  if (!isEnabled() || !m_controller)
+    return;
+
+  if (!m_actionSet.isEmpty()) {
+    m_controller->setActionSet(m_controller->actionSetByName(m_actionSet));
+  }
+
+  activateActionSetLayers();
 }

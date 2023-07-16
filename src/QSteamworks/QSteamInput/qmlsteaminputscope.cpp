@@ -1,6 +1,7 @@
 #include "qmlsteaminputscope.h"
 #include "QSteamInput/qmlsteaminputcontrol.h"
 #include "steaminput.h"
+#include <algorithm>
 
 using namespace QSteamworks::QSteamInput;
 
@@ -16,21 +17,24 @@ void QMLSteamInputScope::addControl(QMLSteamInputControl *control) {
   rebuildInputStack();
 }
 
-static QList<QPair<long int, QMLSteamInputControl *>> buildStack(QQuickItem *root, long int level = 0) {
+static QList<QPair<long int, QMLSteamInputControl *>> buildStack(QObject *root, long int level = 0) {
   QList<QPair<long int, QMLSteamInputControl *>> stack;
+
+  if (root == nullptr) {
+    return stack;
+  }
 
   if (auto control = qobject_cast<QMLSteamInputControl *>(root)) {
     if (control->isEnabled()) {
-      stack << QPair{level, control};
+      stack << QPair{level + control->z(), control};
     }
   }
 
   foreach (auto child, root->children()) {
-    auto item = qobject_cast<QQuickItem *>(child);
-    if (item) {
-      stack += buildStack(qobject_cast<QQuickItem *>(child), level + 1);
-    }
+    stack += buildStack(child, level + 1);
   }
+
+  std::sort(stack.begin(), stack.end(), [](auto a, auto b) { return b.first > a.first; });
 
   return stack;
 }
@@ -54,6 +58,9 @@ void QMLSteamInputScope::rebuildInputStack() {
   }
 
   if (stack.count() > 0) {
+    foreach (auto c, stack.last()) {
+      c->applyActionSetAndLayers();
+    }
     setActiveControls(stack.last() + globals);
   } else {
     setActiveControls(globals);
