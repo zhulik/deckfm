@@ -8,12 +8,11 @@ import QtQuick.Controls.Material 2.12
 import Steamworks 1.0
 import Steamworks.SteamInput 1.0
 
-import "./DirectoryView" as DirView
-import "./GamesView" as GamesView
+import "./Apps" as Apps
 
-import "MainWindow.js" as JS
+import "./MainWindow/MainWindow.js" as JS
 
-import "QSteamworks" as Steamworks
+import "./MainWindow" as Components
 
 import DeckFM 1.0
 
@@ -34,14 +33,14 @@ ApplicationWindow {
     width: 1280
     height: 720
 
-    header: Header {
+    header: Components.Header {
         id: header
         onMenuClicked: navigationDrawer.visible = !navigationDrawer.visible
         onLogoClicked: globalMenu.popup()
         onExitClicked: mainWindow.close()
     }
 
-    footer: Footer {
+    footer: Components.Footer {
         visible: swipeView.currentItem.showFooter
         hintActions: swipeView.currentItem.hintActions
     }
@@ -92,7 +91,7 @@ ApplicationWindow {
             }
         }
 
-        NavigationDrawer {
+        Components.NavigationDrawer {
             id: navigationDrawer
             y: header.height
             width: Math.max(parent.width * 0.3, 450)
@@ -118,7 +117,7 @@ ApplicationWindow {
                             contentChildren[currentIndex].tabName)
             }
 
-            DirView.DirectoryView {
+            Apps.FileManager {
                 id: directoryView
 
                 readonly property string tabName: "file_manager"
@@ -127,20 +126,20 @@ ApplicationWindow {
                 visible: swipeView.currentItem == directoryView
             }
 
-            GamesView.GamesView {
+            Apps.Games {
                 id: gamesView
 
                 readonly property string tabName: "games"
             }
         }
 
-        GlobalMenu {
+        Components.GlobalMenu {
             id: globalMenu
 
             onExitClicked: mainWindow.close()
         }
 
-        DebugOverlay {
+        Components.DebugOverlay {
             id: debugOverlay
             visible: false
 
