@@ -6,10 +6,9 @@ import "./MDI" as MDI
 import "QSteamworks" as Steamworks
 
 Drawer {
-    id: drawer
-    y: header.height
-    width: Math.max(parent.width * 0.3, 450)
-    height: stackView.height
+    id: root
+
+    readonly property string currentMode: tabRepeater.model[tabBar.currentIndex].mode
 
     Shortcut {
         sequence: "F2"
@@ -25,41 +24,64 @@ Drawer {
 
         z: 100
         pressHandlers: {
-            "tab_navigation_top_left": () => console.log("!!!"),
-            "tab_navigation_top_right": () => console.log("!!!")
+            "tab_navigation_top_left": tabBar.decrementCurrentIndex,
+            "tab_navigation_top_right": tabBar.incrementCurrentIndex,
+            "cancel": root.close
         }
     }
 
     ColumnLayout {
-        Steamworks.ActionIcon {
-            name: "tab_navigation_top_left"
-            width: 30
-            height: 30
-        }
-        Steamworks.ActionIcon {
-            name: "tab_navigation_top_right"
-            width: 30
-            height: 30
-        }
         anchors.fill: parent
 
-        TabView {
-            model: [{
-                    "name": "Files",
-                    "icon": "file"
-                }, {
-                    "name": "Games",
-                    "icon": "gamepad"
-                }, {
-                    "name": "Browser",
-                    "icon": "web"
-                }]
-            tabDelegate: TabButton {
-                MDI.Icon {
-                    name: modelData.icon
-                    anchors.centerIn: parent
+        RowLayout {
+            Layout.fillWidth: parent
+
+            Steamworks.ActionIcon {
+                name: "tab_navigation_top_left"
+                width: 30
+                height: 30
+            }
+
+            TabBar {
+                id: tabBar
+                Layout.fillWidth: parent
+
+                Repeater {
+                    id: tabRepeater
+                    anchors.fill: parent
+
+                    model: [{
+                            "name": "Files",
+                            "icon": "file",
+                            "mode": "file_manager"
+                        }, {
+                            "name": "Games",
+                            "icon": "gamepad",
+                            "mode": "games"
+                        }, {
+                            "name": "Browser",
+                            "icon": "web",
+                            "mode": "browser"
+                        }]
+
+                    TabButton {
+                        MDI.Icon {
+                            name: modelData.icon
+                            anchors.centerIn: parent
+                        }
+                    }
                 }
             }
+
+            Steamworks.ActionIcon {
+                name: "tab_navigation_top_right"
+                width: 30
+                height: 30
+            }
+        }
+
+        Item {
+            Layout.fillHeight: parent
         }
     }
 }

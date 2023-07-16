@@ -99,6 +99,8 @@ ApplicationWindow {
             y: header.height
             width: Math.max(parent.width * 0.3, 450)
             height: stackView.height
+
+            onCurrentModeChanged: console.log(currentMode)
         }
 
         StackView {
