@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.15
 
 import QtQuick.Controls.Material 2.12
 
-import "../../../resources/qml/models" as Models
+import "../../../resources/qml/Models" as Models
 import "../../../resources/qml/MDI" as MDI
 
 import "./ControllersTabComponents" as Components

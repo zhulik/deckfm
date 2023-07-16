@@ -5,7 +5,7 @@ import QtQuick.Controls.Material 2.12
 import QtGraphicalEffects 1.15
 
 import "../MDI" as MDI
-import "../models" as Models
+import "../Models" as Models
 
 ListView {
     id: root
