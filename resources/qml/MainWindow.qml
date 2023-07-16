@@ -40,12 +40,12 @@ ApplicationWindow {
         onLogoClicked: globalMenu.popup()
         onExitClicked: mainWindow.close()
 
-        visible: stackView.depth == 1
+        visible: swipeView.depth == 1
     }
 
     footer: Footer {
-        visible: stackView.currentItem.showFooter
-        hintActions: stackView.currentItem.hintActions
+        visible: swipeView.currentItem.showFooter
+        hintActions: swipeView.currentItem.hintActions
     }
 
     SteamUtils {
@@ -98,29 +98,42 @@ ApplicationWindow {
             id: navigationDrawer
             y: header.height
             width: Math.max(parent.width * 0.3, 450)
-            height: stackView.height
+            height: swipeView.height
 
-            onCurrentModeChanged: console.log(currentMode)
+            onCurrentModeChanged: {
+                const cs = swipeView.contentChildren
+                for (var i = 0; i < cs.length; i++) {
+                    if (cs[i].tabName === currentMode) {
+                        swipeView.currentIndex = i
+                    }
+                }
+            }
         }
 
-        StackView {
-            id: stackView
+        SwipeView {
+            id: swipeView
             focus: true
-
             anchors.fill: parent
 
-            initialItem: directoryView
+            onCurrentIndexChanged: {
+                navigationDrawer.setCurrentMode(
+                            contentChildren[currentIndex].tabName)
+            }
 
             DirView.DirectoryView {
                 id: directoryView
 
+                readonly property string tabName: "file_manager"
+
                 onFileOpened: JS.openFile(path)
-                visible: stackView.currentItem == directoryView
+                visible: swipeView.currentItem == directoryView
             }
 
-            //            GamesView.GamesView {
-            //                id: gamesView
-            //            }
+            GamesView.GamesView {
+                id: gamesView
+
+                readonly property string tabName: "games"
+            }
         }
 
         GlobalMenu {

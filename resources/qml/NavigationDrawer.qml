@@ -8,7 +8,15 @@ import "QSteamworks" as Steamworks
 Drawer {
     id: root
 
-    readonly property string currentMode: tabRepeater.model[tabBar.currentIndex].mode
+    property string currentMode: tabRepeater.model[tabBar.currentIndex].mode
+
+    function setCurrentMode(mode) {
+        if (mode === currentMode) {
+            return
+        }
+
+        tabBar.currentIndex = tabRepeater.model.findIndex(x => x.mode === mode)
+    }
 
     Shortcut {
         sequence: "F2"
