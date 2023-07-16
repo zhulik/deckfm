@@ -27,8 +27,6 @@ class QMLSteamInputControl : public QQuickItem {
   Q_PROPERTY(QJSValue analogHandlers READ analogHandlers WRITE setAnalogHandlers NOTIFY analogHandlersChanged)
 
 public:
-  QMLSteamInputControl(QQuickItem *parent = nullptr);
-
   Controller *controller() const;
   void setController(Controller *newController);
 
@@ -51,6 +49,8 @@ public:
 
   bool global() const;
   void setglobal(bool newGlobal);
+
+  void applyActionSetAndLayers();
 
 signals:
   void controllerChanged();

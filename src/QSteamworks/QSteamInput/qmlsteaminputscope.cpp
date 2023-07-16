@@ -58,6 +58,9 @@ void QMLSteamInputScope::rebuildInputStack() {
   }
 
   if (stack.count() > 0) {
+    foreach (auto c, stack.last()) {
+      c->applyActionSetAndLayers();
+    }
     setActiveControls(stack.last() + globals);
   } else {
     setActiveControls(globals);
